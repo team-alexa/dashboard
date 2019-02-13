@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
-import LoginScreen from './components/login/LoginScreen'
-import MainApp from './components/main_app/MainApp'
+import LoginScreen from './components/LoginScreen'
+import MainApp from './components/MainApp'
 
 class App extends Component {
   render() {
