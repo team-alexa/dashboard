@@ -12,7 +12,7 @@ class Content extends Component {
   render() {
     console.log(this.props)
     return (
-      <div className="content">
+      <div className={this.props.visible+" content"}>
         {components[this.props.page]}
       </div>
     );
