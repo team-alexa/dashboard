@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Sidebar from './Sidebar';
 import LogoHeader from './LogoHeader';
 import Content from './Content';
-import '../../css/main_app/MainApp.css';
+import '../css/MainApp.css';
 
 class MainApp extends Component {
   constructor(props) {
