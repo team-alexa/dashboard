@@ -4,7 +4,8 @@ import '../css/Content.css';
 class Content extends Component {
   render() {
     return (
-      <div className="content">
+      <div className={this.props.visible+" content"}>
+        <p>Some Info</p>
       </div>
     );
   }
