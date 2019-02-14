@@ -8,7 +8,12 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Route exact path="/" component={MainApp} />
+          <Route
+            path="/"
+            render={(props) => <MainApp {...props}
+            match={{params: {page: 'home'}}} />}
+          />
+          <Route exact path="/:page" component={MainApp} />
           <Route path="/login" component={LoginScreen} />
         </div>
       </Router>

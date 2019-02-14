@@ -4,7 +4,7 @@ import LogoHeader from './LogoHeader';
 import Content from './Content';
 import '../../css/main_app/MainApp.css';
 
-class App extends Component {
+class MainApp extends Component {
   constructor(props) {
     super(props)
 
@@ -20,14 +20,15 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.props)
     return (
       <div className="app" onClick={this.toggleSidebar}>
         <Sidebar visible={this.state.sidebarVisible}/>
         <LogoHeader />
-        <Content />
+        <Content page={this.props.match.params.page} />
       </div>
     );
   }
 }
 
-export default App;
+export default MainApp;
