@@ -16,15 +16,20 @@ class App extends Component {
   }
 
   toggleSidebar() {
-    this.setState({sidebarVisible: "close"})
+      if(this.state.sidebarVisible == "close"){
+          this.setState({sidebarVisible: "open"})
+      }
+      else{
+          this.setState({sidebarVisible: "close"})
+      }
   }
 
   render() {
     return (
-      <div className="app" onClick={this.toggleSidebar}>
-        <Sidebar visible={this.state.sidebarVisible}/>
-        <LogoHeader />
-        <Content />
+      <div className="app">
+        <Sidebar visible={this.state.sidebarVisible} toggleSide={this.toggleSidebar}/>
+        <LogoHeader visible={this.state.sidebarVisible}/>
+        <Content visible={this.state.sidebarVisible}/>
       </div>
     );
   }

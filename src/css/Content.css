@@ -1,8 +1,16 @@
 .content {
   position: absolute;
-  width: calc(100vw - 250px);
   right: 0;
   height: calc(100vh - 91px);
   bottom: 0;
   overflow-y: scroll;
+  transition: width .5s ease-in-out;
+}
+
+.content.open {
+    width: calc(100vw - 150px);
+}
+
+.content.close {
+    width: 100vw;
 }

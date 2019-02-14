@@ -5,10 +5,10 @@ import logo from '../img/main_logo.png'
 class LogoHeader extends Component {
   render() {
     return (
-      <div className="logo-header">
+      <div className={this.props.visible + " logo-header"}>
         <img src={logo}></img>
       </div>
-    );
+    )
   }
 }
 
