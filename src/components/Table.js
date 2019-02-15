@@ -3,28 +3,30 @@ import '../css/Table.css';
 
 class Table extends Component {
   render() {
-    const headers = this.props.data[0]
     return (
       <div className="table-container">
-        <table className="table">
+        <table className="table header">
           <thead>
             <tr>
-              {headers.map((text, index) => {
-                return <th key={index}>{text}</th>
+              {this.props.data.headers.map((text, index) => {
+                return <th style={{"width": this.props.data.spacing[index]}} key={index}>{text}</th>
               })}
             </tr>
           </thead>
-          <tbody>
-            {this.props.data.map((row, index) => {
-              if (index != 0)
-              return (<tr key={index}>
-                {row.map((text, index) => {
-                  return <td key={index}>{text}</td>
-                })}
-              </tr>)
-            })}
-          </tbody>
         </table>
+        <div className="table-body-container">
+          <table className="table body">
+            <tbody>
+              {this.props.data.data.map((row, index) => {
+                return (<tr key={index}>
+                  {row.map((text, index) => {
+                    return <td style={{"width": this.props.data.spacing[index]}} key={index}>{text}</td>
+                  })}
+                </tr>)
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }

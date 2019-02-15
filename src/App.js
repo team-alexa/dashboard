@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
+import { Route, BrowserRouter as Router } from 'react-router-dom'
 import LoginScreen from './components/LoginScreen'
 import MainApp from './components/MainApp'
+import {DataProvider} from './Store'
 
 class App extends Component {
   render() {
     return (
       <Router>
-        <div>
+        <DataProvider>
           <Route
             path="/"
             exact
@@ -16,7 +17,7 @@ class App extends Component {
           />
           <Route exact path="/:page" component={MainApp} />
           <Route path="/login" component={LoginScreen} />
-        </div>
+        </DataProvider>
       </Router>
     );
   }

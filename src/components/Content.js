@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Home from './Home'
+import {DataConsumer} from '../Store'
 import '../css/Content.css';
 
 const components = {
@@ -10,11 +11,14 @@ const components = {
 
 class Content extends Component {
   render() {
-    console.log(this.props)
     return (
-      <div className={this.props.visible+" content"}>
-        {components[this.props.page]}
-      </div>
+      <DataConsumer>
+        {store =>
+          <div className={store.sidebarClass+" content"}>
+            {components[store.page]}
+          </div>
+        }
+      </DataConsumer>
     );
   }
 }
