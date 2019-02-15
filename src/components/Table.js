@@ -3,7 +3,7 @@ import '../css/Table.css';
 
 class Table extends Component {
   render() {
-    const headers = this.props.data.shift()
+    const headers = this.props.data[0]
     return (
       <div className="table-container">
         <table className="table">
@@ -16,6 +16,7 @@ class Table extends Component {
           </thead>
           <tbody>
             {this.props.data.map((row, index) => {
+              if (index != 0)
               return (<tr key={index}>
                 {row.map((text, index) => {
                   return <td key={index}>{text}</td>

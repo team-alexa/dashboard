@@ -10,6 +10,7 @@ class App extends Component {
         <div>
           <Route
             path="/"
+            exact
             render={(props) => <MainApp {...props}
             match={{params: {page: 'home'}}} />}
           />

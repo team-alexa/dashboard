@@ -28,7 +28,10 @@ class MainApp extends Component {
     console.log(this.props)
     return (
       <div className="app">
-        <Sidebar visible={this.state.sidebarVisible} toggleSide={this.toggleSidebar}/>
+        <Sidebar
+          visible={this.state.sidebarVisible}
+          toggleSide={this.toggleSidebar}
+          page={this.props.match.params.page}/>
         <LogoHeader visible={this.state.sidebarVisible}/>
         <Content visible={this.state.sidebarVisible} page={this.props.match.params.page}/>
       </div>
