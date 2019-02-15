@@ -10,7 +10,7 @@ class Sidebar extends Component {
       <DataConsumer>
         {store =>
           <div className={store.sidebarClass + " sidebar"}>
-            <h1> Hello, <br/> Megan! </h1>
+            <h1> Hello, <br/><span>{store.currentUser}</span></h1>
             <button className="toggle-sidebar-button" onClick={store.toggleSidebar}>&#9776;</button>
             <SidebarButton name="Home" link="" active={store.page == "home"}/>
             <SidebarButton name="Students" link="students" active={store.page == "students"}/>

@@ -20,6 +20,11 @@
     font-size: 24pt;
     color: white;
     margin-right: 10px;
+    font-weight: 100;
+}
+
+.sidebar h1 span {
+    font-weight: 500;
 }
 
 .sidebar-button{
