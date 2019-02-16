@@ -14,3 +14,7 @@
 .content.close {
     width: 100vw;
 }
+
+.content-page {
+  padding: 10px 30px;
+}
