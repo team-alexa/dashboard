@@ -1,9 +1,11 @@
 import React from 'react'
 
 const Context = React.createContext("")
-const studentData = {
+const studentTableData = {
+  width: "100%",
+  height: "400px",
   headers: ["Date", "Student", "Teacher", "Category", "Details"],
-  spacing: ["10%", "20%", "20%", "10%", "40%"],
+  columnWidths: ["10%", "20%", "20%", "10%", "40%"],
   data: [["2/14/19", "Jon Snow", "Sophia Hills", "Food", "Jon ate 1 slice of watermelon, a cup of milk, and a ham and cheese sandwich."],
   ["2/14/19", "Princess Consuela BananaHammock", "Jack Baker", "Anecdotal", "Details"],
   ["2/14/19", "Katie Clark", "Emma Jones", "Sleep", "Details"],
@@ -30,14 +32,21 @@ class DataProvider extends React.Component {
     this.setPage = this.setPage.bind(this)
 
     this.state = {
-      studentData: studentData,
+      studentTableData,
       page: "home",
-      currentUser: "Megan",
+      currentUser: "Mitchell",
       sidebarClass: "open",
+      dateTime: new Date(),
 
       toggleSidebar: this.toggleSidebar,
       setPage: this.setPage
     }
+  }
+
+  componentDidMount() {
+    setInterval(() => {
+      this.setState({dateTime: new Date()})
+    }, 1000)
   }
 
   toggleSidebar() {

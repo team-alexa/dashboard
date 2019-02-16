@@ -7,10 +7,10 @@ class Home extends Component {
   render() {
     return (
       <DataConsumer>
-        {data => 
+        {store => 
           <div className="home">
             <h2>Recent Activity</h2>
-            <Table data={data.studentData} />
+            <Table data={store.studentTableData} />
             <h2>Your Students</h2>
           </div>
         }

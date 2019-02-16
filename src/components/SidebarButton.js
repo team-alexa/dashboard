@@ -7,11 +7,8 @@ class SidebarButton extends Component {
         super(props);
     }
     render() {
-        console.log(this.props)
       return (
-          
-            <Link className={this.props.active ? "sidebar-button selected" : "sidebar-button"} to={"/" + this.props.link}>{this.props.name}</Link>
-          
+        <Link className={this.props.active ? "sidebar-button selected" : "sidebar-button"} to={"/" + this.props.link}>{this.props.name}</Link>
       );
   }
 }
