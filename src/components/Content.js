@@ -13,9 +13,13 @@ const components = {
 class Content extends Component {
   render() {
     return (
-      <div className={this.props.visible+" content"}>
-        <p>Some Info</p>
-      </div>
+      <DataConsumer>
+        {store =>
+          <div className={store.sidebarClass+" content"}>
+            {components[store.page]}
+          </div>
+        }
+      </DataConsumer>
     );
   }
 }

@@ -8,7 +8,7 @@
 }
 
 .content.open {
-    width: calc(100vw - 150px);
+    width: calc(100vw - 250px);
 }
 
 .content.close {

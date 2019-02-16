@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import '../css/LogoHeader.css';
 import logo from '../img/main_logo.png'
+import {DataConsumer} from '../Store'
 
 class LogoHeader extends Component {
   render() {
     return (
-      <div className={this.props.visible + " logo-header"}>
-        <img src={logo}></img>
-      </div>
+      <DataConsumer>
+        {store =>
+          <div className={store.sidebarClass + " logo-header"}>
+            <img src={logo}></img>
+          </div>
+        }
+      </DataConsumer>
     )
   }
 }

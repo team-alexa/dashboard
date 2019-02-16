@@ -1,6 +1,6 @@
 .sidebar {
   background-color: rgb(0, 159, 194);
-  width: 150px;
+  width: 250px;
   height: 100vh;
   position: fixed;
   transition: margin-left .5s ease-in-out;
@@ -12,12 +12,23 @@
 }
 
 .sidebar.close {
-  margin-left: -150px;
+  margin-left: -250px;
+}
+
+.sidebar h1 {
+    text-align: right;
+    font-size: 24pt;
+    color: white;
+    margin-right: 10px;
+    font-weight: 100;
+}
+
+.sidebar h1 span {
+    font-weight: 500;
 }
 
 .sidebar-button{
     display:block;
-    width: 150px;
     background-color: rgb(0, 159, 194);
     border-style: solid;
     border-color: rgb(0, 141, 173);
@@ -26,8 +37,8 @@
     padding: 6.5px 0px;
     color:white;
     text-decoration: none;
-    font-size: 10pt;
-    
+    font-size: 14pt;
+    width: 100%
 }
 
 .sidebar-button:visited{
@@ -52,18 +63,24 @@
 .sidebar-button.selected{
     background-color: white;
     color: rgb(0, 159, 194);
-    border-left: #7bc241 solid 5px;
-    width:145px;
+    border-left: #7bc241 solid 7px;
+    width:243px;
 }
 
 .toggle-sidebar-button{
     position:absolute;
-    left:160px;
+    left:260px;
     top:10px;
     font-size: 14pt;
     color:#aaa;
     border:1px solid #ccc;
     border-radius: 5px;
-    background-color: transparent;    
+    background-color: transparent;
+    padding: 2px 10px 4px;
+    outline: none;
+    cursor: pointer;
 }
 
+.toggle-sidebar-button:active {
+    background-color: rgb(230, 230, 230);
+}

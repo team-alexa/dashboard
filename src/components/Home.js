@@ -7,7 +7,7 @@ class Home extends Component {
   render() {
     return (
       <DataConsumer>
-        {store => 
+        {store =>
           <div className="home content-page">
             <h2>Recent Activity</h2>
             <Table data={store.recentActivities} />
