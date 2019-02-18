@@ -1,12 +1,24 @@
 import React, { Component } from 'react';
+import Home from './Home'
+import {DataConsumer} from '../Store'
 import '../css/Content.css';
+
+const components = {
+  "": <Home />,
+  "home": <Home />,
+  "profile": <Home />
+}
 
 class Content extends Component {
   render() {
     return (
-      <div className={this.props.visible+" content"}>
-        <p>Some Info</p>
-      </div>
+      <DataConsumer>
+        {store =>
+          <div className={store.sidebarClass+" content"}>
+            {components[store.page]}
+          </div>
+        }
+      </DataConsumer>
     );
   }
 }
