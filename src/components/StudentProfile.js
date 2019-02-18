@@ -10,6 +10,10 @@ class StudentProfile extends Component{
         return (
             
           <div className={this.props.visible+" studentProfile"} >
+            <div className = {this.props.visible+" buttonGroup"}>
+             <button type="button"  className ={this.props.visible+" buttonNewLog"} >New Log</button> 
+             <button type="button" className ={this.props.visible+" buttonSave"}  >Save</button> 
+             </div>
             Name:<input type="text" className ={this.props.visible+" input"} placeholder="Last Name" size ="32"  name="lname"/>
            <input type="text" className ={this.props.visible+" input"} placeholder="First Name" size ="32" name="fname"/><br/>
             ID: <input type="text" className ={this.props.visible+" input"} placeholder="1234" size = "3"name="ID"/><br/>
@@ -21,6 +25,7 @@ class StudentProfile extends Component{
             Medical Allergies (Separated by ','):<input type="text" className ={this.props.visible+" input"} size = "64" /><br/>
             <p>Teacher: Mukul Goyal </p>
             <p>Logs:</p>
+          
           </div>
         );
       }
