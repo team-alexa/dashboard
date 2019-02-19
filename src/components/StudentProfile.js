@@ -8,24 +8,28 @@ class StudentProfile extends Component{
     
     render() {
         return (
-            
-          <div className={this.props.visible+" studentProfile"} >
-            <div className = {this.props.visible+" buttonGroup"}>
-             <button type="button"  className ={this.props.visible+" buttonNewLog"} >New Log</button> 
-             <button type="button" className ={this.props.visible+" buttonSave"}  >Save</button> 
-             </div>
-            Name:<input type="text" className ={this.props.visible+" input"} placeholder="Last Name" size ="32"  name="lname"/>
-           <input type="text" className ={this.props.visible+" input"} placeholder="First Name" size ="32" name="fname"/><br/>
-            ID: <input type="text" className ={this.props.visible+" input"} placeholder="1234" size = "3"name="ID"/><br/>
+          <div className="student-profile" >
+
+            <div className="button-group">
+              <button type="button">New Log</button> 
+              <button type="button">Save</button> 
+            </div>
+            <label htmlFor="lname">Name:</label> <input type="text" placeholder="Last Name" size ="32"  name="lname" id="lname"/>
+            <input type="text" placeholder="First Name" size ="32" name="fname"/>
+            <br/>
+            <label htmlFor="id">ID:</label> <input type="text" placeholder={this.props.id} size = "3" name="id" id="id"/>
+            <br/>
             <p>Age: 2 </p>
-             DOB (MM/DD/YYYY):<input type="text" className ={this.props.visible+" input"} size = "1" maxLength="2" placeholder ="01" name="month"/>
-            /<input type="text" className ={this.props.visible+" input"} size = "1" maxLength="2" placeholder ="01" name="day"/>
-            /<input type="text" className ={this.props.visible+" input"} size = "2" maxLength="4" placeholder ="2017" name="year"/><br/> 
-            Food Allergies (Separated by ','):<input type="text" className ={this.props.visible+" input"} size = "64" /><br/>
-            Medical Allergies (Separated by ','):<input type="text" className ={this.props.visible+" input"} size = "64" /><br/>
+            <label htmlFor="month">DOB (MM/DD/YYYY):</label> <input type="text" size = "1" maxLength="2" placeholder ="01" name="month" id="month"/>
+            /<input type="text" size = "1" maxLength="2" placeholder ="01" name="day"/>
+            /<input type="text" size = "2" maxLength="4" placeholder ="2017" name="year"/>
+            <br/>
+            <label htmlFor="food">Food Allergies (comma-separated):</label> <input type="text" size = "64" id="food" />
+            <br/>
+            <label htmlFor="medical">Medical Allergies (comma-separated):</label> <input type="text" size = "64" id="medical" />
+            <br/>
             <p>Teacher: Mukul Goyal </p>
             <p>Logs:</p>
-          
           </div>
         );
       }
