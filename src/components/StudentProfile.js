@@ -14,6 +14,7 @@ class StudentProfile extends Component{
               <button type="button">New Log</button> 
               <button type="button">Save</button> 
             </div>
+            <h1>Last Name, First Name</h1>
             <label htmlFor="lname">Name:</label> <input type="text" placeholder="Last Name" size ="32"  name="lname" id="lname"/>
             <input type="text" placeholder="First Name" size ="32" name="fname"/>
             <br/>
