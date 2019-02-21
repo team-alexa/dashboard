@@ -1,12 +1,16 @@
-.students .header {
+.search-page {
+  height: 100%;
+}
+
+.search-page .header {
   height: 75px;
 }
 
-.students .header h2 {
+.search-page .header h2 {
   float: left;
 }
 
-.students .header input[type="text"] {
+.search-page .header input[type="text"] {
   float: right;
   margin-top: 25px;
   width: 200px;
@@ -20,12 +24,12 @@
   outline: none;
 }
 
-.students .header button[type="submit"] {
+.search-page .header button[type="submit"] {
   float: right;
   margin-left: 5px;
   background-color: rgb(0, 159, 194);
-  padding: 9px 20px;
-  font-size: 15px;
+  padding: 0px 20px 4px;
+  font-size: 25px;
   color: white;
   border-radius: 4px;
   margin-top: 25px;
@@ -34,9 +38,9 @@
   cursor: pointer;
 }
 
-.students .header button[type="submit"]:hover {
+.search-page .header button[type="submit"]:hover {
   color: rgb(0, 159, 194);
   background-color: white;
-  padding: 8px 19px;
+  padding: 0px 19px 3px;
   border: 1px solid rgb(0, 159, 194);
 }

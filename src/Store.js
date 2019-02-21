@@ -21,15 +21,8 @@ const recentActivities = {
   ["2/12/19", "Jake Ainsworth", "Jon Snow", "Food", "Details"],
   ["2/12/19", "Hannah Patel", "Hannah Patel", "Sleep", "Details"],
   ["2/12/19", "Collin Zafar", "Isabella Trott", "Needs", "Details"],
-  ["2/12/19", "Cameron Frank", "Cameron Frank", "Sleep", "Details"]]
-}
-
-const students = {
-  width: "100%",
-  height: "500px",
-  headers: ["Date", "Student", "Teacher", "Category", "Details"],
-  columnWidths: ["10%", "20%", "20%", "10%", "40%"],
-  data: [["2/14/19", "Jon Snow", "Sophia Hills", "Food", "Jon ate 1 slice of watermelon, a cup of milk, and a ham and cheese sandwich."],
+  ["2/12/19", "Cameron Frank", "Cameron Frank", "Sleep", "Details"],
+  ["2/14/19", "Jon Snow", "Sophia Hills", "Food", "Jon ate 1 slice of watermelon, a cup of milk, and a ham and cheese sandwich."],
   ["2/14/19", "Princess Consuela BananaHammock", "Jack Baker", "Anecdotal", "Details"],
   ["2/14/19", "Katie Clark", "Emma Jones", "Sleep", "Details"],
   ["2/14/19", "Jack Baker", "Fred Barthel", "Sleep", "Details"],
@@ -45,6 +38,43 @@ const students = {
   ["2/12/19", "Hannah Patel", "Hannah Patel", "Sleep", "Details"],
   ["2/12/19", "Collin Zafar", "Isabella Trott", "Needs", "Details"],
   ["2/12/19", "Cameron Frank", "Cameron Frank", "Sleep", "Details"]]
+}
+
+const students = {
+  width: "100%",
+  height: "80%",
+  headers: ["First Name", "Last Name", "Teacher", "Age", "Allergies"],
+  columnWidths: ["10%", "20%", "20%", "10%", "40%"],
+  data: [["Jon", "Snow", "Sophia Hills", "3", "N/A"],
+    ["Katie", "Clark", "Emma Jones", "2", "N/A"],
+    ["Jack", "Baker", "Fred Barthel", "1", "Peanuts and fish"],
+    ["Emma", "Jones", "Nathan Irwin", "3", "N/A"],
+    ["Sophia", "Hills", "Abby Johnson", "3", "N/A"],
+    ["Nathan", "Irwin", "Trish White", "3", "N/A"],
+    ["Megan", "Waterworth", "Steven Kitscha", "3", "N/A"],
+    ["Steven", "Kitscha", "Katie Clark", "3", "N/A"],
+    ["Fred", "Barthel", "Collin Zafar", "3", "N/A"],
+    ["Isabella", "Trott", "Megan Waterworth", "3", "N/A"],
+    ["Trish", "White", "Jake Ainsworth", "3", "N/A"],
+    ["Jake", "Ainsworth", "Jon Snow", "3", "N/A"],
+    ["Hannah", "Patel", "Hannah Patel", "3", "N/A"],
+    ["Collin", "Zafar", "Isabella Trott", "3", "N/A"],
+    ["Cameron", "Frank", "Cameron Frank", "3", "N/A"],
+    ["Jon", "Snow", "Sophia Hills", "3", "N/A"],
+    ["Katie", "Clark", "Emma Jones", "2", "N/A"],
+    ["Jack", "Baker", "Fred Barthel", "1", "Peanuts and fish"],
+    ["Emma", "Jones", "Nathan Irwin", "3", "N/A"],
+    ["Sophia", "Hills", "Abby Johnson", "3", "N/A"],
+    ["Nathan", "Irwin", "Trish White", "3", "N/A"],
+    ["Megan", "Waterworth", "Steven Kitscha", "3", "N/A"],
+    ["Steven", "Kitscha", "Katie Clark", "3", "N/A"],
+    ["Fred", "Barthel", "Collin Zafar", "3", "N/A"],
+    ["Isabella", "Trott", "Megan Waterworth", "3", "N/A"],
+    ["Trish", "White", "Jake Ainsworth", "3", "N/A"],
+    ["Jake", "Ainsworth", "Jon Snow", "3", "N/A"],
+    ["Hannah", "Patel", "Hannah Patel", "3", "N/A"],
+    ["Collin", "Zafar", "Isabella Trott", "3", "N/A"],
+    ["Cameron", "Frank", "Cameron Frank", "3", "N/A"]]
 }
 
 class DataProvider extends React.Component {

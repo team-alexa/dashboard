@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import Table from './Table';
 import {DataConsumer} from '../Store'
-import '../css/Students.css';
+import '../css/SearchPage.css';
 
-class Students extends Component {
+class SearchPage extends Component {
   render() {
     return (
       <DataConsumer>
         {store => 
-          <div className="students content-page">
+          <div className="search-page content-page">
             <div className="header">
-              <h2>Students</h2>
-              <button type="submit">></button>
+              <h2>{this.props.title}</h2>
+              <button type="submit">⮕</button>
               <input type="text" placeholder="Search"></input>
             </div>
-            <Table data={store.students} />
+            <Table data={this.props.tableData} />
           </div>
         }
       </DataConsumer>
@@ -22,4 +22,4 @@ class Students extends Component {
   }
 }
 
-export default Students;
+export default SearchPage;
