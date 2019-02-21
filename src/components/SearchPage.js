@@ -11,7 +11,7 @@ class SearchPage extends Component {
           <div className="search-page content-page">
             <div className="header">
               <h2>{this.props.title}</h2>
-              <button type="submit">⮕</button>
+              <button type="submit">→</button>
               <input type="text" placeholder="Search"></input>
             </div>
             <Table data={this.props.tableData} />
