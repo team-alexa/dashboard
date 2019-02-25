@@ -90,17 +90,10 @@ class DataProvider extends React.Component {
       page: "home",
       currentUser: "Mitchell",
       sidebarClass: "open",
-      dateTime: new Date(),
 
       toggleSidebar: this.toggleSidebar,
       setPage: this.setPage
     }
-  }
-
-  componentDidMount() {
-    setInterval(() => {
-      this.setState({dateTime: new Date()})
-    }, 1000)
   }
 
   toggleSidebar() {
