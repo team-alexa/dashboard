@@ -16,6 +16,7 @@ class App extends Component {
             match={{params: {page: 'home'}}} />}
           />
           <Route exact path="/:page" component={MainApp} />
+          <Route exact path="/:page/:id" component={MainApp} />
           <Route path="/login" component={LoginScreen} />
         </DataProvider>
       </Router>
