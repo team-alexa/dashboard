@@ -6,10 +6,6 @@ import StudentProfile from './StudentProfile'
 import {DataConsumer} from '../Store'
 import '../css/Content.css';
 
-const logs = {
-
-}
-
 const components = {
   "": <Home />,
   "home": <Home />,
