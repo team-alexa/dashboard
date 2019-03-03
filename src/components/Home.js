@@ -27,9 +27,7 @@ class Home extends Component {
             <Table data={store.recentActivities} />
             <h2>Your Students</h2>
             <div className="student-cards">
-              <DataConsumer>
-                {store => this.generateStudentCards(store)}
-              </DataConsumer>
+              {this.generateStudentCards(store)}
             </div>
           </div>
         }
