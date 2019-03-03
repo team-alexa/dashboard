@@ -8,7 +8,7 @@ class Home extends Component {
     return (
       <DataConsumer>
         {store => 
-          <div className="home">
+          <div className="home content-page">
             <h2>Recent Activity</h2>
             <Table data={store.studentTableData} />
             <h2>Your Students</h2>

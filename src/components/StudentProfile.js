@@ -35,14 +35,14 @@ class StudentProfile extends Component{
         return (
           <DataConsumer>
             {store =>
-                <div className="student-profile page" >
+                <div className="student-profile content-page" >
                 <div className="button-group">
                   <button type="button" className = "logButton">
                     <div className="text">New Log</div>
                   </button> 
                   <button type="button">Save</button> 
                 </div>
-                <h2>Last Name, First Name</h2>
+                <h2 className="name">Last Name, First Name</h2>
                 <br/>
                 <label htmlFor="lname">Name:</label> <input type="text" placeholder="Last Name" size ="32"  name="lname" id="lname"/>
                 <input type="text" placeholder="First Name" size ="32" name="fname"/>
@@ -59,7 +59,7 @@ class StudentProfile extends Component{
                 <label htmlFor="medical">Medical Allergies (comma-separated):</label> <input type="text" size = "64" id="medical" />
                 <br/>
                 <p>Teacher: Mukul Goyal </p>
-                <p>Logs:</p>
+                <h2>Logs</h2>
                 <Table data={singleStudentTableData} />
               </div>
               }
