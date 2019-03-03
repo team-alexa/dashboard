@@ -1,0 +1,9 @@
+.admin-page{
+  padding: 0px 30px 30px;
+}
+
+.admin-page .page-header {
+  border-bottom: 1px solid rgb(96, 104, 103);
+  padding: 0px 3px 3px;
+  display: inline-block;
+}

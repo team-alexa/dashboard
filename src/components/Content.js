@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Home from './Home'
 import SearchPage from './SearchPage'
+import AdminPage from './AdminPage'
 import StudentProfile from './StudentProfile'
 import {DataConsumer} from '../Store'
 import '../css/Content.css';
@@ -22,7 +23,7 @@ const components = {
 
     return <SearchPage title="Logs" tableData={tableData} />
   }}</DataConsumer>,
-  "profile": <Home />
+  "adminpanel": <AdminPage />
 }
 
 const componentsWithIds = {
