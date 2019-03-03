@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Home from './Home'
+import AdminPage from './AdminPage'
 import StudentProfile from './StudentProfile'
 import {DataConsumer} from '../Store'
 import '../css/Content.css';
@@ -8,6 +9,7 @@ const components = {
   "": <Home />,
   "home": <Home />,
   "profile": <Home />,
+  "adminpanel": <AdminPage />,
   "students": <Home />
 }
 
