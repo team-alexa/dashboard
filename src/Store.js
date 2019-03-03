@@ -30,16 +30,19 @@ class DataProvider extends React.Component {
 
     this.toggleSidebar = this.toggleSidebar.bind(this)
     this.setPage = this.setPage.bind(this)
+    this.setPageId = this.setPageId.bind(this)
 
     this.state = {
       studentTableData,
       page: "home",
+      pageId: "",
       currentUser: "Mitchell",
       sidebarClass: "open",
       dateTime: new Date(),
 
       toggleSidebar: this.toggleSidebar,
-      setPage: this.setPage
+      setPage: this.setPage,
+      setPageId: this.setPageId
     }
   }
 
@@ -60,6 +63,11 @@ class DataProvider extends React.Component {
   setPage(page) {
     if (this.state.page != page)
       this.setState({page})
+  }
+
+  setPageId(pageId) {
+    if (this.state.pageId != pageId)
+      this.setState({pageId})
   }
 
   render() {

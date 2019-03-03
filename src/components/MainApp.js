@@ -15,6 +15,7 @@ class MainApp extends Component {
       <DataConsumer>
         {store => {
           store.setPage(this.props.match.params.page)
+          store.setPageId(this.props.match.params.id)
           return(
             <div className="app">
               <Sidebar/>

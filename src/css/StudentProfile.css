@@ -1,0 +1,59 @@
+.student-profile .name {
+  border-bottom: 1px solid rgb(96, 104, 103);
+  padding: 0px 3px 3px;
+  display: inline-block;
+}
+
+.button-group {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  display: block;
+}
+
+.button-group button {
+  color: white;
+  background-color: rgb(0, 159, 194);
+  border: none;
+  margin: 8px 0px;
+  height: 45px;
+  width: 150px;
+  border: 2px solid rgb(0, 159, 194);
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  font-size: 16px;
+  font-family: "Open Sans", sans-serif;
+}
+
+.button-group button:hover {
+  color: rgb(0, 159, 194);
+  background-color: white;
+}
+.button-group .logButton .text{
+  display: inline;
+  
+}
+.button-group .icon{
+  display: inline;
+  font-size: 30px;
+}
+
+input[type="text"] {
+  padding: 10px;
+  margin: 6px;
+  border: 1px solid rgb(201, 201, 201);
+  border-radius: 4px;     
+  outline: none;
+}
+
+input[type="text"]:focus {
+  border-color:rgb(0, 159, 194);
+  box-shadow: 0 0 8px 0 rgb(0, 159, 194);
+}
+
