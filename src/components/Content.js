@@ -9,7 +9,7 @@ const components = {
   "": <Home />,
   "home": <Home />,
   "profile": <Home />,
-  "adminpanel": <AdminPage />
+  "adminpanel": <AdminPage />,
   "students": <Home />
 }
 

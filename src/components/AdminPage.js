@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import '../css/AdminPage.css';
-import {DataConsumer} from '../Store'
 import Table from './Table';
 
 const teacherTempTableData = {
@@ -28,15 +27,11 @@ class AdminPage extends Component{
     
     render() {
         return(
-            <DataConsumer>
-            {store =>
-                <div className="admin-page page">
-                    <h2 class="header1">{store.currentUser}</h2>
-                    <h2 class="sub-header">Teachers</h2>
-                    <Table data={teacherTempTableData}/>
-                </div>
-            }
-            </DataConsumer>
+            <div className="admin-page page">
+                <h2 class="page-header">Admin Panel</h2>
+                <h2>Teachers</h2>
+                <Table data={teacherTempTableData}/>
+            </div>
         );
     }
 }
