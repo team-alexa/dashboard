@@ -5,6 +5,7 @@
   position: fixed;
   transition: margin-left .5s ease-in-out;
   border-right: 1px solid lightgray;
+  z-index: 2;
 }
 
 .sidebar.open {
