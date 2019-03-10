@@ -35,7 +35,7 @@ export default {
   ],
   logs: [
     ["2/14/19", "Jon Snow", "Sophia Hills", "Food", "Jon ate 1 slice of watermelon, a cup of milk, and a ham and cheese sandwich.", "log1"],
-    ["2/14/19", "Princess Consuela BananaHammock", "Jack Baker", "Anecdotal", "Details", "log2"],
+    ["2/14/19", "This Is A Relly Long Full Name", "Jack Baker", "Anecdotal", "Details", "log2"],
     ["2/14/19", "Katie Clark", "Emma Jones", "Sleep", "Details", "log3"],
     ["2/14/19", "Jack Baker", "Fred Barthel", "Sleep", "Details", "log4"],
     ["2/14/19", "Emma Jones", "Nathan Irwin", "Activity", "Details", "log5"],
@@ -51,7 +51,7 @@ export default {
     ["2/12/19", "Collin Zafar", "Isabella Trott", "Needs", "Details", "log15"],
     ["2/12/19", "Cameron Frank", "Cameron Frank", "Sleep", "Details", "log16"],
     ["2/14/19", "Jon Snow", "Sophia Hills", "Food", "Jon ate 1 slice of watermelon, a cup of milk, and a ham and cheese sandwich.", "log17"],
-    ["2/14/19", "Princess Consuela BananaHammock", "Jack Baker", "Anecdotal", "Details", "log18"],
+    ["2/14/19", "This Is A Relly Long Full Name", "Jack Baker", "Anecdotal", "Details", "log18"],
     ["2/14/19", "Katie Clark", "Emma Jones", "Sleep", "Details", "log19"],
     ["2/14/19", "Jack Baker", "Fred Barthel", "Sleep", "Details", "log20"],
     ["2/14/19", "Emma Jones", "Nathan Irwin", "Activity", "Details", "log21"],
