@@ -117,7 +117,7 @@ class StudentProfile extends Component{
                   possibleValues={this.getAllTeacherNames()}
                   onClick={this.loadTeachers}/>
                 <br/>
-                <h2>Logs</h2>
+                <h2>{`${this.state.fullName}'s Logs`}</h2>
                 <Table data={singleStudentTableData}
                   width="100%"
                   height="400px"
