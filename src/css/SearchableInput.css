@@ -1,0 +1,83 @@
+.searchable-input {
+  display: flex;
+  margin-top: 6px;
+}
+
+.searchable-input .label {
+  margin: 10px 5px 0 0;
+}
+
+.searchable-input .main {
+  padding: 5px;
+  display: flex;
+  border: 1px solid rgb(201, 201, 201);
+  border-radius: 5px;
+  width: 400px;
+  overflow: hidden;
+  min-height: 30px;
+}
+
+.searchable-input .chip {
+  display: flex;
+  background-color: #7bc241;
+  border-radius: 4px;
+  padding: 2px;
+  margin-right: 3px;
+}
+
+.searchable-input .chip p {
+  margin: 0;
+  padding: 2px;
+  color: white;
+}
+
+.searchable-input .chip p:last-of-type {
+  margin-left: 5px;
+}
+
+.searchable-input .chip p:last-of-type:hover {
+  color: rgb(228, 78, 78);
+  cursor: pointer;
+}
+
+.searchable-input input[type="text"] {
+  border: none;
+  padding: 0;
+  font-size: 16px;
+  outline: none;
+  margin: 0 5px;
+}
+
+.searchable-input input[type="text"]:focus {
+  box-shadow: none;
+}
+
+.searchable-input .possible-values {
+  position: absolute;
+  margin-top: 36px;
+  padding: 0;
+  background-color: white;
+  border: 1px solid grey;
+  border-top: 0;
+  width: 200px;
+  max-height: 400px;
+  z-index: 5;
+  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.089);
+}
+
+.searchable-input .possible-values li {
+  list-style: none;
+  padding: 7px;
+  border-bottom: 1px solid rgb(209, 209, 209);
+  color: rgb(75, 75, 75);
+}
+
+.searchable-input .possible-values li:hover {
+  cursor: pointer;
+  background-color: #7bc241;
+  color: white;
+}
+
+.searchable-input .possible-values li:last-of-type {
+  border-bottom: 0;
+}
