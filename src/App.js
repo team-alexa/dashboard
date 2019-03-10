@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, BrowserRouter as Router } from 'react-router-dom'
-import LoginScreen from './components/LoginScreen'
-import MainApp from './components/MainApp'
+import Login from './components/Login'
+import Dashboard from './components/Dashboard'
 import {DataProvider} from './Store'
 
 class App extends Component {
@@ -12,12 +12,12 @@ class App extends Component {
           <Route
             path="/"
             exact
-            render={(props) => <MainApp {...props}
+            render={(props) => <Dashboard {...props}
             match={{params: {page: 'home'}}} />}
           />
-          <Route exact path="/:page" component={MainApp} />
-          <Route exact path="/:page/:id" component={MainApp} />
-          <Route path="/login" component={LoginScreen} />
+          <Route exact path="/:page" component={Dashboard} />
+          <Route exact path="/:page/:id" component={Dashboard} />
+          <Route path="/login" component={Login} />
         </DataProvider>
       </Router>
     );

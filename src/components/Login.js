@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import '../css/LoginScreen.css';
+import '../css/Login.css';
 
-class LoginScreen extends Component {
+class Login extends Component {
   render() {
     return (
       <div className="login-screen">
@@ -11,4 +11,4 @@ class LoginScreen extends Component {
   }
 }
 
-export default LoginScreen;
+export default Login;

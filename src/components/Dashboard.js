@@ -3,9 +3,9 @@ import Sidebar from './Sidebar';
 import LogoHeader from './LogoHeader';
 import Content from './Content';
 import {DataConsumer} from '../Store';
-import '../css/MainApp.css';
+import '../css/Dashboard.css';
 
-class MainApp extends Component {
+class Dashboard extends Component {
   constructor(props) {
     super(props)
   }
@@ -16,7 +16,8 @@ class MainApp extends Component {
         {store => {
           store.setPage(this.props.match.params.page)
           store.setPageId(this.props.match.params.id)
-          return(
+          if (store.page == "login") return;
+          else return (
             <div className="app">
               <Sidebar/>
               <LogoHeader/>
@@ -29,4 +30,4 @@ class MainApp extends Component {
   }
 }
 
-export default MainApp;
+export default Dashboard;
