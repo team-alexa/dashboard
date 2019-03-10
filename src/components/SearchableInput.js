@@ -47,14 +47,6 @@ class SearchableInput extends Component {
     this.setState({values, inputValue: ""});
   }
 
-  calculateInputSize() {
-    var count = 0
-    this.state.values.forEach(value => {
-      count += value.length + 3
-    })
-    return 50 - count;
-  }
-
   render() {
     return (
       <div className="searchable-input">
@@ -72,8 +64,7 @@ class SearchableInput extends Component {
             <input type="text"
               placeholder={this.props.placeholder}
               value={this.state.inputValue}
-              onChange={this.onChange}
-              size={this.calculateInputSize()}>
+              onChange={this.onChange}>
             </input> :
             null
           }

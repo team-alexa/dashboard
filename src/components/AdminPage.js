@@ -3,15 +3,15 @@ import '../css/AdminPage.css';
 import Table from './Table';
 
 const teacherTempTableData = [
-    ["Megan Waterworth", "Yes"],
-    ["Fred Barthel", "Yes"],
-    ["Jake Ainsworth", "Yes"],
-    ["Mitchell Kossoris", "Yes"],
-    ["Steven Kitscha", "Yes"],
-    ["Bob Bobson", "No"],
-    ["Person Personello", "No"],
-    ["Jimmy Smith", "No"],
-    ["Hey You", "No"]
+    ["Megan Waterworth", "Yes", "meganwaterworth"],
+    ["Fred Barthel", "Yes", "fredbarthel"],
+    ["Jake Ainsworth", "Yes", "jakeainsworth"],
+    ["Mitchell Kossoris", "Yes", "mitchellkossoris"],
+    ["Steven Kitscha", "Yes", "stevenkitscha"],
+    ["Bob Bobson", "No", "bobbobson"],
+    ["Person Personello", "No", "personpersonello"],
+    ["Jimmy Smith", "No", "jimmysmith"],
+    ["Hey You", "No", "heyyou"]
 ]
 
 class AdminPage extends Component{

@@ -58,8 +58,8 @@ class StudentProfile extends Component{
                 <SearchableInput
                   placeholder="Teacher"
                   label="Teacher: "
-                  limit={2}
-                  possibleValues={["Mitchell", "Megan", "Fred", "Hello world", "Fred", "Jake", "Steven", "Meegs", "Phteven"]}/>
+                  limit={1}
+                  possibleValues={["Mukul Goyal", "Mitchell Kossoris", "Megan Waterworth", "Marco Polo", "Maggie Mills", "Matt Heil", "Max Frommelt", "Fred Barthel", "Hello World", "Jake Ainsworth", "Steven Kitscha", "Meegs Mom", "Phteven Phitscha"]}/>
                 <br/>
                 <h2>Logs</h2>
                 <Table data={singleStudentTableData}
