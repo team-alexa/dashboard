@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Table from './Table';
 import StudentCard from './StudentCard'
 import {DataConsumer} from '../Store'
+import Constants from '../Constants'
 import '../css/Home.css';
 
 class Home extends Component {
@@ -9,9 +10,9 @@ class Home extends Component {
     super(props);
   }
 
-  generateStudentCards(store) {
+  generateStudentCards() {
     const cards = []
-    store.students.forEach(student => {
+    Constants.students.forEach(student => {
       cards.push(
         <StudentCard
           name={student[0] + " " + student[1]}
@@ -28,7 +29,7 @@ class Home extends Component {
         {store =>
           <div className="home content-page">
             <h2>Recent Activity</h2>
-            <Table data={store.recentActivities}
+            <Table data={Constants.logs}
               width="100%"
               height="400px"
               headers={["Date", "Student", "Teacher", "Category", "Details"]}

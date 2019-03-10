@@ -4,6 +4,7 @@ import SearchPage from './SearchPage'
 import AdminPage from './AdminPage'
 import StudentProfile from './StudentProfile'
 import {DataConsumer} from '../Store'
+import Constants from '../Constants'
 import '../css/Content.css';
 
 class Content extends Component {
@@ -21,7 +22,7 @@ class Content extends Component {
         case "": return <Home />
         case "home": return <Home />
         case "students": return <SearchPage title="Students"
-          table={{data: store.students,
+          table={{data: Constants.students,
             width: "100%",
             height: "80%",
             headers: ["First Name", "Last Name", "Teacher", "Age", "Allergies"],
@@ -30,7 +31,7 @@ class Content extends Component {
           } />
         case "logs": return <SearchPage title="Logs"
             table={{
-              data: store.recentActivities,
+              data: Constants.logs,
               width: "100%",
               height: "80%",
               headers: ["Date", "Student", "Teacher", "Category", "Details"],

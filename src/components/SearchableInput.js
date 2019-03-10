@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import '../css/SearchableInput.css';
 
 class SearchableInput extends Component {
@@ -8,9 +9,11 @@ class SearchableInput extends Component {
     this.onChange = this.onChange.bind(this);
 
     this.state = {
-      values: [],
+      values: props.values || [],
       inputValue: ""
     }
+
+    console.log(this.state)
   }
 
   onChange(e) {
@@ -47,9 +50,15 @@ class SearchableInput extends Component {
     this.setState({values, inputValue: ""});
   }
 
+  componentWillReceiveProps(props) {
+    if (props.values) {
+      this.setState({values: props.values})
+    }
+  }
+
   render() {
     return (
-      <div className="searchable-input">
+      <div className="searchable-input" onClick={this.props.onClick}>
         <p className="label">{this.props.label}</p>
         <div className="main">
           {this.state.values.map((value, index) => {
