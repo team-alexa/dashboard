@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import '../css/SearchableInput.css';
 
 class SearchableInput extends Component {
@@ -10,7 +9,8 @@ class SearchableInput extends Component {
 
     this.state = {
       values: props.values || [],
-      inputValue: ""
+      inputValue: "",
+      receivedVals: false
     }
 
     console.log(this.state)
@@ -51,8 +51,8 @@ class SearchableInput extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.values) {
-      this.setState({values: props.values})
+    if (props.values && !this.state.receivedVals) {
+      this.setState({values: props.values, receivedVals: true})
     }
   }
 

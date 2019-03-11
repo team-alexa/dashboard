@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../css/StudentProfile.css';
-import {DataConsumer} from '../Store'
+import {DataConsumer, Context} from '../Store'
 import Constants from '../Constants'
 
 import Table from './Table';
@@ -30,6 +30,7 @@ class StudentProfile extends Component{
       super(props)
 
       this.onChange = this.onChange.bind(this)
+      this.saveData = this.saveData.bind(this)
       this.getStudentTeacherName = this.getStudentTeacherName.bind(this)
 
       this.state = {
@@ -41,25 +42,41 @@ class StudentProfile extends Component{
         nickName: "",
         studentID: "",
         teacherID: "",
-        teachers: []
+        teachers: [],
+        hasChanged: false
       }
+
+      this.displayedMessage = false
     }
 
     componentDidMount() {
-      fetch(Constants.apiUrl + "students?studentID=" + this.props.id)
-        .then(response => response.json())
-        .then(data => {
-          if (data[0]) {
-            if (!data[0].nickName) data[0].nickName = data[0].firstName
-            this.setState(data[0])
-          }
-        })
-
+      if (this.context.pageId != "new") {
+        this.context.setContentLoading(true)
+        fetch(Constants.apiUrl + "students?studentID=" + this.props.id)
+          .then(response => response.json())
+          .then(data => {
+            if (data[0]) {
+              if (!data[0].nickName) data[0].nickName = data[0].firstName
+              this.setState(data[0])
+            } else {
+              if (!this.displayedMessage) {
+                this.context.setToastMessage("No Student Found", "red")
+                this.context.setToastDisplay(true)
+              }
+            }
+            this.context.setContentLoading(false)
+          })
+      }
       fetch(Constants.apiUrl + "teachers")
-        .then(response => response.json())
-        .then(data => {
-          this.setState({teachers: data})
-        })
+          .then(response => response.json())
+          .then(data => {
+            this.setState({teachers: data})
+          })
+    }
+
+    saveData() {
+      this.context.setToastMessage("Saved student data!", "green")
+      this.context.setToastDisplay(true)
     }
 
     getStudentTeacherName() {
@@ -75,7 +92,7 @@ class StudentProfile extends Component{
     }
 
     onChange(e) {
-      this.setState({[e.target.id]: e.target.value});
+      this.setState({[e.target.id]: e.target.value, hasChanged: true});
     }
     
     render() {
@@ -86,10 +103,11 @@ class StudentProfile extends Component{
             {store =>
                 <div className="student-profile content-page" >
                 <div className="button-group">
-                  <button type="button" className = "logButton">
-                    <div className="text">New Log</div>
-                  </button> 
-                  <button type="button">Save</button> 
+                  {store.pageId != "new" ?
+                    <button type="button" className = "log-button enabled">
+                      <div className="text">New Log</div>
+                    </button> : null }
+                  <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button> 
                 </div>
                 <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
                 <br/>
@@ -98,7 +116,7 @@ class StudentProfile extends Component{
                 <br/>
                 <label htmlFor="nickname">Nickname:</label> <input type="text" placeholder="Nickname" size="25" name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange}/>
                 <br />
-                <label htmlFor="id">ID:</label> <input type="text" size = "10" name="id" id="id" value={store.pageId} onChange={this.onChange}/>
+                <label htmlFor="id">ID:</label> <input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange}/>
                 <br/>
                 <p>Age: 2 </p>
                 <label htmlFor="month">DOB (MM/DD/YYYY):</label> <input type="text" size = "2" maxLength="2" placeholder ="01" name="month" id="month" value={birthDate.getMonth() || ""} />
@@ -115,23 +133,25 @@ class StudentProfile extends Component{
                   limit={1}
                   values={teacherName ? [teacherName] : null}
                   possibleValues={this.getAllTeacherNames()}
-                  onClick={this.loadTeachers}/>
-                <br/>
-                <h2>{`${this.state.fullName}'s Logs`}</h2>
-                <Table data={singleStudentTableData}
-                  width="100%"
-                  height="400px"
-                  headers={["Date", "Student", "Teacher", "Category", "Details"]}
-                  columnWidths={["10%", "20%", "20%", "10%", "40%"]}
-                  rootAddress="/logs/" />
+                  onClick={() => this.setState({hasChanged: true})}/>
+                {store.pageId != "new" ? <div>
+                  <br/>
+                  <h2>{this.state.fullName ? `${this.state.fullName}'s Logs` : "Logs"}</h2>
+                  <Table data={singleStudentTableData}
+                    width="100%"
+                    height="400px"
+                    headers={["Date", "Student", "Teacher", "Category", "Details"]}
+                    columnWidths={["10%", "20%", "20%", "10%", "40%"]}
+                    rootAddress="/logs/" />
+                  </div> : null
+                }
               </div>
               }
           </DataConsumer>
         );
       }
-
-
-
 }
+
+StudentProfile.contextType = Context
 
 export default StudentProfile

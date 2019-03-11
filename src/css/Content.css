@@ -18,3 +18,47 @@
 .content-page {
   padding: 10px 30px;
 }
+
+/* Toast Message Styles */
+.content .toast {
+  position: fixed;
+  padding: 7px 15px;
+  background: white;
+  box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.103);
+  transition: top .5s ease-in-out;
+}
+
+.content .toast h2 {
+  margin: 0;
+  font-size: 16px;
+  color: inherit;
+  float: left;
+  margin-right: 10px;
+}
+
+.content .toast span:hover {
+  cursor: pointer;
+}
+
+.content .toast.blue {
+  background-color: rgb(0, 159, 194);
+  color: white;
+}
+
+.content .toast.green {
+  background-color: #7bc241;
+  color: white;
+}
+
+.content .toast.red {
+  background-color: #ff491c;
+  color: white;
+}
+
+.content .toast.enabled {
+  top: 105px;
+}
+
+.content .toast.disabled {
+  top: 0px;
+}

@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
+import {DataConsumer} from '../Store'
+import '../css/Content.css';
+
 import Home from './Home'
-import SearchPage from './SearchPage'
 import AdminPage from './AdminPage'
 import StudentProfile from './StudentProfile'
-import {DataConsumer} from '../Store'
-import Constants from '../Constants'
-import '../css/Content.css';
+import Students from './Students'
+import Logs from './Logs'
+import Error from './Error'
 
 class Content extends Component {
   constructor(props) {
     super(props);
+
+    this.toastRef = React.createRef()
+    this.updated = false
+    this.state = {
+      toastLeft: "0px"
+    }
   }
 
   getComponent(store) {
@@ -21,32 +29,39 @@ class Content extends Component {
       switch(store.page) {
         case "": return <Home />
         case "home": return <Home />
-        case "students": return <SearchPage title="Students"
-          table={{data: Constants.students,
-            width: "100%",
-            height: "80%",
-            headers: ["First Name", "Last Name", "Teacher", "Age", "Allergies"],
-            columnWidths: ["15%", "15%", "30%", "10%", "40%"],
-            rootAddress: "/students/"}
-          } />
-        case "logs": return <SearchPage title="Logs"
-            table={{
-              data: Constants.logs,
-              width: "100%",
-              height: "80%",
-              headers: ["Date", "Student", "Teacher", "Category", "Details"],
-              columnWidths: ["10%", "20%", "20%", "10%", "40%"],
-              rootAddress: "/logs/"}
-            } />
+        case "students": return <Students />
+        case "logs": return <Logs />
         case "adminpanel": return <AdminPage />
+        default: return <Error />
       }
+    }
+  }
+
+  componentDidUpdate() {
+    if (!this.updated) {
+      var left = 215 // Sidebar offset
+      left -= this.toastRef.current.offsetWidth
+      this.updated = true
+      this.setState({toastLeft: `calc(50% + ${left}px)`})
+    } else {
+      this.updated = false
     }
   }
 
   render() {
     return (
       <DataConsumer>
-        {store => <div className={store.sidebarClass+" content"}>{this.getComponent(store)}</div>}
+        {store =>
+          <div className={store.sidebarClass + " content"}>
+            <div className={"toast " + (store.displayToastMessage ? "enabled " : "disabled ") + store.toastColor}
+              style={{left: this.state.toastLeft}}
+              ref={this.toastRef}>
+              <h2>{store.toastMessage}</h2>
+              <span onClick={() => store.setToastDisplay(false)}>x</span>
+            </div>
+            {this.getComponent(store)}
+          </div>
+        }
       </DataConsumer>
     );
   }

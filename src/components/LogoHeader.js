@@ -10,6 +10,7 @@ class LogoHeader extends Component {
         {store =>
           <div className={store.sidebarClass + " logo-header"}>
             <img src={logo}></img>
+            <div className={"loader " + (store.contentLoading ? "enabled" : "disabled")}></div>
           </div>
         }
       </DataConsumer>

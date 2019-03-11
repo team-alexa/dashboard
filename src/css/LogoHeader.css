@@ -3,8 +3,9 @@
   top: 0;
   right: 0;
   border-bottom: 1px solid rgb(201, 201, 201);
-  z-index: -1;
+  z-index: 1;
   transition: width .5s ease-in-out;
+  background: white;
 }
 
 .logo-header img {
@@ -20,4 +21,31 @@
 
 .logo-header.close {
     width: 100vw;
+}
+
+/* Loader Styles */
+
+.loader {
+  border: 6px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 6px solid #3498db;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 30px;
+  top: 23px;
+  animation: spin 1s linear infinite;
+}
+
+.loader.disabled {
+  display: none;
+}
+
+.loader.enabled {
+  display: block;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

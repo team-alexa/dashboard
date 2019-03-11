@@ -7,6 +7,9 @@ class DataProvider extends React.Component {
     super(props)
 
     this.toggleSidebar = this.toggleSidebar.bind(this)
+    this.setContentLoading = this.setContentLoading.bind(this)
+    this.setToastMessage = this.setToastMessage.bind(this)
+    this.setToastDisplay = this.setToastDisplay.bind(this)
     this.setPage = this.setPage.bind(this)
     this.setPageId = this.setPageId.bind(this)
 
@@ -15,8 +18,15 @@ class DataProvider extends React.Component {
       pageId: "",
       currentUser: "Mitchell",
       sidebarClass: "open",
+      contentLoading: false,
+      toastMessage: "",
+      toastColor: "red",
+      displayToastMessage: false,
 
       toggleSidebar: this.toggleSidebar,
+      setContentLoading: this.setContentLoading,
+      setToastMessage: this.setToastMessage,
+      setToastDisplay: this.setToastDisplay,
       setPage: this.setPage,
       setPageId: this.setPageId
     }
@@ -28,6 +38,18 @@ class DataProvider extends React.Component {
     } else{
       this.setState({sidebarClass: "close"})
     }
+  }
+
+  setToastMessage(toastMessage, toastColor) {
+    this.setState({toastMessage, toastColor})
+  }
+
+  setToastDisplay(state) {
+    this.setState({displayToastMessage: state})
+  }
+
+  setContentLoading(state) {
+    this.setState({contentLoading: state})
   }
 
   setPage(page) {
