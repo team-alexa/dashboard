@@ -81,11 +81,14 @@ class StudentProfile extends Component{
     } else {
       this.setState({editable: true})
     }
-    fetch(Constants.apiUrl + "teachers")
-        .then(response => response.json())
-        .then(data => {
-          this.setState({teachers: data})
-        })
+
+    if (this.context.teachers.length == 0) {
+      fetch(Constants.apiUrl + "teachers")
+          .then(response => response.json())
+          .then(data => {
+            this.context.setTeachers(data)
+          })
+    }
   }
 
   saveData() {
@@ -93,7 +96,7 @@ class StudentProfile extends Component{
   }
 
   getStudentTeacherName() {
-    var teacher = this.state.teachers.filter(teacher => {
+    var teacher = this.context.teachers.filter(teacher => {
       return teacher.teacherID == this.state.teacherID
     })
 
@@ -101,7 +104,7 @@ class StudentProfile extends Component{
   }
 
   getAllTeacherNames() {
-    return this.state.teachers.map(teacher => teacher.fullName)
+    return this.context.teachers.map(teacher => teacher.fullName)
   }
 
   onChange(e) {

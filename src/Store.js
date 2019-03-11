@@ -8,9 +8,10 @@ class DataProvider extends React.Component {
 
     this.toggleSidebar = this.toggleSidebar.bind(this)
     this.setContentLoading = this.setContentLoading.bind(this)
-    this.setToast = this.setToast.bind(this)
     this.setPage = this.setPage.bind(this)
     this.setPageId = this.setPageId.bind(this)
+    this.setTeachers = this.setTeachers.bind(this)
+    this.setToast = this.setToast.bind(this)
 
     this.state = {
       page: "home",
@@ -23,12 +24,14 @@ class DataProvider extends React.Component {
         color: "red",
         visible: false
       },
+      teachers: [],
 
       toggleSidebar: this.toggleSidebar,
       setContentLoading: this.setContentLoading,
-      setToast: this.setToast,
       setPage: this.setPage,
-      setPageId: this.setPageId
+      setPageId: this.setPageId,
+      setTeachers: this.setTeachers,
+      setToast: this.setToast,
     }
   }
 
@@ -38,15 +41,6 @@ class DataProvider extends React.Component {
     } else{
       this.setState({sidebarClass: "close"})
     }
-  }
-
-  setToast(params) {
-    const newToast = {
-      message: params.message || this.state.toast.message,
-      color: params.color || this.state.toast.color,
-      visible: params.visible != undefined ? params.visible : this.state.toast.visible
-    }
-    this.setState({toast: newToast})
   }
 
   setContentLoading(state) {
@@ -61,6 +55,19 @@ class DataProvider extends React.Component {
   setPageId(pageId) {
     if (this.state.pageId != pageId)
       this.setState({pageId})
+  }
+
+  setToast(params) {
+    const newToast = {
+      message: params.message || this.state.toast.message,
+      color: params.color || this.state.toast.color,
+      visible: params.visible != undefined ? params.visible : this.state.toast.visible
+    }
+    this.setState({toast: newToast})
+  }
+
+  setTeachers(teachers) {
+    this.setState({teachers})
   }
 
   render() {
