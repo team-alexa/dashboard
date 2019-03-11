@@ -8,8 +8,7 @@ class DataProvider extends React.Component {
 
     this.toggleSidebar = this.toggleSidebar.bind(this)
     this.setContentLoading = this.setContentLoading.bind(this)
-    this.setToastMessage = this.setToastMessage.bind(this)
-    this.setToastDisplay = this.setToastDisplay.bind(this)
+    this.setToast = this.setToast.bind(this)
     this.setPage = this.setPage.bind(this)
     this.setPageId = this.setPageId.bind(this)
 
@@ -19,14 +18,15 @@ class DataProvider extends React.Component {
       currentUser: "Mitchell",
       sidebarClass: "open",
       contentLoading: false,
-      toastMessage: "",
-      toastColor: "red",
-      displayToastMessage: false,
+      toast: {
+        message: "",
+        color: "red",
+        visible: false
+      },
 
       toggleSidebar: this.toggleSidebar,
       setContentLoading: this.setContentLoading,
-      setToastMessage: this.setToastMessage,
-      setToastDisplay: this.setToastDisplay,
+      setToast: this.setToast,
       setPage: this.setPage,
       setPageId: this.setPageId
     }
@@ -40,12 +40,13 @@ class DataProvider extends React.Component {
     }
   }
 
-  setToastMessage(toastMessage, toastColor) {
-    this.setState({toastMessage, toastColor})
-  }
-
-  setToastDisplay(state) {
-    this.setState({displayToastMessage: state})
+  setToast(params) {
+    const newToast = {
+      message: params.message || this.state.toast.message,
+      color: params.color || this.state.toast.color,
+      visible: params.visible != undefined ? params.visible : this.state.toast.visible
+    }
+    this.setState({toast: newToast})
   }
 
   setContentLoading(state) {

@@ -1,21 +1,18 @@
 import React, { Component } from 'react';
 import '../css/LogoHeader.css';
 import logo from '../img/main_logo.png'
-import {DataConsumer} from '../Store'
+import { Context } from '../Store'
 
 class LogoHeader extends Component {
   render() {
     return (
-      <DataConsumer>
-        {store =>
-          <div className={store.sidebarClass + " logo-header"}>
-            <img src={logo}></img>
-            <div className={"loader " + (store.contentLoading ? "enabled" : "disabled")}></div>
-          </div>
-        }
-      </DataConsumer>
+      <div className={this.context.sidebarClass + " logo-header"}>
+        <img src={logo}></img>
+        <div className={"loader " + (this.context.contentLoading ? "enabled" : "disabled")}></div>
+      </div>
     )
   }
 }
 
+LogoHeader.contextType = Context;
 export default LogoHeader;

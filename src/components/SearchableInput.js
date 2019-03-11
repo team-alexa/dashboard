@@ -12,8 +12,6 @@ class SearchableInput extends Component {
       inputValue: "",
       receivedVals: false
     }
-
-    console.log(this.state)
   }
 
   onChange(e) {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {DataConsumer} from '../Store'
+import {Context} from '../Store'
 import '../css/Content.css';
 
 import Home from './Home'
@@ -20,13 +20,13 @@ class Content extends Component {
     }
   }
 
-  getComponent(store) {
-    if (store.pageId) {
-      switch(store.page) {
-        case "students": return <StudentProfile id={store.pageId} />
+  getComponent() {
+    if (this.context.pageId) {
+      switch(this.context.page) {
+        case "students": return <StudentProfile id={this.context.pageId} />
       }
     } else {
-      switch(store.page) {
+      switch(this.context.page) {
         case "": return <Home />
         case "home": return <Home />
         case "students": return <Students />
@@ -39,32 +39,27 @@ class Content extends Component {
 
   componentDidUpdate() {
     if (!this.updated) {
-      var left = 215 // Sidebar offset
-      left -= this.toastRef.current.offsetWidth
-      this.updated = true
+      var left = 125 // accounting for sidebar offset and padding
+      left -= this.toastRef.current.offsetWidth/2
       this.setState({toastLeft: `calc(50% + ${left}px)`})
-    } else {
-      this.updated = false
     }
+    this.updated = !this.updated
   }
 
   render() {
     return (
-      <DataConsumer>
-        {store =>
-          <div className={store.sidebarClass + " content"}>
-            <div className={"toast " + (store.displayToastMessage ? "enabled " : "disabled ") + store.toastColor}
-              style={{left: this.state.toastLeft}}
-              ref={this.toastRef}>
-              <h2>{store.toastMessage}</h2>
-              <span onClick={() => store.setToastDisplay(false)}>x</span>
-            </div>
-            {this.getComponent(store)}
-          </div>
-        }
-      </DataConsumer>
+      <div className={this.context.sidebarClass + " content"}>
+        <div className={"toast " + (this.context.toast.visible ? "enabled " : "disabled ") + this.context.toast.color}
+          style={{left: this.state.toastLeft}}
+          ref={this.toastRef}>
+          <h2>{this.context.toast.message}</h2>
+          <span onClick={() => this.context.setToast({visible: false})}>x</span>
+        </div>
+        {this.getComponent()}
+      </div>
     );
   }
 }
 
+Content.contextType = Context;
 export default Content;

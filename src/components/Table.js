@@ -5,7 +5,6 @@ import '../css/Table.css';
 class Table extends Component {
   constructor(props) {
     super(props);
-    console.log(props)
   }
 
   navigateTo(path) {
