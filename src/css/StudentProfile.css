@@ -57,7 +57,7 @@
   font-size: 30px;
 }
 
-input[type="text"] {
+input[type="text"], input[type="number"] {
   padding: 10px;
   margin: 6px;
   border: 1px solid rgb(201, 201, 201);
