@@ -18,7 +18,7 @@ class Sidebar extends Component {
             <SidebarButton name="My Account" link="myaccount" active={store.page == "myaccount"}/>
             <SidebarButton name="Admin Panel" link="adminpanel" active={store.page == "adminpanel"}/>
             <SidebarButton name="Help" link="help" active={store.page == "help"}/>
-            <SidebarButton name="Log Out" link=""/>
+            <SidebarButton name="Log Out" link="login"/>
           </div>
         }
       </DataConsumer>

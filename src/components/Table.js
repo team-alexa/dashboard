@@ -1,15 +1,25 @@
 import React, { Component } from 'react';
+import { withRouter } from "react-router";
 import '../css/Table.css';
 
 class Table extends Component {
+  constructor(props) {
+    super(props);
+    console.log(props)
+  }
+
+  navigateTo(path) {
+    this.props.history.push({pathname: path})
+  }
+
   render() {
     return (
-      <div className="table-container" style={{height: this.props.data.height, width: this.props.data.width}}>
+      <div className="table-container" style={{height: this.props.height, width: this.props.width}}>
         <table className="table header">
           <thead>
             <tr>
-              {this.props.data.headers.map((text, index) => {
-                return <th style={{"width": this.props.data.columnWidths[index]}} key={index}>{text}</th>
+              {this.props.headers.map((text, index) => {
+                return <th style={{"width": this.props.columnWidths[index]}} key={index}>{text}</th>
               })}
             </tr>
           </thead>
@@ -17,10 +27,11 @@ class Table extends Component {
         <div className="table-body-container">
           <table className="table body">
             <tbody>
-              {this.props.data.data.map((row, index) => {
-                return (<tr key={index}>
+              {this.props.data.map((row, index) => {
+                return (<tr key={index} onClick={() => this.navigateTo(this.props.rootAddress + row[row.length-1])}>
                   {row.map((text, index) => {
-                    return <td style={{"width": this.props.data.columnWidths[index]}} key={index}>{text}</td>
+                    if (index < row.length - 1)
+                      return <td style={{"width": this.props.columnWidths[index]}} key={index}>{text}</td>
                   })}
                 </tr>)
               })}
@@ -32,4 +43,4 @@ class Table extends Component {
   }
 }
 
-export default Table;
+export default withRouter(Table);
