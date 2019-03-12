@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Sidebar from './Sidebar';
 import LogoHeader from './LogoHeader';
 import Content from './Content';
-import {DataConsumer} from '../Store';
+import { Context } from '../Store';
 import '../css/Dashboard.css';
 
 class Dashboard extends Component {
@@ -11,23 +11,18 @@ class Dashboard extends Component {
   }
 
   render() {
+    this.context.setPage(this.props.match.params.page)
+    this.context.setPageId(this.props.match.params.id)
     return (
-      <DataConsumer>
-        {store => {
-          store.setPage(this.props.match.params.page)
-          store.setPageId(this.props.match.params.id)
-          if (store.page == "login") return;
-          else return (
-            <div className="app">
-              <Sidebar/>
-              <LogoHeader/>
-              <Content/>
-            </div>
-          )}
-        }
-      </DataConsumer>
+      this.context.page == "login" ? null :
+      <div className="app">
+        <Sidebar/>
+        <LogoHeader/>
+        <Content/>
+      </div>
     );
   }
 }
 
+Dashboard.contextType = Context;
 export default Dashboard;

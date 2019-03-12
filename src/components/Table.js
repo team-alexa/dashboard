@@ -5,7 +5,6 @@ import '../css/Table.css';
 class Table extends Component {
   constructor(props) {
     super(props);
-    console.log(props)
   }
 
   navigateTo(path) {
@@ -37,6 +36,10 @@ class Table extends Component {
               })}
             </tbody>
           </table>
+          {this.props.newLink ?
+            <button className="new-button" onClick={() => this.navigateTo(this.props.newLink)}>+</button> :
+            null
+          }
         </div>
       </div>
     );

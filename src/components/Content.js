@@ -1,55 +1,65 @@
 import React, { Component } from 'react';
+import {Context} from '../Store'
+import '../css/Content.css';
+
 import Home from './Home'
-import SearchPage from './SearchPage'
 import AdminPage from './AdminPage'
 import StudentProfile from './StudentProfile'
-import {DataConsumer} from '../Store'
-import Constants from '../Constants'
-import '../css/Content.css';
+import Students from './Students'
+import Logs from './Logs'
+import Error from './Error'
 
 class Content extends Component {
   constructor(props) {
     super(props);
+
+    this.toastRef = React.createRef()
+    this.updated = false
+    this.state = {
+      toastLeft: "0px"
+    }
   }
 
-  getComponent(store) {
-    if (store.pageId) {
-      switch(store.page) {
-        case "students": return <StudentProfile id={store.pageId} />
+  getComponent() {
+    if (this.context.pageId) {
+      switch(this.context.page) {
+        case "students": return <StudentProfile id={this.context.pageId} />
       }
     } else {
-      switch(store.page) {
+      switch(this.context.page) {
         case "": return <Home />
         case "home": return <Home />
-        case "students": return <SearchPage title="Students"
-          table={{data: Constants.students,
-            width: "100%",
-            height: "80%",
-            headers: ["First Name", "Last Name", "Teacher", "Age", "Allergies"],
-            columnWidths: ["15%", "15%", "30%", "10%", "40%"],
-            rootAddress: "/students/"}
-          } />
-        case "logs": return <SearchPage title="Logs"
-            table={{
-              data: Constants.logs,
-              width: "100%",
-              height: "80%",
-              headers: ["Date", "Student", "Teacher", "Category", "Details"],
-              columnWidths: ["10%", "20%", "20%", "10%", "40%"],
-              rootAddress: "/logs/"}
-            } />
+        case "students": return <Students />
+        case "logs": return <Logs />
         case "adminpanel": return <AdminPage />
+        default: return <Error />
       }
     }
   }
 
+  componentDidUpdate() {
+    if (!this.updated) {
+      var left = 125 // accounting for sidebar offset and padding
+      left -= this.toastRef.current.offsetWidth/2
+      this.setState({toastLeft: `calc(50% + ${left}px)`})
+    }
+    this.updated = !this.updated
+  }
+
   render() {
     return (
-      <DataConsumer>
-        {store => <div className={store.sidebarClass+" content"}>{this.getComponent(store)}</div>}
-      </DataConsumer>
+      <div className={this.context.sidebarClass + " content"}>
+        <div className={"toast " + (this.context.toast.visible ? "enabled " : "disabled ") + this.context.toast.color}
+          style={{left: this.state.toastLeft}}
+          ref={this.toastRef}>
+          <h2>{this.context.toast.message}</h2>
+          <span onClick={() => this.context.setToast({visible: false})}>x</span>
+        </div>
+        {this.getComponent()}
+      </div>
     );
   }
 }
 
+Content.contextType = Context;
 export default Content;
