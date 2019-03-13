@@ -15,9 +15,9 @@ class App extends Component {
             render={(props) => <Dashboard {...props}
             match={{params: {page: 'home'}}} />}
           />
+          <Route exact path="/login" component={Login} />
           <Route exact path="/:page" component={Dashboard} />
           <Route exact path="/:page/:id" component={Dashboard} />
-          <Route path="/login" component={Login} />
         </DataProvider>
       </Router>
     );

@@ -1,4 +1,5 @@
 import React from 'react'
+import Constants from './Constants'
 
 const Context = React.createContext("")
 
@@ -6,12 +7,14 @@ class DataProvider extends React.Component {
   constructor(props) {
     super(props)
 
+    this.loadTeachers = this.loadTeachers.bind(this)
     this.toggleSidebar = this.toggleSidebar.bind(this)
     this.setContentLoading = this.setContentLoading.bind(this)
     this.setPage = this.setPage.bind(this)
     this.setPageId = this.setPageId.bind(this)
     this.setTeachers = this.setTeachers.bind(this)
     this.setToast = this.setToast.bind(this)
+    this.setStudents = this.setStudents.bind(this)
 
     this.state = {
       page: "home",
@@ -24,14 +27,31 @@ class DataProvider extends React.Component {
         color: "red",
         visible: false
       },
-      teachers: [],
+      teachers: {},
+      students: [],
 
+      loadTeachers: this.loadTeachers,
       toggleSidebar: this.toggleSidebar,
       setContentLoading: this.setContentLoading,
       setPage: this.setPage,
       setPageId: this.setPageId,
       setTeachers: this.setTeachers,
       setToast: this.setToast,
+      setStudents: this.setStudents
+    }
+  }
+
+  loadTeachers() {
+    if (Object.keys(this.state.teachers).length == 0) {
+      fetch(Constants.apiUrl + "teachers")
+          .then(response => response.json())
+          .then(data => {
+            const teachers = {}
+            data.forEach(teacher => {
+              teachers[teacher.teacherID] = teacher
+            })
+            this.setTeachers(teachers)
+          })
     }
   }
 
@@ -57,17 +77,26 @@ class DataProvider extends React.Component {
       this.setState({pageId})
   }
 
-  setToast(params) {
+  setToast(params, time = 2000) {
     const newToast = {
       message: params.message || this.state.toast.message,
       color: params.color || this.state.toast.color,
       visible: params.visible != undefined ? params.visible : this.state.toast.visible
     }
     this.setState({toast: newToast})
+
+    setTimeout(function() {
+      newToast.visible = false
+      this.setState({toast: newToast})
+    }.bind(this), time)
   }
 
   setTeachers(teachers) {
     this.setState({teachers})
+  }
+
+  setStudents(students) {
+    this.setState({students})
   }
 
   render() {

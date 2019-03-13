@@ -32,6 +32,7 @@ class StudentProfile extends Component{
     this.onChange = this.onChange.bind(this)
     this.saveData = this.saveData.bind(this)
     this.getStudentTeacherName = this.getStudentTeacherName.bind(this)
+    this.addTeacher = this.addTeacher.bind(this)
 
     this.state = {
       birthDate: "",
@@ -67,13 +68,13 @@ class StudentProfile extends Component{
             const newState = data[0]
 
             newState.date = birthDate.getDate()
-            newState.month = birthDate.getMonth()
+            newState.month = birthDate.getMonth() + 1
             newState.year = birthDate.getFullYear()
             newState.editable = true
             this.setState(newState)
           } else {
             if (!this.displayedMessage) {
-              this.context.setToast({message: "No Student Found", color: "red", visible: true})
+              this.context.setToast({message: "No Student Found", color: "red", visible: true}, 10000)
             }
           }
           this.context.setContentLoading(false)
@@ -82,34 +83,59 @@ class StudentProfile extends Component{
       this.setState({editable: true})
     }
 
-    if (this.context.teachers.length == 0) {
-      fetch(Constants.apiUrl + "teachers")
-          .then(response => response.json())
-          .then(data => {
-            this.context.setTeachers(data)
-          })
-    }
+    this.context.loadTeachers()
   }
 
   saveData() {
-    this.context.setToast({message: "Saved!", color: "green", visible: true})
+    const body = {
+      method: this.context.pageId == "new" ? "new" : "update",
+      studentID: this.state.studentID,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      birthDate: String(parseInt(this.state.year) + 1) + "-" + this.state.month + "-" + this.state.date,
+      foodAllergies: this.state.foodAllergies,
+      medical: this.state.medical,
+      teacherID: this.state.teacherID,
+      nickName: this.state.nickName
+    }
+
+    fetch(Constants.apiUrl + 'students', {
+      method: "POST",
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    .then(response => response.json())
+    .then(() => {
+      delete body.method
+      this.context.students.push(body)
+      this.context.setStudents(this.context.students)
+      this.context.setToast({message: "Saved!", color: "green", visible: true})
+    })
+    .catch(error => console.log(error))
   }
 
   getStudentTeacherName() {
-    var teacher = this.context.teachers.filter(teacher => {
-      return teacher.teacherID == this.state.teacherID
-    })
-
-    return teacher[0] ? teacher[0].fullName : null
+    return this.context.teachers[this.state.teacherID] ? this.context.teachers[this.state.teacherID].fullName : ""
   }
 
   getAllTeacherNames() {
-    return this.context.teachers.map(teacher => teacher.fullName)
+    return Object.keys(this.context.teachers).map(key => this.context.teachers[key].fullName)
   }
 
   onChange(e) {
     if (this.state.editable)
       this.setState({[e.target.id]: e.target.value, hasChanged: true});
+  }
+
+  addTeacher(teacher) {
+    var teachers = Object.keys(this.context.teachers).filter(key => {
+      return this.context.teachers[key].fullName == teacher
+    })
+
+    var id = teachers.length > 0 ? teachers[0] : null
+    this.setState({teacherID: id})
   }
   
   render() {
@@ -132,7 +158,7 @@ class StudentProfile extends Component{
       <br />
       <label htmlFor="id">ID:</label> <input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/>
       <br/>
-      <p>Age: 2 </p>
+      <p>Age: {parseInt(new Date().getFullYear()) - parseInt(new Date(this.state.birthDate).getFullYear())} </p>
       <label htmlFor="month">DOB (MM/DD/YYYY):</label>
       <input type="number" size = "2" maxLength="2" min="0" max="12" placeholder ="01" name="month" id="month" value={this.state.month} onChange={this.onChange} autoComplete="off" />
       /<input type="number" size = "2" maxLength="2" min="0" max="31" placeholder ="01" name="day" id="date" value={this.state.date} onChange={this.onChange} autoComplete="off" />
@@ -148,7 +174,8 @@ class StudentProfile extends Component{
         limit={1}
         values={teacherName ? [teacherName] : null}
         possibleValues={this.getAllTeacherNames()}
-        onClick={() => this.setState({hasChanged: true})}/>
+        onClick={() => this.setState({hasChanged: true})}
+        addValue={this.addTeacher}/>
       {this.context.pageId != "new" ? <div>
         <br/>
         <h2>{this.state.fullName ? `${this.state.fullName}'s Logs` : "Logs"}</h2>

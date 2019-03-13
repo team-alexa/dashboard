@@ -11,8 +11,8 @@ class Dashboard extends Component {
   }
 
   render() {
-    this.context.setPage(this.props.match.params.page)
     this.context.setPageId(this.props.match.params.id)
+    this.context.setPage(this.props.match.params.page)
     return (
       this.context.page == "login" ? null :
       <div className="app">

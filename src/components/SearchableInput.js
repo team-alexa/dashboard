@@ -46,6 +46,9 @@ class SearchableInput extends Component {
     values.push(value)
 
     this.setState({values, inputValue: ""});
+    if (this.props.addValue) {
+      this.props.addValue(value)
+    }
   }
 
   componentWillReceiveProps(props) {
