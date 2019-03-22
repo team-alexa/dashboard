@@ -4,6 +4,12 @@
   display: inline-block;
 }
 
+.account-page .name {
+  border-bottom: 1px solid rgb(96, 104, 103);
+  padding: 0px 3px 3px;
+  display: inline-block;
+}
+
 .button-group {
   position: absolute;
   top: 15px;

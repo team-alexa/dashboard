@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../css/StudentProfile.css';
+import '../css/index.css';
 import { Context } from '../Store'
 import Constants from '../Constants'
 

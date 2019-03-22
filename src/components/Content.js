@@ -8,6 +8,7 @@ import StudentProfile from './StudentProfile'
 import Students from './Students'
 import Logs from './Logs'
 import Error from './Error'
+import AccountPage from './AccountPage'
 
 class Content extends Component {
   constructor(props) {
@@ -32,6 +33,7 @@ class Content extends Component {
         case "students": return <Students />
         case "logs": return <Logs />
         case "adminpanel": return <AdminPage />
+        case "myaccount": return <AccountPage />
         default: return <Error />
       }
     }
