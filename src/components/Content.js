@@ -9,6 +9,7 @@ import Students from './Students'
 import Logs from './Logs'
 import Error from './Error'
 import AccountPage from './AccountPage'
+import LogPage from './LogPage';
 
 class Content extends Component {
   constructor(props) {
@@ -25,6 +26,7 @@ class Content extends Component {
     if (this.context.pageId) {
       switch(this.context.page) {
         case "students": return <StudentProfile id={this.context.pageId} />
+        case "logs": return <LogPage id={this.context.pageId}/>
       }
     } else {
       switch(this.context.page) {

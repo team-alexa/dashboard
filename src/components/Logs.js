@@ -3,6 +3,7 @@ import Table from './Table';
 import '../css/SearchPage.css';
 import Constants from '../Constants'
 
+
 class Logs extends Component {
   render() {
     return (
@@ -17,7 +18,8 @@ class Logs extends Component {
           width="100%"
           headers={["Date", "Student", "Teacher", "Category", "Details"]}
           columnWidths={["10%", "20%", "20%", "10%", "40%"]}
-          rootAddress="/logs/"/>
+          rootAddress="/logs/"
+          newLink="/logs/new"/>
       </div>
     );
   }
