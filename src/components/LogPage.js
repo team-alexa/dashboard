@@ -19,34 +19,35 @@ class LogPage extends Component{
       editable: false,
       hasChanged: false    
     }
+    this.displayedMessage = false
   }
 
   componentDidMount(){
     if (this.context.pageId != "new") {
       this.context.setContentLoading(true)
-    //   fetch(Constants.apiUrl + "logs?logID=" + this.props.id)
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     if (data[0]) {
-    //       const newState = data[0]
-    //       newState.editable = true
-    //       this.setState(newState)
-    //     } else {
-    //       if (!this.displayedMessage) {
-    //         this.context.setToast({message: "No Log Found", color: "red", visible: true}, 10000)
-    //       }
-    //     }
+      fetch(Constants.apiUrl + "logs?logID=" + this.context.pageId)
+      .then(response => response.json())
+      .then(data => {
+        if (data[0]) {
+          const newState = data[0]
+          newState.editable = true
+          this.setState(newState)
+        } else {
+          if (!this.displayedMessage) {
+            this.context.setToast({message: "No Log Found", color: "red", visible: true}, 10000)
+          }
+        }
 
 
-      this.setState({studentName: "Cameron Frank",
-        teacherName: "Nathan Irwin",
-        activity: "sleeping",
-        activityDetails: "1 hour",
-        timeLogged: "2:00 pm",
-        dateLogged: "3/23/19",
-        editable: true})
+      // this.setState({studentName: "Cameron Frank",
+      //   teacherName: "Nathan Irwin",
+      //   activity: "sleeping",
+      //   activityDetails: "1 hour",
+      //   timeLogged: "2:00 pm",
+      //   dateLogged: "3/23/19",
+      //   editable: true})
       this.context.setContentLoading(false)
-    //  })
+      })
     } else {
       this.setState({editable: true})
     }

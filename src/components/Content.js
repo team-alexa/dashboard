@@ -35,7 +35,7 @@ class Content extends Component {
         case "students": return <Students />
         case "logs": return <Logs />
         case "adminpanel": return <AdminPage />
-        case "myaccount": return <AccountPage />
+        case "myaccount": return <AccountPage id={this.context.pageId} />
         default: return <Error />
       }
     }
