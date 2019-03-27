@@ -11,13 +11,7 @@ class Students extends Component {
 
   componentDidMount() {
     if (this.context.students.length == 0) {
-      this.context.setContentLoading(true)
-      fetch(Constants.apiUrl + 'students')
-        .then(response => response.json())
-        .then(data => {
-          this.context.setStudents(data)
-          this.context.setContentLoading(false)
-        })
+      this.context.loadMoreStudents()
     }
     this.context.loadTeachers()
   }
@@ -49,7 +43,8 @@ class Students extends Component {
           headers={["First Name", "Last Name", "Teacher", "Age", "Allergies"]}
           columnWidths={["15%", "15%", "30%", "10%", "40%"]}
           rootAddress="/students/"
-          newLink="/students/new" />
+          newLink="/students/new"
+          loadFunction = {this.context.loadMoreStudents} />
       </div>
     );
   }

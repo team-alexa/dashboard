@@ -1,5 +1,5 @@
 export default {
-  apiUrl: "https://zjpy12m198.execute-api.us-east-1.amazonaws.com/dev/",
+  apiUrl: "https://p6k336tkzj.execute-api.us-east-1.amazonaws.com/production/",
   students: [
     ["Jon", "Snow", "Sophia Hills", "3", "N/A", "jonsnow"],
     ["Katie", "Clark", "Emma Jones", "2", "N/A", "katieclark"],

@@ -11,6 +11,12 @@ class Table extends Component {
     this.props.history.push({pathname: path})
   }
 
+  handleScroll(e) {
+    if (e.target.scrollTop >= (this.table.offsetHeight - e.target.offsetHeight)) {
+      this.props.loadFunction()
+    }
+  }
+
   render() {
     return (
       <div className="table-container" style={{height: this.props.height, width: this.props.width}}>
@@ -23,8 +29,8 @@ class Table extends Component {
             </tr>
           </thead>
         </table>
-        <div className="table-body-container">
-          <table className="table body">
+        <div className="table-body-container" onScroll={e => this.handleScroll(e)}>
+          <table className="table body" ref={table => this.table = table}>
             <tbody>
               {this.props.data.map((row, index) => {
                 return (<tr key={index} onClick={() => this.navigateTo(this.props.rootAddress + row[row.length-1])}>
