@@ -11,12 +11,13 @@ class Home extends Component {
 
   generateStudentCards() {
     const cards = []
-    Constants.students.forEach(student => {
+    Constants.students.forEach((student, index) => {
       cards.push(
         <StudentCard
           name={student[0] + " " + student[1]}
           age={student[3]}
           allergies={student[4]}
+          key={index}
         />)
     })
     return cards;

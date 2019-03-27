@@ -8,6 +8,8 @@ class DataProvider extends React.Component {
     super(props)
 
     this.loadTeachers = this.loadTeachers.bind(this)
+    this.loadMoreStudents = this.loadMoreStudents.bind(this)
+    this.loadMoreLogs = this.loadMoreLogs.bind(this)
     this.toggleSidebar = this.toggleSidebar.bind(this)
     this.setContentLoading = this.setContentLoading.bind(this)
     this.setPage = this.setPage.bind(this)
@@ -29,8 +31,11 @@ class DataProvider extends React.Component {
       },
       teachers: {},
       students: [],
+      logs: [],
 
       loadTeachers: this.loadTeachers,
+      loadMoreStudents: this.loadMoreStudents,
+      loadMoreLogs: this.loadMoreLogs,
       toggleSidebar: this.toggleSidebar,
       setContentLoading: this.setContentLoading,
       setPage: this.setPage,
@@ -53,6 +58,28 @@ class DataProvider extends React.Component {
             this.setTeachers(teachers)
           })
     }
+  }
+
+  loadMoreStudents() {
+    this.setContentLoading(true)
+    fetch(Constants.apiUrl + 'students?index=' + this.state.students.length)
+      .then(response => response.json())
+      .then(data => {
+        const students = this.state.students.slice()
+        this.setStudents(students.concat(data))
+        this.setContentLoading(false)
+      })
+  }
+
+  loadMoreLogs() {
+    this.setContentLoading(true)
+    fetch(Constants.apiUrl + 'logs?index=' + this.state.logs.length)
+      .then(response => response.json())
+      .then(data => {
+        const logs = this.state.logs.slice()
+        this.setLogs(logs.concat(data))
+        this.setContentLoading(false)
+      })
   }
 
   toggleSidebar() {
@@ -97,6 +124,10 @@ class DataProvider extends React.Component {
 
   setStudents(students) {
     this.setState({students})
+  }
+
+  setLogs(logs) {
+    this.setState({logs})
   }
 
   render() {

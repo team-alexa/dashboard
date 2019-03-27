@@ -10,8 +10,12 @@
   float: left;
 }
 
-.search-page .header input[type="text"] {
+.search-page .header form {
   float: right;
+}
+
+.search-page .header input[type="text"] {
+  float: left;
   margin-top: 25px;
   width: 200px;
   height: 18px;
@@ -25,7 +29,7 @@
 }
 
 .search-page .header button[type="submit"] {
-  float: right;
+  float: left;
   margin-left: 5px;
   background-color: rgb(0, 159, 194);
   padding: 2px 20px 5px;
