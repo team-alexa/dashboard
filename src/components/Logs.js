@@ -3,7 +3,6 @@ import Table from './Table';
 import '../css/SearchPage.css';
 import Constants from '../Constants'
 
-
 class Logs extends Component {
   render() {
     return (
