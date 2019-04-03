@@ -12,7 +12,7 @@ class Table extends Component {
   }
 
   handleScroll(e) {
-    if (e.target.scrollTop >= (this.table.offsetHeight - e.target.offsetHeight)) {
+    if (e.target.scrollTop >= (this.table.offsetHeight - e.target.offsetHeight) && this.props.loadFunction) {
       this.props.loadFunction()
     }
   }

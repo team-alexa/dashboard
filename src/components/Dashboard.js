@@ -10,6 +10,11 @@ class Dashboard extends Component {
     super(props)
   }
 
+  componentDidMount() {
+    this.context.loadTeachers()
+    this.context.loadStudents()
+  }
+
   render() {
     this.context.setPageId(this.props.match.params.id)
     this.context.setPage(this.props.match.params.page)
