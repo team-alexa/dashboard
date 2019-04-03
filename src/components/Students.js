@@ -9,15 +9,9 @@ class Students extends Component {
     super(props)
   }
 
-  componentDidMount() {
-    if (this.context.students.length == 0) {
-      this.context.loadMoreStudents()
-    }
-    this.context.loadTeachers()
-  }
-
   getStudentTableData() {
-    return this.context.students.map(student => {
+    return Object.keys(this.context.students).map(student => {
+      student = this.context.students[student]
       var age = parseInt(new Date().getFullYear()) - parseInt(new Date(student.birthDate).getFullYear())
       var teacher = this.context.teachers[student.teacherID] ? this.context.teachers[student.teacherID].fullName : ""
       return [student.firstName,
