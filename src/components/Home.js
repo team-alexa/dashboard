@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Table from './Table';
 import StudentCard from './StudentCard'
 import Constants from '../Constants'
+import {Context} from '../Store'
 import '../css/Home.css';
 
 class Home extends Component {
@@ -11,16 +12,19 @@ class Home extends Component {
 
   generateStudentCards() {
     const cards = []
-    Constants.students.forEach((student, index) => {
+    Object.keys(this.context.students).forEach((student, index) => {
+      student = this.context.students[student]
+      const age = parseInt(new Date().getFullYear()) - parseInt(new Date(student.birthDate).getFullYear())
       cards.push(
         <StudentCard
-          name={student[0] + " " + student[1]}
-          age={student[3]}
-          allergies={student[4]}
+          name={student.fullName}
+          age={age}
+          allergies={student.foodAllergies}
+          id={student.studentID}
           key={index}
         />)
     })
-    return cards;
+    return cards
   }
 
   render() {
@@ -41,5 +45,7 @@ class Home extends Component {
     );
   }
 }
+
+Home.contextType = Context
 
 export default Home;
