@@ -25,18 +25,6 @@ class Students extends Component {
   }
 
   getStudentTableData() {
-<<<<<<< Updated upstream
-    return this.context.students.map(student => {
-      var age = parseInt(new Date().getFullYear()) - parseInt(new Date(student.birthDate).getFullYear())
-      var teacher = this.context.teachers[student.teacherID] ? this.context.teachers[student.teacherID].fullName : ""
-      return [student.firstName,
-        student.lastName,
-        teacher,
-        age,
-        student.foodAllergies,
-        student.studentID]
-    })
-=======
     if (this.state.searchStudents.length > 0) {
       return Object.keys(this.state.searchStudents).map(student => {
         student = this.context.students[student]
@@ -81,7 +69,6 @@ class Students extends Component {
   onChange(e) {
     console.log(e.target.id)
     this.setState({[e.target.id]: e.target.value});
->>>>>>> Stashed changes
   }
 
   render() {
