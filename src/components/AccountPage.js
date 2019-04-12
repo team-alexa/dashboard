@@ -10,6 +10,7 @@ class AccountPage extends Component{
 
         this.onChange = this.onChange.bind(this)
 
+        this.state = {
            
             firstName: "",
             lastName: "",

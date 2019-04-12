@@ -15,14 +15,15 @@ class LogPage extends Component{
     this.getAllStudentNames = this.getAllStudentNames.bind(this)
   
     this.state = {
+      dateTime: "",
       studentID: "",
       teacherID: "",
       studentFullName: "",
       teacherFullName: "",
       activityType: "",
       activityDetails: "",
-      time: "",
-      date: "",
+      timeString: "",
+      dateString: "",
       editable: false,
       hasChanged: false,
       initialStudentName: "",
@@ -46,8 +47,12 @@ class LogPage extends Component{
           newState.teacherFullName = data[0].teacherFullName
           newState.activityType = data[0].activityType
           newState.activityDetails = data[0].activityDetails
-          newState.date = fullDate.toISOString().substr(0, 10);
-          newState.time = fullDate.getTime()
+          newState.date = fullDate
+          newState.dateString = fullDate.toISOString().substr(0, 10);
+          newState.timeString = fullDate.toUTCString().substr(17).substr(0 ,5);
+          newState.dateTime = fullDate
+          console.log(newState.dateString)
+          console.log(newState.timeString)
           newState.initialStudentName = data[0].studentFullName
           newState.initialTeacherName = data[0].teacherFullName
           newState.editable = true          
@@ -63,53 +68,21 @@ class LogPage extends Component{
       this.setState({editable: true})
     }
     this.context.loadTeachers();     
-   // this.context.loadStudents();
+    this.context.loadStudents();
   }
   onChange(e) {
     if (this.state.editable)
       this.setState({[e.target.id]: e.target.value, hasChanged: true})
     }
   saveData(){
-    var canSave = true
-    if(this.state.studentFullName != this.state.initialStudentName){
-      this.context.setContentLoading(true)      
-      fetch(Constants.apiUrl + "students?fullName=" + this.state.studentFullName)
-      .then(response => response.json())
-      .then(data => {
-        if(data[0]){
-          this.setState({studentID: data[0].studentID})
-           }
-        else{
-          canSave = false
-          this.context.setToast({message: "Invalid Student Name", color: "red", visible: true},10000)
-        }        
-      })
-      this.context.setContentLoading(false)
-    }
-    if(this.state.teacherFullName !== this.state.initialTeacherName){
-      this.context.setContentLoading(true)
-      fetch(Constants.apiUrl + "teachers?fullName=" + this.state.teacherFullName)
-      .then(response => response.json())
-      .then(data => {
-        if(data[0]){
-          this.setState({teacherID: data[0].teacherID})
-        }
-        else{
-          canSave = false
-          this.context.setToast({message: "Invalid Teacher Name", color: "red", visible: true})
-        }        
-      })
-      this.context.setContentLoading(false)
-    }
-
-    if(canSave){
+         
       const body ={
         method: this.context.pageId == "new" ? "new" : "update",
         studentID: this.state.studentID,
         teacherID: this.state.teacherID,
         activityType: this.state.activityType,
         activityDetails: this.state.activityDetails,
-        date: String(parseInt(this.state.year) + 1) + "-" + this.state.month + "-" + this.state.date + " " + this.state.hour + ":" + this.state.minute + ":" + this.state.second,
+        date: this.dateString + " " + this.timeString + ":00",
       }
       fetch(Constants.apiUrl + 'logs', {
         method: "POST",
@@ -121,12 +94,11 @@ class LogPage extends Component{
       .then(response => response.json())
       .then(() => {
         delete body.method
-        this.context.students.push(body)
+        this.context.logs[body.logID] = body
         this.context.setLogs(this.context.logs)
         this.context.setToast({message: "Saved!", color: "green", visible: true})
       })
       .catch(error => console.log(error))
-    }
   }
   getAllTeacherNames() {
     return Object.keys(this.context.teachers).map(key => this.context.teachers[key].fullName)
@@ -183,9 +155,9 @@ class LogPage extends Component{
           <br/>
           <label htmlFor="activityDetails">Activity Details:</label> <input type="text" placeholder="Activity Details" size ="64"  name="activityDetails" id="activityDetails" value={this.state.activityDetails} onChange={this.onChange} autoComplete="off"/>
           <br/>
-          <label htmlFor="time">Time:</label> <input type="time"  placeholder={this.state.time} size ="32"  name="time" id="time" value={this.state.time} onChange={this.onChange} autoComplete="off"/>
+          <label htmlFor="time">Time:</label> <input type="time" size ="32"  name="time" id="timeString" value={this.state.timeString} onfocus="this.value=''" onChange={this.onChange} autoComplete="off"/>
           <br/>
-          <label htmlFor="date">Date: </label> <input type="date" name="date" id="date" value={this.state.date} onChange={this.onChange} autoComplete="off" />
+          <label htmlFor="date">Date: </label> <input type="date" name="date" id="dateString" value={this.state.dateString} onChange={this.onChange} autoComplete="off" />
          
       <br/>
         </div>

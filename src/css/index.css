@@ -71,7 +71,7 @@ display: inline;
 font-size: 30px;
 }
 
-input[type="text"], input[type="number"] {
+input[type="text"], input[type="number"], input[type="date"], input[type="time"] {
 padding: 10px;
 margin: 6px;
 border: 1px solid rgb(201, 201, 201);
@@ -80,7 +80,7 @@ outline: none;
 font-size: 16px;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus, input[type="date"]:focus, input[type="time"]:focus {
 border-color:rgb(0, 159, 194);
 box-shadow: 0 0 8px 0 rgb(0, 159, 194);
 }

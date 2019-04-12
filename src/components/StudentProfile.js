@@ -66,10 +66,8 @@ class StudentProfile extends Component{
             }
             const birthDate = new Date(data[0].birthDate)
             const newState = data[0]
-
-            newState.date = birthDate.getDate()
-            newState.month = birthDate.getMonth() + 1
-            newState.year = birthDate.getFullYear()
+            newState.birthDate = birthDate
+            newState.birthDateString = birthDate.toISOString().substr(0, 10)
             newState.editable = true
             this.setState(newState)
           } else {
@@ -159,10 +157,8 @@ class StudentProfile extends Component{
       <label htmlFor="id">ID:</label> <input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/>
       <br/>
       <p>Age: {parseInt(new Date().getFullYear()) - parseInt(new Date(this.state.birthDate).getFullYear())} </p>
-      <label htmlFor="month">DOB (MM/DD/YYYY):</label>
-      <input type="number" size = "2" maxLength="2" min="0" max="12" placeholder ="01" name="month" id="month" value={this.state.month} onChange={this.onChange} autoComplete="off" />
-      /<input type="number" size = "2" maxLength="2" min="0" max="31" placeholder ="01" name="day" id="date" value={this.state.date} onChange={this.onChange} autoComplete="off" />
-      /<input type="number" size = "4" maxLength="4" placeholder ="2017" name="year" id="year" value={this.state.year} onChange={this.onChange} autoComplete="off" />
+      <label htmlFor="month">DOB :</label>
+      <input type="date" value={this.state.birthDateString} onChange={this.onChange} autoComplete="off" />
       <br/>
       <label htmlFor="food">Food Allergies (comma-separated):</label> <input type="text" size = "64" id="foodAllergies" value={this.state.foodAllergies} onChange={this.onChange} autoComplete="off" />
       <br/>
