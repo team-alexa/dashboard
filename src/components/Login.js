@@ -33,6 +33,9 @@ export class Login extends SignIn {
     }
 
     async signIn(event) {
+        if (event) {
+            event.preventDefault()
+        }
         const { username='', password } = this.inputs;
         if (!Auth || typeof Auth.signIn !== 'function') {
             throw new Error('No Auth module found, please ensure @aws-amplify/auth is imported');
