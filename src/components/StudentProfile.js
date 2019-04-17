@@ -28,9 +28,6 @@ class StudentProfile extends Component{
       teachers: [],
       hasChanged: false,
       editable: false,
-      date: "",
-      month: "",
-      year: "",
       logs: []
     }
 
@@ -48,9 +45,10 @@ class StudentProfile extends Component{
               data[0].nickName = data[0].firstName
             }
             const birthDate = new Date(data[0].birthDate)
+            console.log("birthDate", data[0].birthDate)
             const newState = data[0]
+            console.log("birthDate", birthDate)
             newState.birthDate = birthDate
-            newState.birthDateString = birthDate.toISOString().substr(0, 10)
             newState.editable = true
             this.setState(newState)
           } else {
@@ -68,12 +66,14 @@ class StudentProfile extends Component{
   }
 
   saveData() {
+    const dte = new Date(this.state.birthDate)
+    const dteStr = dte.getUTCFullYear() + "-" + (dte.getUTCMonth() + 1) + "-" + dte.getUTCDate()
     const body = {
       method: this.context.pageId == "new" ? "new" : "update",
       studentID: this.state.studentID,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
-      birthDate: String(parseInt(this.state.year) + 1) + "-" + this.state.month + "-" + this.state.date,
+      birthDate: dteStr,
       foodAllergies: this.state.foodAllergies,
       medical: this.state.medical,
       teacherID: this.state.teacherID,
@@ -168,7 +168,7 @@ class StudentProfile extends Component{
       <br/>
       <p>Age: {parseInt(new Date().getFullYear()) - parseInt(new Date(this.state.birthDate).getFullYear())} </p>
       <label htmlFor="month">DOB :</label>
-      <input type="date" value={this.state.birthDateString} onChange={this.onChange} autoComplete="off" />
+      <input type="date" id="birthDate" value={this.state.birthDate} onChange={this.onChange} autoComplete="off" />
       <br/>
       <label htmlFor="food">Food Allergies (comma-separated):</label> <input type="text" size = "64" id="foodAllergies" value={this.state.foodAllergies} onChange={this.onChange} autoComplete="off" />
       <br/>
