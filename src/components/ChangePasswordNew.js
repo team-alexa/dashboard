@@ -20,7 +20,7 @@ export default class ChangePasswordNew extends RequireNewPassword {
                 this.changeState('signedIn', user);
                 Auth.currentAuthenticatedUser()
                     .then(result => {
-                        this.context.setCurrentUser(result.username);
+                        this.context.loadUserData(result);
                     });
             } else {
                 user = Object.assign(user, data);

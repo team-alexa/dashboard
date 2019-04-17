@@ -23,7 +23,7 @@ export class Login extends SignIn {
                     this.changeState('signedIn', user);
                     Auth.currentAuthenticatedUser()
                     .then(result => {
-                        this.context.setCurrentUser(result.username);
+                        this.context.loadUserData(result);
                     });
             } else {
                     user = Object.assign(user, data);

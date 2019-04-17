@@ -19,12 +19,15 @@ class DataProvider extends React.Component {
     this.setToast = this.setToast.bind(this)
     this.setStudents = this.setStudents.bind(this)
     this.logOut = this.logOut.bind(this)
-      this.setCurrentUser = this.setCurrentUser.bind(this)
+    this.loadUserData = this.loadUserData.bind(this)
 
     this.state = {
       page: "home",
       pageId: "",
-      currentUser: "Mitchell",
+      currentUser: {
+        firstName: "",
+        students: []
+      },
       sidebarClass: "open",
       contentLoading: false,
       toast: {
@@ -47,7 +50,7 @@ class DataProvider extends React.Component {
       setToast: this.setToast,
       setStudents: this.setStudents,
       logOut: this.logOut,
-     setCurrentUser:this.setCurrentUser
+      loadUserData:this.loadUserData
     }
   }
 
@@ -87,6 +90,29 @@ class DataProvider extends React.Component {
       })
   }
 
+  loadUserData(currentUser){
+    this.setContentLoading(true)
+    fetch(Constants.apiUrl + 'teachers?teacherID=' + currentUser.username)
+      .then(response => response.json())
+      .then(data => {
+        if (data[0]) {
+          const user = this.state.currentUser
+          Object.assign(user, data[0])
+          Object.assign(user, currentUser)
+          this.setState({currentUser: user})
+        }
+        this.setContentLoading(false)
+      })
+
+    fetch(Constants.apiUrl + 'students?teacherID=' + currentUser.username)
+      .then(response => response.json())
+      .then(data => {
+        const user = this.state.currentUser
+        user.students = data
+        this.setState({currentUser: user})
+      })
+  }
+
   toggleSidebar() {
     if(this.state.sidebarClass == "close"){
       this.setState({sidebarClass: "open"})
@@ -108,10 +134,6 @@ class DataProvider extends React.Component {
     if (this.state.pageId != pageId)
       this.setState({pageId})
   }
-    
-setCurrentUser(currentUser){
-    this.setState({currentUser})
-}
 
   setToast(params, time = 2000) {
     const newToast = {

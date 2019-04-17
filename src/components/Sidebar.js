@@ -9,7 +9,7 @@ class Sidebar extends Component {
   render() {
     return (
       <div className={this.context.sidebarClass + " sidebar"}>
-        <h1> Hello, <br/><span>{this.context.currentUser}</span></h1>
+        <h1> Hello, <br/><span>{this.context.currentUser.firstName}</span></h1>
         <button className="toggle-sidebar-button" onClick={this.context.toggleSidebar}>&#9776;</button>
         <SidebarButton name="Home" link="" active={this.context.page == "home"}/>
         <SidebarButton name="Students" link="students" active={this.context.page == "students"}/>
