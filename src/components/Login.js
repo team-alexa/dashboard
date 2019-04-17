@@ -64,7 +64,7 @@ export class Login extends SignIn {
                 <input key="username" name="username" onChange={this.handleInputChange} type="text" placeholder="Username" size="32"/>
                 <br/>
                 <input key="password" name="password" onChange={this.handleInputChange} type="password" placeholder="Password" size="32"/>
-                <p> 
+                <p className='login-p'> 
                     Forgot your password?{" "}
                     <a onClick={() => super.changeState("forgotPasswordNew")}>Reset Password</a>
                 </p>
