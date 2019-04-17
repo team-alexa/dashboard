@@ -64,7 +64,7 @@ export class Login extends SignIn {
         <div className="login-screen">
             <form className="main-div" onSubmit={this.signIn}>
                 <img src="/static/media/main_logo.1d5af73f.png"/>
-                <input key="username" name="username" onChange={this.handleInputChange} type="text" placeholder="Email" size="32"/>
+                <input key="username" name="username" onChange={this.handleInputChange} type="text" placeholder="Email or ID" size="32"/>
                 <br/>
                 <input key="password" name="password" onChange={this.handleInputChange} type="password" placeholder="Password" size="32"/>
                 <p className='login-p'> 
