@@ -3,11 +3,22 @@ import Sidebar from './Sidebar';
 import LogoHeader from './LogoHeader';
 import Content from './Content';
 import { Context } from '../Store';
+import { Auth } from 'aws-amplify';
 import '../css/Dashboard.css';
 
 class Dashboard extends Component {
   constructor(props) {
     super(props)
+  }
+
+  componentDidMount() {
+    Auth.currentAuthenticatedUser()
+      .then(user => this.context.loadUserData(user))
+    this.context.loadTeachers()
+    this.context.loadStudents()
+    if (this.context.logs.length == 0) {
+      this.context.loadMoreLogs()
+    }
   }
 
   render() {

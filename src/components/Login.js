@@ -23,7 +23,7 @@ export class Login extends SignIn {
                     this.changeState('signedIn', user);
                     Auth.currentAuthenticatedUser()
                     .then(result => {
-                        this.context.setCurrentUser(result.username);
+                        this.context.loadUserData(result);
                     });
             } else {
                     user = Object.assign(user, data);
@@ -33,6 +33,9 @@ export class Login extends SignIn {
     }
 
     async signIn(event) {
+        if (event) {
+            event.preventDefault()
+        }
         const { username='', password } = this.inputs;
         if (!Auth || typeof Auth.signIn !== 'function') {
             throw new Error('No Auth module found, please ensure @aws-amplify/auth is imported');
@@ -59,17 +62,17 @@ export class Login extends SignIn {
     showComponent(theme) {
         return (
         <div className="login-screen">
-            <div className="main-div">
+            <form className="main-div" onSubmit={this.signIn}>
                 <img src="/static/media/main_logo.1d5af73f.png"/>
-                <input key="username" name="username" onChange={this.handleInputChange} type="text" placeholder="Username" size="32"/>
+                <input key="username" name="username" onChange={this.handleInputChange} type="text" placeholder="Email" size="32"/>
                 <br/>
                 <input key="password" name="password" onChange={this.handleInputChange} type="password" placeholder="Password" size="32"/>
                 <p className='login-p'> 
                     Forgot your password?{" "}
                     <a onClick={() => super.changeState("forgotPasswordNew")}>Reset Password</a>
                 </p>
-                <button className="login-button" onClick={() => this.signIn()}>Login</button>
-            </div>
+                <button className="login-button" onClick={this.signIn}>Login</button>
+            </form>
         </div>
         );
     }

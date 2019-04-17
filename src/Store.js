@@ -9,7 +9,7 @@ class DataProvider extends React.Component {
     super(props)
 
     this.loadTeachers = this.loadTeachers.bind(this)
-    this.loadMoreStudents = this.loadMoreStudents.bind(this)
+    this.loadStudents = this.loadStudents.bind(this)
     this.loadMoreLogs = this.loadMoreLogs.bind(this)
     this.toggleSidebar = this.toggleSidebar.bind(this)
     this.setContentLoading = this.setContentLoading.bind(this)
@@ -19,12 +19,16 @@ class DataProvider extends React.Component {
     this.setToast = this.setToast.bind(this)
     this.setStudents = this.setStudents.bind(this)
     this.logOut = this.logOut.bind(this)
-      this.setCurrentUser = this.setCurrentUser.bind(this)
+    this.loadUserData = this.loadUserData.bind(this)
+    this.setLogs = this.setLogs.bind(this)
 
     this.state = {
       page: "home",
       pageId: "",
-      currentUser: "Mitchell",
+      currentUser: {
+        firstName: "",
+        students: []
+      },
       sidebarClass: "open",
       contentLoading: false,
       toast: {
@@ -33,11 +37,11 @@ class DataProvider extends React.Component {
         visible: false
       },
       teachers: {},
-      students: [],
+      students: {},
       logs: [],
 
       loadTeachers: this.loadTeachers,
-      loadMoreStudents: this.loadMoreStudents,
+      loadStudents: this.loadStudents,
       loadMoreLogs: this.loadMoreLogs,
       toggleSidebar: this.toggleSidebar,
       setContentLoading: this.setContentLoading,
@@ -47,12 +51,14 @@ class DataProvider extends React.Component {
       setToast: this.setToast,
       setStudents: this.setStudents,
       logOut: this.logOut,
-     setCurrentUser:this.setCurrentUser
+      loadUserData:this.loadUserData,
+      setLogs: this.setLogs
     }
   }
 
   loadTeachers() {
     if (Object.keys(this.state.teachers).length == 0) {
+      this.setContentLoading(true)
       fetch(Constants.apiUrl + "teachers")
           .then(response => response.json())
           .then(data => {
@@ -61,17 +67,21 @@ class DataProvider extends React.Component {
               teachers[teacher.teacherID] = teacher
             })
             this.setTeachers(teachers)
+            this.setContentLoading(false)
           })
     }
   }
 
-  loadMoreStudents() {
+  loadStudents() {
     this.setContentLoading(true)
-    fetch(Constants.apiUrl + 'students?index=' + this.state.students.length)
+    fetch(Constants.apiUrl + 'students')
       .then(response => response.json())
       .then(data => {
-        const students = this.state.students.slice()
-        this.setStudents(students.concat(data))
+        const students = {}
+        data.forEach(student => {
+          students[student.studentID] = student
+        })
+        this.setStudents(students)
         this.setContentLoading(false)
       })
   }
@@ -84,6 +94,29 @@ class DataProvider extends React.Component {
         const logs = this.state.logs.slice()
         this.setLogs(logs.concat(data))
         this.setContentLoading(false)
+      })
+  }
+
+  loadUserData(currentUser){
+    this.setContentLoading(true)
+    fetch(Constants.apiUrl + 'teachers?teacherID=' + currentUser.username)
+      .then(response => response.json())
+      .then(data => {
+        if (data[0]) {
+          const user = this.state.currentUser
+          Object.assign(user, data[0])
+          Object.assign(user, currentUser)
+          this.setState({currentUser: user})
+        }
+        this.setContentLoading(false)
+      })
+
+    fetch(Constants.apiUrl + 'students?teacherID=' + currentUser.username)
+      .then(response => response.json())
+      .then(data => {
+        const user = this.state.currentUser
+        user.students = data
+        this.setState({currentUser: user})
       })
   }
 
@@ -108,10 +141,6 @@ class DataProvider extends React.Component {
     if (this.state.pageId != pageId)
       this.setState({pageId})
   }
-    
-setCurrentUser(currentUser){
-    this.setState({currentUser})
-}
 
   setToast(params, time = 2000) {
     const newToast = {

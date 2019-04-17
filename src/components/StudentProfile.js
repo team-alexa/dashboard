@@ -1,29 +1,10 @@
 import React, { Component } from 'react';
-import '../css/StudentProfile.css';
+import '../css/index.css';
 import { Context } from '../Store'
 import Constants from '../Constants'
 
 import Table from './Table';
 import SearchableInput from './SearchableInput'
-
-const singleStudentTableData = [
-  ["2/14/19", "Megan Waterworth", "Sophia Hills", "Food", "milk", "log1"],
-  ["2/14/19", "Megan Waterworth", "Jack Baker", "Anecdotal", "Details", "log12"],
-  ["2/14/19", "Megan Waterworth", "Emma Jones", "Food", "milk", "log1"],
-  ["2/14/19", "Megan Waterworth", "Fred Barthel", "Food", "Fred's Breads", "log142"],
-  ["2/14/19", "Megan Waterworth", "Nathan Irwin", "Activity", "Details", "log52"],
-  ["2/14/19", "Megan Waterworth", "Abby Johnson", "Food", "milk", "log12"],
-  ["2/13/19", "Megan Waterworth", "Trish White", "Anecdotal", "Details", "log55"],
-  ["2/13/19", "Megan Waterworth", "Steven Kitscha", "Activity", "Details", "log25"],
-  ["2/13/19", "Megan Waterworth", "Katie Clark", "Sleep", "Details", "log105"],
-  ["2/13/19", "Megan Waterworth", "Nathan Irwin", "Activity", "Details", "log42"],
-  ["2/13/19", "Megan Waterworth", "Abby Johnson", "Needs", "Details", "log68"],
-  ["2/13/19", "Megan Waterworth", "Trish White", "Food", "milk", "log22"],
-  ["2/13/19", "Megan Waterworth", "Steven Kitscha", "Food", "milk", "log53"],
-  ["2/13/19", "Megan Waterworth", "Emma Jones", "Sleep", "Details", "log24"],
-  ["2/13/19", "Megan Waterworth", "Fred Barthel", "Sleep", "Fred's Breads", "log95"],
-  ["2/13/19", "Megan Waterworth", "Collin Zafar", "Sleep", "Details", "log72"]
-]
 
 class StudentProfile extends Component{
   constructor(props){
@@ -33,6 +14,7 @@ class StudentProfile extends Component{
     this.saveData = this.saveData.bind(this)
     this.getStudentTeacherName = this.getStudentTeacherName.bind(this)
     this.addTeacher = this.addTeacher.bind(this)
+    this.loadMoreLogs = this.loadMoreLogs.bind(this)
 
     this.state = {
       birthDate: "",
@@ -46,9 +28,7 @@ class StudentProfile extends Component{
       teachers: [],
       hasChanged: false,
       editable: false,
-      date: "",
-      month: "",
-      year: ""
+      logs: []
     }
 
     this.displayedMessage = false
@@ -65,11 +45,10 @@ class StudentProfile extends Component{
               data[0].nickName = data[0].firstName
             }
             const birthDate = new Date(data[0].birthDate)
+            console.log("birthDate", data[0].birthDate)
             const newState = data[0]
-
-            newState.date = birthDate.getDate()
-            newState.month = birthDate.getMonth() + 1
-            newState.year = birthDate.getFullYear()
+            console.log("birthDate", birthDate)
+            newState.birthDate = birthDate
             newState.editable = true
             this.setState(newState)
           } else {
@@ -82,17 +61,19 @@ class StudentProfile extends Component{
     } else {
       this.setState({editable: true})
     }
-
+    this.loadMoreLogs()
     this.context.loadTeachers()
   }
 
   saveData() {
+    const dte = new Date(this.state.birthDate)
+    const dteStr = dte.getUTCFullYear() + "-" + (dte.getUTCMonth() + 1) + "-" + dte.getUTCDate()
     const body = {
       method: this.context.pageId == "new" ? "new" : "update",
       studentID: this.state.studentID,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
-      birthDate: String(parseInt(this.state.year) + 1) + "-" + this.state.month + "-" + this.state.date,
+      birthDate: dteStr,
       foodAllergies: this.state.foodAllergies,
       medical: this.state.medical,
       teacherID: this.state.teacherID,
@@ -109,7 +90,7 @@ class StudentProfile extends Component{
     .then(response => response.json())
     .then(() => {
       delete body.method
-      this.context.students.push(body)
+      this.context.students[body.studentID] = body
       this.context.setStudents(this.context.students)
       this.context.setToast({message: "Saved!", color: "green", visible: true})
     })
@@ -137,6 +118,33 @@ class StudentProfile extends Component{
     var id = teachers.length > 0 ? teachers[0] : null
     this.setState({teacherID: id})
   }
+
+  loadMoreLogs() {
+    this.context.setContentLoading(true)
+    var url = Constants.apiUrl + 'logs?index=' + this.state.logs.length
+    url += '&studentID=' + this.context.pageId
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const logs = this.state.logs.slice()
+        this.setState({logs: logs.concat(data)})
+        this.context.setContentLoading(false)
+      })
+  }
+
+  getLogTableData() {
+    const logs = this.state.logs
+    return logs.map(log => {
+      const date = new Date(log.date)
+      const dateStr = (date.getUTCMonth() + 1) + "/" + date.getUTCDate() + "/" + date.getUTCFullYear()
+      return [dateStr,
+        log.studentFullName,
+        log.teacherFullName,
+        log.activityType,
+        log.activityDetails,
+        log.logID]
+    })
+  }
   
   render() {
     var teacherName = this.getStudentTeacherName()
@@ -159,10 +167,8 @@ class StudentProfile extends Component{
       <label htmlFor="id">ID:</label> <input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/>
       <br/>
       <p>Age: {parseInt(new Date().getFullYear()) - parseInt(new Date(this.state.birthDate).getFullYear())} </p>
-      <label htmlFor="month">DOB (MM/DD/YYYY):</label>
-      <input type="number" size = "2" maxLength="2" min="0" max="12" placeholder ="01" name="month" id="month" value={this.state.month} onChange={this.onChange} autoComplete="off" />
-      /<input type="number" size = "2" maxLength="2" min="0" max="31" placeholder ="01" name="day" id="date" value={this.state.date} onChange={this.onChange} autoComplete="off" />
-      /<input type="number" size = "4" maxLength="4" placeholder ="2017" name="year" id="year" value={this.state.year} onChange={this.onChange} autoComplete="off" />
+      <label htmlFor="month">DOB :</label>
+      <input type="date" id="birthDate" value={this.state.birthDate} onChange={this.onChange} autoComplete="off" />
       <br/>
       <label htmlFor="food">Food Allergies (comma-separated):</label> <input type="text" size = "64" id="foodAllergies" value={this.state.foodAllergies} onChange={this.onChange} autoComplete="off" />
       <br/>
@@ -179,12 +185,13 @@ class StudentProfile extends Component{
       {this.context.pageId != "new" ? <div>
         <br/>
         <h2>{this.state.fullName ? `${this.state.fullName}'s Logs` : "Logs"}</h2>
-        <Table data={singleStudentTableData}
+        <Table data={this.getLogTableData()}
+          height="40vh"
           width="100%"
-          height="400px"
           headers={["Date", "Student", "Teacher", "Category", "Details"]}
           columnWidths={["10%", "20%", "20%", "10%", "40%"]}
-          rootAddress="/logs/" />
+          rootAddress="/logs/"
+          loadFunction = {this.loadMoreLogs} />
         </div> : null
       }
       </div>

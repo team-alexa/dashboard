@@ -32,7 +32,7 @@ export default class VerifyContactNew extends VerifyContact {
                 this.setState({ verifyAttr: null });
                 Auth.currentAuthenticatedUser()
                     .then(result => {
-                        this.context.setCurrentUser(result.username);
+                        this.context.loadUserData(result);
                     });
             })
             .catch(err => this.error(err));

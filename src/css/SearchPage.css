@@ -14,7 +14,7 @@
   float: right;
 }
 
-.search-page .header input[type="text"] {
+.search-page .header input[type="text"], .search-page .header input[type="date"] {
   float: left;
   margin-top: 25px;
   width: 200px;
@@ -26,6 +26,7 @@
   font-family: "Open Sans";
   color: #6e6e6e;
   outline: none;
+  margin: 25px 4px 0;
 }
 
 .search-page .header button[type="submit"] {
@@ -40,6 +41,7 @@
   outline: none;
   border: none;
   cursor: pointer;
+  margin: 25px 4px 0;
 }
 
 .search-page .header button[type="submit"]:hover {
