@@ -6,25 +6,6 @@ import Constants from '../Constants'
 import Table from './Table';
 import SearchableInput from './SearchableInput'
 
-const singleStudentTableData = [
-  ["2/14/19", "Megan Waterworth", "Sophia Hills", "Food", "milk", "log1"],
-  ["2/14/19", "Megan Waterworth", "Jack Baker", "Anecdotal", "Details", "log12"],
-  ["2/14/19", "Megan Waterworth", "Emma Jones", "Food", "milk", "log1"],
-  ["2/14/19", "Megan Waterworth", "Fred Barthel", "Food", "Fred's Breads", "log142"],
-  ["2/14/19", "Megan Waterworth", "Nathan Irwin", "Activity", "Details", "log52"],
-  ["2/14/19", "Megan Waterworth", "Abby Johnson", "Food", "milk", "log12"],
-  ["2/13/19", "Megan Waterworth", "Trish White", "Anecdotal", "Details", "log55"],
-  ["2/13/19", "Megan Waterworth", "Steven Kitscha", "Activity", "Details", "log25"],
-  ["2/13/19", "Megan Waterworth", "Katie Clark", "Sleep", "Details", "log105"],
-  ["2/13/19", "Megan Waterworth", "Nathan Irwin", "Activity", "Details", "log42"],
-  ["2/13/19", "Megan Waterworth", "Abby Johnson", "Needs", "Details", "log68"],
-  ["2/13/19", "Megan Waterworth", "Trish White", "Food", "milk", "log22"],
-  ["2/13/19", "Megan Waterworth", "Steven Kitscha", "Food", "milk", "log53"],
-  ["2/13/19", "Megan Waterworth", "Emma Jones", "Sleep", "Details", "log24"],
-  ["2/13/19", "Megan Waterworth", "Fred Barthel", "Sleep", "Fred's Breads", "log95"],
-  ["2/13/19", "Megan Waterworth", "Collin Zafar", "Sleep", "Details", "log72"]
-]
-
 class StudentProfile extends Component{
   constructor(props){
     super(props)
@@ -33,6 +14,7 @@ class StudentProfile extends Component{
     this.saveData = this.saveData.bind(this)
     this.getStudentTeacherName = this.getStudentTeacherName.bind(this)
     this.addTeacher = this.addTeacher.bind(this)
+    this.loadMoreLogs = this.loadMoreLogs.bind(this)
 
     this.state = {
       birthDate: "",
@@ -48,7 +30,8 @@ class StudentProfile extends Component{
       editable: false,
       date: "",
       month: "",
-      year: ""
+      year: "",
+      logs: []
     }
 
     this.displayedMessage = false
@@ -82,7 +65,7 @@ class StudentProfile extends Component{
     } else {
       this.setState({editable: true})
     }
-
+    this.loadMoreLogs()
     this.context.loadTeachers()
   }
 
@@ -137,6 +120,33 @@ class StudentProfile extends Component{
     var id = teachers.length > 0 ? teachers[0] : null
     this.setState({teacherID: id})
   }
+
+  loadMoreLogs() {
+    this.context.setContentLoading(true)
+    var url = Constants.apiUrl + 'logs?index=' + this.state.logs.length
+    url += '&studentID=' + this.context.pageId
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const logs = this.state.logs.slice()
+        this.setState({logs: logs.concat(data)})
+        this.context.setContentLoading(false)
+      })
+  }
+
+  getLogTableData() {
+    const logs = this.state.logs
+    return logs.map(log => {
+      const date = new Date(log.date)
+      const dateStr = (date.getUTCMonth() + 1) + "/" + date.getUTCDate() + "/" + date.getUTCFullYear()
+      return [dateStr,
+        log.studentFullName,
+        log.teacherFullName,
+        log.activityType,
+        log.activityDetails,
+        log.logID]
+    })
+  }
   
   render() {
     var teacherName = this.getStudentTeacherName()
@@ -179,12 +189,13 @@ class StudentProfile extends Component{
       {this.context.pageId != "new" ? <div>
         <br/>
         <h2>{this.state.fullName ? `${this.state.fullName}'s Logs` : "Logs"}</h2>
-        <Table data={singleStudentTableData}
+        <Table data={this.getLogTableData()}
+          height="40vh"
           width="100%"
-          height="400px"
           headers={["Date", "Student", "Teacher", "Category", "Details"]}
           columnWidths={["10%", "20%", "20%", "10%", "40%"]}
-          rootAddress="/logs/" />
+          rootAddress="/logs/"
+          loadFunction = {this.loadMoreLogs} />
         </div> : null
       }
       </div>
