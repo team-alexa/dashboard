@@ -20,6 +20,7 @@ class DataProvider extends React.Component {
     this.setStudents = this.setStudents.bind(this)
     this.logOut = this.logOut.bind(this)
     this.loadUserData = this.loadUserData.bind(this)
+    this.setLogs = this.setLogs.bind(this)
 
     this.state = {
       page: "home",
@@ -50,7 +51,8 @@ class DataProvider extends React.Component {
       setToast: this.setToast,
       setStudents: this.setStudents,
       logOut: this.logOut,
-      loadUserData:this.loadUserData
+      loadUserData:this.loadUserData,
+      setLogs: this.setLogs
     }
   }
 
