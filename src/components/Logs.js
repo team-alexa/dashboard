@@ -15,7 +15,9 @@ class Logs extends Component {
       studentName: "",
       teacherName: "",
       date: "",
-      searchLogs: []
+      searchLogs: [],
+      displaySearch: false,
+      searchChanged: false
     }
   }
 
@@ -27,9 +29,11 @@ class Logs extends Component {
   }
 
   getLogTableData() {
-    const logs = this.state.searchLogs.length > 0 ? this.state.searchLogs : this.context.logs
+    const logs = this.state.displaySearch ? this.state.searchLogs : this.context.logs
     return logs.map(log => {
-      return [log.date,
+      const date = new Date(log.date)
+      const dateStr = (date.getUTCMonth() + 1) + "/" + date.getUTCDate() + "/" + date.getUTCFullYear()
+      return [dateStr,
         log.studentFullName,
         log.teacherFullName,
         log.activityType,
@@ -42,20 +46,39 @@ class Logs extends Component {
     if (e) {
       e.preventDefault()
     }
-    if (this.state.studentName || this.state.teacherName) {
-      var url = Constants.apiUrl + "logs?index=" + this.state.searchLogs.length
+    if (this.state.studentName || this.state.teacherName || this.state.date) {
+      var date = this.state.date ? new Date(this.state.date) : ""
+      date = date ? (date.getUTCMonth() + 1) + "-" + date.getUTCDate() + "-" + date.getUTCFullYear() : ""
+
+      var url = Constants.apiUrl + "logs?index=" + (this.state.searchChanged ? "0" : this.state.searchLogs.length) 
       url += this.state.studentName ? "&studentFullName=" + this.state.studentName : ""
       url += this.state.teacherName ? "&teacherFullName=" + this.state.teacherName : ""
+      url += date ? "&date=" + date : ""
+      this.context.setContentLoading(true)
       fetch(url)
         .then(response => response.json())
-        .then(data => this.setState({searchLogs: data || []}))
+        .then(data => {
+          this.context.setContentLoading(false)
+          if (!(data instanceof Array)) {
+            this.context.setToast({color: "red", message: "Data didn't load correctly", visible: true}, 10000)
+            return
+          }
+
+          if (!this.state.searchChanged) {
+            const logs = this.state.searchLogs.slice()
+            this.setState({searchLogs: logs.concat(data), displaySearch: true})
+          } else {
+            this.setState({searchLogs: data || [], displaySearch: true})
+            this.setState({searchChanged: false})
+          }
+        })
     } else {
-      this.setState({searchLogs: []})
+      this.setState({searchLogs: [], displaySearch: false})
     }
   }
 
   onChange(e) {
-    this.setState({[e.target.id]: e.target.value, hasChanged: true});
+    this.setState({[e.target.id]: e.target.value, "searchChanged": true});
   }
 
   render() {
@@ -64,6 +87,7 @@ class Logs extends Component {
         <div className="header">
           <h2>Logs</h2>
           <form onSubmit={this.search}>
+            <input type="date" placeholder="Date" value={this.state.date} id="date" onChange={this.onChange}></input>
             <input type="text" placeholder="Student" value={this.state.studentName} id="studentName" onChange={this.onChange}></input>
             <input type="text" placeholder="Teacher" value={this.state.teacherName} id="teacherName" onChange={this.onChange}></input>
             <button type="submit" onClick={this.search}>→</button>
@@ -76,7 +100,7 @@ class Logs extends Component {
           columnWidths={["10%", "20%", "20%", "10%", "40%"]}
           rootAddress="/logs/"
           newLink="/logs/new"
-          loadFunction = {this.context.loadMoreLogs} />
+          loadFunction = {this.state.displaySearch ? () => {this.search(null)} : this.context.loadMoreLogs} />
       </div>
     );
   }

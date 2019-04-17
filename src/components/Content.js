@@ -8,6 +8,7 @@ import StudentProfile from './StudentProfile'
 import Students from './Students'
 import Logs from './Logs'
 import Error from './Error'
+import Help from './Help'
 import LogPage from'./LogPage'
 import AccountPage from './AccountPage'
 
@@ -36,6 +37,7 @@ class Content extends Component {
         case "logs": return <Logs />
         case "adminpanel": return <AdminPage />
         case "myaccount": return <AccountPage />
+        case "help": return <Help />
         default: return <Error />
       }
     }

@@ -4,7 +4,7 @@
   display: inline-block;
 }
 
-.button-group {
+.student-profile .button-group {
   position: absolute;
   top: 15px;
   right: 15px;
@@ -16,7 +16,7 @@
   display: block;
 }
 
-.button-group button {
+.student-profile .button-group button {
   color: white;
   border: none;
   margin: 8px 0px;
@@ -30,34 +30,34 @@
   outline: none;
 }
 
-.button-group button.enabled {
+.student-profile .button-group button.enabled {
   background-color: rgb(0, 159, 194);
   border: 2px solid rgb(0, 159, 194);
 }
 
-.button-group button.enabled:hover {
+.student-profile .button-group button.enabled:hover {
   color: rgb(0, 159, 194);
   background-color: white;
 }
 
-.button-group button.disabled {
+.student-profile .button-group button.disabled {
   background-color: rgb(170, 170, 170);
 }
 
-.button-group button.disabled {
+.student-profile .button-group button.disabled {
   cursor: not-allowed;
 }
 
-.button-group .log-button .text{
+.student-profile .button-group .log-button .text{
   display: inline;
 }
 
-.button-group .icon{
+.student-profile .button-group .icon{
   display: inline;
   font-size: 30px;
 }
 
-input[type="text"], input[type="number"] {
+.student-profile input[type="text"], input[type="number"] {
   padding: 10px;
   margin: 6px;
   border: 1px solid rgb(201, 201, 201);
@@ -66,7 +66,7 @@ input[type="text"], input[type="number"] {
   font-size: 16px;
 }
 
-input[type="text"]:focus {
+.student-profile input[type="text"]:focus {
   border-color:rgb(0, 159, 194);
   box-shadow: 0 0 8px 0 rgb(0, 159, 194);
 }
