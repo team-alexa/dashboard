@@ -9,7 +9,7 @@ class DataProvider extends React.Component {
     super(props)
 
     this.loadTeachers = this.loadTeachers.bind(this)
-    this.loadMoreStudents = this.loadMoreStudents.bind(this)
+    this.loadStudents = this.loadStudents.bind(this)
     this.loadMoreLogs = this.loadMoreLogs.bind(this)
     this.toggleSidebar = this.toggleSidebar.bind(this)
     this.setContentLoading = this.setContentLoading.bind(this)
@@ -36,11 +36,11 @@ class DataProvider extends React.Component {
         visible: false
       },
       teachers: {},
-      students: [],
+      students: {},
       logs: [],
 
       loadTeachers: this.loadTeachers,
-      loadMoreStudents: this.loadMoreStudents,
+      loadStudents: this.loadStudents,
       loadMoreLogs: this.loadMoreLogs,
       toggleSidebar: this.toggleSidebar,
       setContentLoading: this.setContentLoading,
@@ -56,6 +56,7 @@ class DataProvider extends React.Component {
 
   loadTeachers() {
     if (Object.keys(this.state.teachers).length == 0) {
+      this.setContentLoading(true)
       fetch(Constants.apiUrl + "teachers")
           .then(response => response.json())
           .then(data => {
@@ -64,17 +65,21 @@ class DataProvider extends React.Component {
               teachers[teacher.teacherID] = teacher
             })
             this.setTeachers(teachers)
+            this.setContentLoading(false)
           })
     }
   }
 
-  loadMoreStudents() {
+  loadStudents() {
     this.setContentLoading(true)
-    fetch(Constants.apiUrl + 'students?index=' + this.state.students.length)
+    fetch(Constants.apiUrl + 'students')
       .then(response => response.json())
       .then(data => {
-        const students = this.state.students.slice()
-        this.setStudents(students.concat(data))
+        const students = {}
+        data.forEach(student => {
+          students[student.studentID] = student
+        })
+        this.setStudents(students)
         this.setContentLoading(false)
       })
   }

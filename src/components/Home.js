@@ -13,15 +13,17 @@ class Home extends Component {
   generateStudentCards() {
     const cards = []
     this.context.currentUser.students.forEach((student, index) => {
+      const age = parseInt(new Date().getFullYear()) - parseInt(new Date(student.birthDate).getFullYear())
       cards.push(
         <StudentCard
           name={student.fullName}
-          age={student.age}
+          age={age}
           allergies={student.foodAllergies}
+          id={student.studentID}
           key={index}
         />)
     })
-    return cards;
+    return cards
   }
 
   render() {

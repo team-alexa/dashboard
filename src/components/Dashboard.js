@@ -14,6 +14,8 @@ class Dashboard extends Component {
   componentDidMount() {
     Auth.currentAuthenticatedUser()
       .then(user => this.context.loadUserData(user))
+    this.context.loadTeachers()
+    this.context.loadStudents()
   }
 
   render() {
