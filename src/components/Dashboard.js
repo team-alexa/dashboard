@@ -16,6 +16,9 @@ class Dashboard extends Component {
       .then(user => this.context.loadUserData(user))
     this.context.loadTeachers()
     this.context.loadStudents()
+    if (this.context.logs.length == 0) {
+      this.context.loadMoreLogs()
+    }
   }
 
   render() {

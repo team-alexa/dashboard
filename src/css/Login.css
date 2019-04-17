@@ -48,7 +48,7 @@
     padding: 10px;
 }
 
-input[type="password"] {
+.login-screen input[type="password"], .login-screen input[type="text"] {
   padding: 10px;
   margin: 6px;
   border: 1px solid rgb(201, 201, 201);
@@ -57,7 +57,7 @@ input[type="password"] {
   font-size: 16px;
 }
 
-input[type="password"]:focus {
+.login-screen input[type="password"]:focus, .login-screen input[type="text"]:focus {
   border-color:rgb(0, 159, 194);
   box-shadow: 0 0 8px 0 rgb(0, 159, 194);
 }
