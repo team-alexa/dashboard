@@ -1,5 +1,6 @@
 import React from 'react'
 import Constants from './Constants'
+import { Auth } from 'aws-amplify';
 
 const Context = React.createContext("")
 
@@ -17,6 +18,8 @@ class DataProvider extends React.Component {
     this.setTeachers = this.setTeachers.bind(this)
     this.setToast = this.setToast.bind(this)
     this.setStudents = this.setStudents.bind(this)
+    this.logOut = this.logOut.bind(this)
+      this.setCurrentUser = this.setCurrentUser.bind(this)
 
     this.state = {
       page: "home",
@@ -42,7 +45,9 @@ class DataProvider extends React.Component {
       setPageId: this.setPageId,
       setTeachers: this.setTeachers,
       setToast: this.setToast,
-      setStudents: this.setStudents
+      setStudents: this.setStudents,
+      logOut: this.logOut,
+     setCurrentUser:this.setCurrentUser
     }
   }
 
@@ -103,6 +108,10 @@ class DataProvider extends React.Component {
     if (this.state.pageId != pageId)
       this.setState({pageId})
   }
+    
+setCurrentUser(currentUser){
+    this.setState({currentUser})
+}
 
   setToast(params, time = 2000) {
     const newToast = {
@@ -130,6 +139,12 @@ class DataProvider extends React.Component {
     this.setState({logs})
   }
 
+  logOut(){
+      Auth.signOut()
+        .then(data => console.log(data))
+        .catch(err => console.log(err));
+  }
+    
   render() {
     return <Context.Provider value={this.state}>
       {this.props.children}

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../css/Sidebar.css';
 import SidebarButton from "./SidebarButton";
 import { Context } from "../Store";
+//import AuthPiece from "aws-amplify-react/dist/Auth";
 
 class Sidebar extends Component {
     
@@ -16,7 +17,8 @@ class Sidebar extends Component {
         <SidebarButton name="My Account" link="myaccount" active={this.context.page == "myaccount"}/>
         <SidebarButton name="Admin Panel" link="adminpanel" active={this.context.page == "adminpanel"}/>
         <SidebarButton name="Help" link="help" active={this.context.page == "help"}/>
-        <SidebarButton name="Log Out" link="login"/>
+        <button className="logout-button" onClick={this.context.logOut}>Log Out</button>
+        
       </div>
     );
   }
