@@ -17,13 +17,6 @@ class Students extends Component {
     }
   }
 
-  componentDidMount() {
-    if (this.context.students.length == 0) {
-      this.context.loadMoreStudents()
-    }
-    this.context.loadTeachers()
-  }
-
   getStudentTableData() {
     if (this.state.searchStudents.length > 0) {
       return Object.keys(this.state.searchStudents).map(student => {

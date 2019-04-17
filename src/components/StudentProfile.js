@@ -92,7 +92,7 @@ class StudentProfile extends Component{
     .then(response => response.json())
     .then(() => {
       delete body.method
-      this.context.students.push(body)
+      this.context.students[body.studentID] = body
       this.context.setStudents(this.context.students)
       this.context.setToast({message: "Saved!", color: "green", visible: true})
     })
