@@ -13,13 +13,15 @@ class Students extends Component {
 
     this.state = {
       searchStudents: [],
-      search: ""
+      displaySearch: false,
+      studentName: "",
+      teacherName: "",
     }
   }
 
   getStudentTableData() {
-    if (this.state.searchStudents.length > 0) {
-      return Object.keys(this.state.searchStudents).map(student => {
+    if (this.state.displaySearch) {
+      return this.state.searchStudents.map(student => {
         student = this.context.students[student]
         var age = parseInt(new Date().getFullYear()) - parseInt(new Date(student.birthDate).getFullYear())
         var teacher = this.context.teachers[student.teacherID] ? this.context.teachers[student.teacherID].fullName : ""
@@ -49,18 +51,27 @@ class Students extends Component {
     if (e) {
       e.preventDefault()
     }
-    if (this.state.search) {
+    if (this.state.studentName || this.state.teacherName) {
       const filteredStudents = Object.keys(this.context.students).filter(student => {
-        return this.context.students[student].fullName.includes(this.state.search)
+        var containsStudentName = true
+        var containsTeacherName = true
+        if (this.state.studentName) {
+          containsStudentName = this.context.students[student].fullName.toLowerCase().includes(this.state.studentName.toLowerCase())
+        }
+        if (this.state.teacherName) {
+          const studentData = this.context.students[student]
+          const teacherName = this.context.teachers[studentData.teacherID] ? this.context.teachers[studentData.teacherID].fullName : ""
+          containsTeacherName = teacherName.toLowerCase().includes(this.state.teacherName.toLowerCase())
+        }
+        return containsStudentName && containsTeacherName
       })
-      this.setState({searchStudents: filteredStudents})
+      this.setState({searchStudents: filteredStudents, displaySearch: true})
     } else {
-      this.setState({searchStudents: []})
+      this.setState({displaySearch: false})
     }
   }
 
   onChange(e) {
-    console.log(e.target.id)
     this.setState({[e.target.id]: e.target.value});
   }
 
@@ -70,7 +81,8 @@ class Students extends Component {
         <div className="header">
           <h2>Students</h2>
           <form onSubmit={this.search}>
-            <input type="text" placeholder="Search" id="search" value={this.state.search} onChange={this.onChange}></input>
+            <input type="text" placeholder="Student" value={this.state.studentName} id="studentName" onChange={this.onChange}></input>
+            <input type="text" placeholder="Teacher" value={this.state.teacherName} id="teacherName" onChange={this.onChange}></input>
             <button type="submit">→</button>
           </form>
         </div>

@@ -16,7 +16,8 @@ class Logs extends Component {
       teacherName: "",
       date: "",
       searchLogs: [],
-      displaySearch: false
+      displaySearch: false,
+      searchChanged: false
     }
   }
 
@@ -46,25 +47,29 @@ class Logs extends Component {
       e.preventDefault()
     }
     if (this.state.studentName || this.state.teacherName || this.state.date) {
-      var url = Constants.apiUrl + "logs?index=" + this.state.searchLogs.length
+      var date = this.state.date ? new Date(this.state.date) : ""
+      date = date ? (date.getUTCMonth() + 1) + "-" + date.getUTCDate() + "-" + date.getUTCFullYear() : ""
+
+      var url = Constants.apiUrl + "logs?index=" + (this.state.searchChanged ? "0" : this.state.searchLogs.length) 
       url += this.state.studentName ? "&studentFullName=" + this.state.studentName : ""
       url += this.state.teacherName ? "&teacherFullName=" + this.state.teacherName : ""
-      url += this.state.date ? "&date=" + this.state.date.replace('/', '-', 'g') : ""
+      url += date ? "&date=" + date : ""
       this.context.setContentLoading(true)
       fetch(url)
         .then(response => response.json())
         .then(data => {
           this.context.setContentLoading(false)
-          if (typeof data != Array) {
+          if (!(data instanceof Array)) {
             this.context.setToast({color: "red", message: "Data didn't load correctly", visible: true}, 10000)
             return
           }
 
-          if (this.state.searchLogs.length > 0) {
+          if (!this.state.searchChanged) {
             const logs = this.state.searchLogs.slice()
             this.setState({searchLogs: logs.concat(data), displaySearch: true})
           } else {
             this.setState({searchLogs: data || [], displaySearch: true})
+            this.setState({searchChanged: false})
           }
         })
     } else {
@@ -73,7 +78,7 @@ class Logs extends Component {
   }
 
   onChange(e) {
-    this.setState({[e.target.id]: e.target.value});
+    this.setState({[e.target.id]: e.target.value, "searchChanged": true});
   }
 
   render() {
