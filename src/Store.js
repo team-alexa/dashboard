@@ -1,5 +1,6 @@
 import React from 'react'
 import Constants from './Constants'
+import { Auth } from 'aws-amplify';
 
 const Context = React.createContext("")
 
@@ -17,12 +18,17 @@ class DataProvider extends React.Component {
     this.setTeachers = this.setTeachers.bind(this)
     this.setToast = this.setToast.bind(this)
     this.setStudents = this.setStudents.bind(this)
+    this.logOut = this.logOut.bind(this)
+    this.loadUserData = this.loadUserData.bind(this)
     this.setLogs = this.setLogs.bind(this)
 
     this.state = {
       page: "home",
       pageId: "",
-      currentUser: "Mitchell",
+      currentUser: {
+        firstName: "",
+        students: []
+      },
       sidebarClass: "open",
       contentLoading: false,
       toast: {
@@ -44,6 +50,8 @@ class DataProvider extends React.Component {
       setTeachers: this.setTeachers,
       setToast: this.setToast,
       setStudents: this.setStudents,
+      logOut: this.logOut,
+      loadUserData:this.loadUserData,
       setLogs: this.setLogs
     }
   }
@@ -86,6 +94,29 @@ class DataProvider extends React.Component {
         const logs = this.state.logs.slice()
         this.setLogs(logs.concat(data))
         this.setContentLoading(false)
+      })
+  }
+
+  loadUserData(currentUser){
+    this.setContentLoading(true)
+    fetch(Constants.apiUrl + 'teachers?teacherID=' + currentUser.username)
+      .then(response => response.json())
+      .then(data => {
+        if (data[0]) {
+          const user = this.state.currentUser
+          Object.assign(user, data[0])
+          Object.assign(user, currentUser)
+          this.setState({currentUser: user})
+        }
+        this.setContentLoading(false)
+      })
+
+    fetch(Constants.apiUrl + 'students?teacherID=' + currentUser.username)
+      .then(response => response.json())
+      .then(data => {
+        const user = this.state.currentUser
+        user.students = data
+        this.setState({currentUser: user})
       })
   }
 
@@ -137,6 +168,12 @@ class DataProvider extends React.Component {
     this.setState({logs})
   }
 
+  logOut(){
+      Auth.signOut()
+        .then(data => console.log(data))
+        .catch(err => console.log(err));
+  }
+    
   render() {
     return <Context.Provider value={this.state}>
       {this.props.children}

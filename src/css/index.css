@@ -12,6 +12,10 @@ h2 {
   color: rgb(96, 104, 103);
 }
 
+.Nav__navBar___3UdSD{
+    display:none;
+}
+
 .name {
 border-bottom: 1px solid rgb(96, 104, 103);
 padding: 0px 3px 3px;
