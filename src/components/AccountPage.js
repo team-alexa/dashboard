@@ -11,32 +11,52 @@ class AccountPage extends Component{
         this.onChange = this.onChange.bind(this)
 
         this.state = {
-           
             firstName: "",
             lastName: "",
+            nickName: "",
+            status: "",
             email: "",
-            admin: false,
-            editable: false,
-            hasChanged: false       
+            role: "",
+            admin: "",
+            editable: "",
+            hasChanged: ""       
           }
     }
 
-    componentDidMount(){
+  componentDidMount(){
         if (this.context.pageId != "new") {
             this.context.setContentLoading(true)
-    
-
-
-            this.setState({firstName: "Gilbert",
-              lastName: "Phillips",
-              email: "philgil@hotmail.com",
-              editable: true})
-            this.context.setContentLoading(false)
-        } else {
-            this.setState({
-              editable: true})
+            fetch(Constants.apiUrl + "Teachers?teacherID=" + this.context.pageId)
+      .then(response => response.json())
+      .then(data => {
+        if (data[0]) {
+          const newState = data[0]
+          newState.firstName = data[0].firstName
+          newState.lastName = data[0].firstName
+          newState.nickName = data[0].nickName
+          newState.status = data[0].status
+          newState.email = data[0].email
+          newState.role = data[0].role
+          newState.hasChanged = false
+          newState.editable = true
+          if(newState.role === "admin"){
+            newState.admin = true
           }
-    }
+          else{
+            newState.admin = false
+          }
+          this.setState(newState)
+          } else {
+          if (!this.displayedMessage) {
+            this.context.setToast({message: "No Account Found", color: "red", visible: true}, 10000)
+          }
+        }
+        this.context.setContentLoading(false)
+        })
+      }else {
+        this.setState({editable: true})
+      }
+     }
     onChange(e) {
         if (this.state.editable)
           this.setState({[e.target.id]: e.target.value, hasChanged: true});
