@@ -26,7 +26,7 @@ class AccountPage extends Component{
   componentDidMount(){
         if (this.context.pageId != "new") {
             this.context.setContentLoading(true)
-            fetch(Constants.apiUrl + "Teachers?teacherID=" + this.context.pageId)
+            fetch(Constants.apiUrl + "Teachers?teacherID=" + this.context.currentUser.fullName)
       .then(response => response.json())
       .then(data => {
         if (data[0]) {
