@@ -82,6 +82,7 @@ border: 1px solid rgb(201, 201, 201);
 border-radius: 4px;     
 outline: none;
 font-size: 16px;
+font-family: 'Open Sans', sans-serif;
 }
 
 input[type="text"]:focus, input[type="date"]:focus, input[type="time"]:focus {
