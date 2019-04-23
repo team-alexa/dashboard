@@ -1,62 +1,73 @@
 import React, {Component} from 'react';
 import '../css/index.css'
-import{Context} from '../Store'
+import{ Context } from '../Store'
 import Constants from '../Constants'
+import { Auth } from 'aws-amplify';
 
 
 class AccountPage extends Component{
-    constructor(props){
-        super(props)
+  constructor(props){
+    super(props)
 
-        this.onChange = this.onChange.bind(this)
+    this.onChange = this.onChange.bind(this)
 
-        this.state = {
-            firstName: "",
-            lastName: "",
-            nickName: "",
-            status: "",
-            email: "",
-            role: "",
-            admin: "",
-            editable: "",
-            hasChanged: ""       
-          }
+    this.state = {
+      firstName: "",
+      lastName: "",
+      nickName: "",
+      status: "",
+      email: "",
+      role: "",
+      admin: "",
+      editable: "",
+      hasChanged: ""       
     }
+  }
 
   componentDidMount(){
-        if (this.context.pageId != "new") {
-            this.context.setContentLoading(true)
-            fetch(Constants.apiUrl + "Teachers?teacherID=" + this.context.currentUser.fullName)
-      .then(response => response.json())
-      .then(data => {
-        if (data[0]) {
-          const newState = data[0]
-          newState.firstName = data[0].firstName
-          newState.lastName = data[0].firstName
-          newState.nickName = data[0].nickName
-          newState.status = data[0].status
-          newState.email = data[0].email
-          newState.role = data[0].role
-          newState.hasChanged = false
-          newState.editable = true
-          if(newState.role === "admin"){
-            newState.admin = true
-          }
-          else{
-            newState.admin = false
-          }
-          this.setState(newState)
+    if (this.context.pageId != "new") {
+      this.context.setContentLoading(true)
+        Auth.currentAuthenticatedUser()
+        .then(user => this.context.loadUserData(user))
+        console.log(this.context.teacherID)
+        console.log(this.context.currentUser)
+        fetch(Constants.apiUrl + "teachers?teacherID=" + this.context.currentUser.username)
+        .then(response => response.json())
+        .then(data => {
+          if (data[0]) {
+            const newState = data[0]
+            newState.firstName = data[0].firstName
+            newState.lastName = data[0].lastName
+            newState.nickName = data[0].nickName
+            newState.status = data[0].status
+            console.log(this.context.currentUser)
+            //  console.log(this.context.currentUser.attributes.email)
+            newState.email =this.context.currentUser.attributes.email
+            newState.role = data[0].role
+            newState.hasChanged = false
+            newState.editable = true
+            if(newState.role === "admin"){
+              newState.admin = true
+            }
+            else{
+              newState.admin = false
+            }
+            this.setState(newState)
           } else {
+            console.log(this.context.currentUser)
+            console.log(this.context.teacherID)
+            console.log(this.context.currentUser.teacherID)
           if (!this.displayedMessage) {
             this.context.setToast({message: "No Account Found", color: "red", visible: true}, 10000)
           }
         }
         this.context.setContentLoading(false)
-        })
-      }else {
-        this.setState({editable: true})
-      }
-     }
+      })
+    }
+    else {
+      this.setState({editable: true})
+    }
+ }
     onChange(e) {
         if (this.state.editable)
           this.setState({[e.target.id]: e.target.value, hasChanged: true});
@@ -77,8 +88,8 @@ class AccountPage extends Component{
             <label htmlFor="lname">Name:</label> <input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.state.lastName} onChange={this.onChange} autoComplete="off"/>
             <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.state.firstName} onChange={this.onChange} autoComplete="off"/>
             <br/>
-            <label htmlFor="email">email address:</label> <input type="text" placeholder="email address" size ="32"  name="email" id="email" value={this.state.email} onChange={this.onChange} autoComplete="off"/>
-            <br/>
+           {/* <label htmlFor="email">email address:</label> <input type="text" placeholder="email address" size ="32"  name="email" id="email" value={this.state.email} onChange={this.onChange} autoComplete="off"/>*/}
+            <p>Email Address: {this.state.email}</p>
             <p>Admin: {this.state.admin? "Yes" : "No"}</p>
           </div>
         )
