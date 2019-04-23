@@ -23,25 +23,27 @@ class AccountPage extends Component{
       hasChanged: ""       
     }
   }
-
+/* I think this fails because componentDidMount() is called before the call to loadUserData() in dashboard.js 
+          can complete. Check console logs after a refresh. 
+          Console.log() call in Store.js doesn't execute until after all print statements in componentDidMount() */
   componentDidMount(){
     if (this.context.pageId != "new") {
       this.context.setContentLoading(true)
-        Auth.currentAuthenticatedUser()
-        .then(user => this.context.loadUserData(user))
-        console.log(this.context.teacherID)
-        console.log(this.context.currentUser)
-        fetch(Constants.apiUrl + "teachers?teacherID=" + this.context.currentUser.username)
+      console.log(this.state.currentUser)
+      console.log("teacherID = "  + this.state.currentUser.teacherID)
+        // Auth.currentAuthenticatedUser()                                tried reloading the currentUser here, 
+        // .then(user => this.context.loadUserData(user))                         no dice.
+        console.log("teacherID = "  + this.context.currentUser.teacherID)
+        fetch(Constants.apiUrl + "teachers?teacherID=" + this.context.currentUser.teacherID)
         .then(response => response.json())
         .then(data => {
           if (data[0]) {
-            const newState = data[0]
+            const newState = data[0]                          
             newState.firstName = data[0].firstName
             newState.lastName = data[0].lastName
             newState.nickName = data[0].nickName
             newState.status = data[0].status
             console.log(this.context.currentUser)
-            //  console.log(this.context.currentUser.attributes.email)
             newState.email =this.context.currentUser.attributes.email
             newState.role = data[0].role
             newState.hasChanged = false
@@ -53,10 +55,32 @@ class AccountPage extends Component{
               newState.admin = false
             }
             this.setState(newState)
-          } else {
+          }
+
+
+          /* I tried skipping the api call in componentDidMount() and setting the data as shown below.
+         
+          
+            const newState = this.context.currentUser
+            newState.firstName = this.context.currentUser.firstName
+            newState.lastName = this.context.currentUser.lastName
+            newState.nickName = this.context.currentUser.nickName
+            newState.status = this.context.currentUser.status
             console.log(this.context.currentUser)
-            console.log(this.context.teacherID)
-            console.log(this.context.currentUser.teacherID)
+            newState.email =this.context.currentUser.attributes.email
+            newState.role = this.context.currentUser.role
+            newState.hasChanged = false
+            newState.editable = true
+            if(newState.role === "admin"){
+              newState.admin = true
+            }
+            else{
+              newState.admin = false
+            }
+            this.setState(newState)          
+          */
+          else {
+            console.log(this.context.currentUser)
           if (!this.displayedMessage) {
             this.context.setToast({message: "No Account Found", color: "red", visible: true}, 10000)
           }

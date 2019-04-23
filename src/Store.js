@@ -25,9 +25,9 @@ class DataProvider extends React.Component {
     this.state = {
       page: "home",
       pageId: "",
-      teacherID: "",
       currentUser: {
         firstName: "",
+        teacherID: "",
         students: []
       },
       sidebarClass: "open",
@@ -107,7 +107,7 @@ class DataProvider extends React.Component {
           const user = this.state.currentUser
           Object.assign(user, data[0])
           Object.assign(user, currentUser)
-         
+          console.log(user.teacherID)
           this.setState({currentUser: user})
         }
         this.setContentLoading(false)
