@@ -5,7 +5,7 @@ import Constants from '../Constants'
 
 import Table from './Table';
 import SearchableInput from './SearchableInput'
-
+import DailyReport from './DailyReport';
 const singleStudentTableData = [
   ["2/14/19", "Megan Waterworth", "Sophia Hills", "Food", "milk", "log1"],
   ["2/14/19", "Megan Waterworth", "Jack Baker", "Anecdotal", "Details", "log12"],
@@ -33,7 +33,11 @@ class StudentProfile extends Component{
     this.saveData = this.saveData.bind(this)
     this.getStudentTeacherName = this.getStudentTeacherName.bind(this)
     this.addTeacher = this.addTeacher.bind(this)
-
+    this.toggleDailyReport=this.toggleDailyReport.bind(this)
+    this.currentDate=this.currentDate.bind(this);
+    this.getDailyLogs=this.getDailyLogs.bind(this);
+    this.showDailyLogsButton=this.showDailyLogsButton.bind(this);
+    this.setDailyLogs=this.setDailyLogs.bind(this);
     this.state = {
       birthDate: "",
       firstName: "",
@@ -48,7 +52,9 @@ class StudentProfile extends Component{
       editable: false,
       date: "",
       month: "",
-      year: ""
+      year: "",
+      showDailyReport: false,
+      dailyLogs:[]
     }
 
     this.displayedMessage = false
@@ -85,7 +91,11 @@ class StudentProfile extends Component{
 
     this.context.loadTeachers()
   }
-
+  toggleDailyReport() {  
+    this.setState({  
+      showDailyReport: !this.state.showDailyReport  
+    });  
+     } 
   saveData() {
     const body = {
       method: this.context.pageId == "new" ? "new" : "update",
@@ -137,7 +147,31 @@ class StudentProfile extends Component{
     var id = teachers.length > 0 ? teachers[0] : null
     this.setState({teacherID: id})
   }
-  
+  getDailyLogs(){
+    fetch(Constants.apiUrl + "logs?studentID=" + this.state.studentID+"&date="+this.currentDate())
+        .then(response => response.json())
+        .then(data => {
+          if (data[0]) {
+            this.setDailyLogs(data)
+          } else {
+              this.context.setToast({message: "No logs found for this student today", color: "red", visible: true}, 2500)
+          }
+        })
+  }
+  setDailyLogs(dailyLogs) {
+    this.setState({dailyLogs})
+  }
+  showDailyLogsButton(){
+    this.getDailyLogs();
+    this.toggleDailyReport();
+  }
+currentDate(){
+  var formattedDate = new Date(Date.now());
+  var day = formattedDate.getDate();
+  var month = formattedDate.getMonth() + 1; //Month from 0 to 11
+  var year = formattedDate.getFullYear();
+  return `${(month<=9 ? '0' + month : month)}-${(day <= 9 ? '0' + day : day)}-${year}`;
+}
   render() {
     var teacherName = this.getStudentTeacherName()
     return (
@@ -148,6 +182,7 @@ class StudentProfile extends Component{
             <div className="text">New Log</div>
           </button> : null }
         <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button> 
+        <button className="Daily-Report-Button enabled" type="button" onClick={this.showDailyLogsButton}>Daily Report</button> 
       </div>
       <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
       <br/>
@@ -187,6 +222,16 @@ class StudentProfile extends Component{
           rootAddress="/logs/" />
         </div> : null
       }
+      {this.state.showDailyReport && this.state.dailyLogs.length!=0?
+         <DailyReport
+         close={this.toggleDailyReport.bind(this)}
+         studentID={this.state.studentID}
+         teacherID={this.state.teacherID}
+         firstName={this.state.firstName}
+         lastName={this.state.lastName}
+         dailyLogs={this.state.dailyLogs}
+         />: null
+       }
       </div>
     );
   }
