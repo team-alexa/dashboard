@@ -29,8 +29,6 @@ class AccountPage extends Component{
   componentDidMount(){
     if (this.context.pageId != "new") {
       this.context.setContentLoading(true)
-      console.log(this.state.currentUser)
-      console.log("teacherID = "  + this.state.currentUser.teacherID)
         // Auth.currentAuthenticatedUser()                                tried reloading the currentUser here, 
         // .then(user => this.context.loadUserData(user))                         no dice.
         console.log("teacherID = "  + this.context.currentUser.teacherID)
