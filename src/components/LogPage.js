@@ -4,6 +4,7 @@ import{Context} from '../Store'
 import Constants from '../Constants'
 import SearchableInput from './SearchableInput'
 
+
 class LogPage extends Component{
   constructor(props){
     super(props)
@@ -15,19 +16,17 @@ class LogPage extends Component{
     this.getAllStudentNames = this.getAllStudentNames.bind(this)
   
     this.state = {
+      initDate: "",
+      initTime: "",
       dateTime: "",
       studentID: "",
       teacherID: "",
-      studentFullName: "",
-      teacherFullName: "",
       activityType: "",
       activityDetails: "",
       timeString: "",
       dateString: "",
       editable: false,
-      hasChanged: false,
-      initialStudentName: "",
-      initialTeacherName: ""   
+      hasChanged: false
     }
     this.displayedMessage = false
   }
@@ -41,20 +40,16 @@ class LogPage extends Component{
         if (data[0]) {
           const fullDate = new Date(data[0].date)
           const newState = data[0]
-          newState.studentID = data[0].studentID
-          newState.teacherID = data[0].teacherID
-          newState.studentFullName = data[0].studentFullName
-          newState.teacherFullName = data[0].teacherFullName
           newState.activityType = data[0].activityType
           newState.activityDetails = data[0].activityDetails
           newState.date = fullDate
           newState.dateString = fullDate.toISOString().substr(0, 10);
           newState.timeString = fullDate.toUTCString().substr(17).substr(0 ,5);
+          newState.initDate = newState.dateString
+          newState.initTime = newState.timeString
           newState.dateTime = fullDate
           console.log(newState.dateString)
           console.log(newState.timeString)
-          newState.initialStudentName = data[0].studentFullName
-          newState.initialTeacherName = data[0].teacherFullName
           newState.editable = true          
           this.setState(newState)
         } else {
@@ -75,15 +70,27 @@ class LogPage extends Component{
       this.setState({[e.target.id]: e.target.value, hasChanged: true})
     }
   saveData(){
-         
+        var d = this.state.initDate
+        if(this.state.dateString.length == 10)
+          d = this.state.dateString
+        else
+          this.context.setToast({message: "Invalid Date Format", color: "red", visible: true}, 3000)
+        var t = this.state.initTime
+        if(this.state.timeString.length == 5)
+          t = this.state.timeString
+        else
+          this.context.setToast({message: "Invalid Time Format", color: "red", visible: true}, 3000)
       const body ={
         method: this.context.pageId == "new" ? "new" : "update",
+        logID: this.context.pageId,
         studentID: this.state.studentID,
         teacherID: this.state.teacherID,
         activityType: this.state.activityType,
         activityDetails: this.state.activityDetails,
-        date: this.dateString + " " + this.timeString + ":00",
+        date: d + "T" + t + ":00Z",
       }
+      console.log(this.state.timeString)
+      console.log(body.date)
       fetch(Constants.apiUrl + 'logs', {
         method: "POST",
         headers:{
@@ -120,7 +127,22 @@ class LogPage extends Component{
     var id = students.length > 0 ? students[0] : null
     this.setState({studentID: id})
   }
-    render(){
+  addActivity(activity){
+    this.setState({activityType: activity})
+  }
+    render(){ //('Food','Nap','Diaper','Injury','Accomplishment','Activity','Needs','Anecdotal')
+      const activityTypes = [
+        { value: 'Food', label: 'Food' },
+        { value: 'Nap', label: 'Nap' },
+        { value: 'Diaper', label: 'Diaper Change' },
+        { value: 'Injury', label: 'Injury' },
+        { value: 'Accomplishment', label: 'Accomplishment' },
+        { value: 'Activity', label: 'Activity' },
+        { value: 'Needs', label: 'Needs' },
+        { value: 'Anecdotal', label: 'Anecdotal' }
+      ]
+        
+      
       var teacherName = this.state.teacherFullName
       var studentName = this.state.studentFullName
       return (
@@ -141,7 +163,6 @@ class LogPage extends Component{
             onClick={() => this.setState({hasChanged: true})}
             addValue={this.addStudent}/>
           <br/>
-          <br/>
           <SearchableInput
             placeholder="Teacher"
             label="Teacher: "
@@ -151,7 +172,7 @@ class LogPage extends Component{
             onClick={() => this.setState({hasChanged: true})}
             addValue={this.addTeacher}/>
           <br/>
-          <label htmlFor="activityType">Activity:</label> <input type="text" placeholder="Activity" size ="32"  name="activityType" id="activityType" value={this.state.activityType} onChange={this.onChange} autoComplete="off"/>
+          <label htmlFor="activityType">Activity:</label> <input type="text" placeholder="Activity" size ="32"  name="activityType" id="activityType" value={this.state.activityType} onChange={this.onChange} autoComplete="off"/> 
           <br/>
           <label htmlFor="activityDetails">Activity Details:</label> <input type="text" placeholder="Activity Details" size ="64"  name="activityDetails" id="activityDetails" value={this.state.activityDetails} onChange={this.onChange} autoComplete="off"/>
           <br/>
