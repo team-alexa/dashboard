@@ -10,6 +10,7 @@ class LogPage extends Component{
  
     this.onChange = this.onChange.bind(this)
     this.saveData = this.saveData.bind(this)
+    this.addStudent = this.addStudent.bind(this)
     this.addTeacher = this.addTeacher.bind(this)
     this.getAllTeacherNames = this.getAllTeacherNames.bind(this)
     this.getAllStudentNames = this.getAllStudentNames.bind(this)
@@ -132,6 +133,7 @@ class LogPage extends Component{
               </button> : null }
             <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button> 
           </div>
+          <h2 className="name">Log {this.context.pageId}</h2>
           <SearchableInput
             placeholder="Student"
             label="Student: "
@@ -140,7 +142,6 @@ class LogPage extends Component{
             possibleValues={this.getAllStudentNames()}
             onClick={() => this.setState({hasChanged: true})}
             addValue={this.addStudent}/>
-          <br/>
           <br/>
           <SearchableInput
             placeholder="Teacher"
