@@ -1,0 +1,21 @@
+.account-page-link{
+    color: white;
+    border: none;
+    margin: 0;
+    padding: 10px 0;
+    width: 156px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    font-size: 16px;
+    font-family: "Open Sans", sans-serif;
+    outline: none;
+    background-color: rgb(0, 159, 194);
+    border: 2px solid rgb(0, 159, 194);
+    text-decoration: none;
+}
+
+.account-page-link:hover{
+    color: rgb(0, 159, 194);
+    background-color: white;
+}

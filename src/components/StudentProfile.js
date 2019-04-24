@@ -1,29 +1,11 @@
 import React, { Component } from 'react';
-import '../css/StudentProfile.css';
+import '../css/index.css';
 import { Context } from '../Store'
 import Constants from '../Constants'
 
 import Table from './Table';
 import SearchableInput from './SearchableInput'
 import DailyReport from './DailyReport';
-const singleStudentTableData = [
-  ["2/14/19", "Megan Waterworth", "Sophia Hills", "Food", "milk", "log1"],
-  ["2/14/19", "Megan Waterworth", "Jack Baker", "Anecdotal", "Details", "log12"],
-  ["2/14/19", "Megan Waterworth", "Emma Jones", "Food", "milk", "log1"],
-  ["2/14/19", "Megan Waterworth", "Fred Barthel", "Food", "Fred's Breads", "log142"],
-  ["2/14/19", "Megan Waterworth", "Nathan Irwin", "Activity", "Details", "log52"],
-  ["2/14/19", "Megan Waterworth", "Abby Johnson", "Food", "milk", "log12"],
-  ["2/13/19", "Megan Waterworth", "Trish White", "Anecdotal", "Details", "log55"],
-  ["2/13/19", "Megan Waterworth", "Steven Kitscha", "Activity", "Details", "log25"],
-  ["2/13/19", "Megan Waterworth", "Katie Clark", "Sleep", "Details", "log105"],
-  ["2/13/19", "Megan Waterworth", "Nathan Irwin", "Activity", "Details", "log42"],
-  ["2/13/19", "Megan Waterworth", "Abby Johnson", "Needs", "Details", "log68"],
-  ["2/13/19", "Megan Waterworth", "Trish White", "Food", "milk", "log22"],
-  ["2/13/19", "Megan Waterworth", "Steven Kitscha", "Food", "milk", "log53"],
-  ["2/13/19", "Megan Waterworth", "Emma Jones", "Sleep", "Details", "log24"],
-  ["2/13/19", "Megan Waterworth", "Fred Barthel", "Sleep", "Fred's Breads", "log95"],
-  ["2/13/19", "Megan Waterworth", "Collin Zafar", "Sleep", "Details", "log72"]
-]
 
 class StudentProfile extends Component{
   constructor(props){
@@ -33,11 +15,12 @@ class StudentProfile extends Component{
     this.saveData = this.saveData.bind(this)
     this.getStudentTeacherName = this.getStudentTeacherName.bind(this)
     this.addTeacher = this.addTeacher.bind(this)
-    this.toggleDailyReport=this.toggleDailyReport.bind(this)
-    this.currentDate=this.currentDate.bind(this);
-    this.getDailyLogs=this.getDailyLogs.bind(this);
-    this.showDailyLogsButton=this.showDailyLogsButton.bind(this);
-    this.setDailyLogs=this.setDailyLogs.bind(this);
+    this.toggleDailyReport = this.toggleDailyReport.bind(this)
+    this.currentDate = this.currentDate.bind(this);
+    this.getDailyLogs = this.getDailyLogs.bind(this);
+    this.showDailyLogsButton = this.showDailyLogsButton.bind(this);
+    this.setDailyLogs = this.setDailyLogs.bind(this);
+    this.loadMoreLogs = this.loadMoreLogs.bind(this);
     this.state = {
       birthDate: "",
       firstName: "",
@@ -54,7 +37,8 @@ class StudentProfile extends Component{
       month: "",
       year: "",
       showDailyReport: false,
-      dailyLogs:[]
+      dailyLogs:[],
+      logs: []
     }
 
     this.displayedMessage = false
@@ -72,11 +56,13 @@ class StudentProfile extends Component{
             }
             const birthDate = new Date(data[0].birthDate)
             const newState = data[0]
-
-            newState.date = birthDate.getDate()
-            newState.month = birthDate.getMonth() + 1
-            newState.year = birthDate.getFullYear()
+            newState.birthDate = birthDate.toISOString().substr(0, 10)
             newState.editable = true
+
+            Object.keys(newState).forEach(key => {
+              newState[key] = newState[key] ? newState[key] : ""
+            })
+
             this.setState(newState)
           } else {
             if (!this.displayedMessage) {
@@ -88,21 +74,23 @@ class StudentProfile extends Component{
     } else {
       this.setState({editable: true})
     }
-
+    this.loadMoreLogs()
     this.context.loadTeachers()
   }
-  toggleDailyReport() {  
-    this.setState({  
-      showDailyReport: !this.state.showDailyReport  
-    });  
-     } 
+  toggleDailyReport() {
+    this.setState({
+      showDailyReport: !this.state.showDailyReport
+    });
+     }
   saveData() {
+    const dte = new Date(this.state.birthDate)
+    const dteStr = dte.getUTCFullYear() + "-" + (dte.getUTCMonth() + 1) + "-" + dte.getUTCDate()
     const body = {
       method: this.context.pageId == "new" ? "new" : "update",
       studentID: this.state.studentID,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
-      birthDate: String(parseInt(this.state.year) + 1) + "-" + this.state.month + "-" + this.state.date,
+      birthDate: dteStr,
       foodAllergies: this.state.foodAllergies,
       medical: this.state.medical,
       teacherID: this.state.teacherID,
@@ -158,20 +146,51 @@ class StudentProfile extends Component{
           }
         })
   }
+
   setDailyLogs(dailyLogs) {
     this.setState({dailyLogs})
   }
+
   showDailyLogsButton(){
     this.getDailyLogs();
     this.toggleDailyReport();
   }
-currentDate(){
-  var formattedDate = new Date(Date.now());
-  var day = formattedDate.getDate();
-  var month = formattedDate.getMonth() + 1; //Month from 0 to 11
-  var year = formattedDate.getFullYear();
-  return `${(month<=9 ? '0' + month : month)}-${(day <= 9 ? '0' + day : day)}-${year}`;
-}
+
+  currentDate(){
+    var formattedDate = new Date(Date.now());
+    var day = formattedDate.getDate();
+    var month = formattedDate.getMonth() + 1; //Month from 0 to 11
+    var year = formattedDate.getFullYear();
+    return `${(month<=9 ? '0' + month : month)}-${(day <= 9 ? '0' + day : day)}-${year}`;
+  }
+
+  loadMoreLogs() {
+    this.context.setContentLoading(true)
+    var url = Constants.apiUrl + 'logs?index=' + this.state.logs.length
+    url += '&studentID=' + this.context.pageId
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const logs = this.state.logs.slice()
+        this.setState({logs: logs.concat(data)})
+        this.context.setContentLoading(false)
+      })
+  }
+
+  getLogTableData() {
+    const logs = this.state.logs
+    return logs.map(log => {
+      const date = new Date(log.date)
+      const dateStr = (date.getUTCMonth() + 1) + "/" + date.getUTCDate() + "/" + date.getUTCFullYear()
+      return [dateStr,
+        log.studentFullName,
+        log.teacherFullName,
+        log.activityType,
+        log.activityDetails,
+        log.logID]
+    })
+  }
+
   render() {
     var teacherName = this.getStudentTeacherName()
     return (
@@ -181,8 +200,8 @@ currentDate(){
           <button type="button" className = "log-button enabled">
             <div className="text">New Log</div>
           </button> : null }
-        <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button> 
-        <button className="Daily-Report-Button enabled" type="button" onClick={this.showDailyLogsButton}>Daily Report</button> 
+        <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button>
+        <button className="Daily-Report-Button enabled" type="button" onClick={this.showDailyLogsButton}>Daily Report</button>
       </div>
       <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
       <br/>
@@ -194,10 +213,8 @@ currentDate(){
       <label htmlFor="id">ID:</label> <input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/>
       <br/>
       <p>Age: {parseInt(new Date().getFullYear()) - parseInt(new Date(this.state.birthDate).getFullYear())} </p>
-      <label htmlFor="month">DOB (MM/DD/YYYY):</label>
-      <input type="number" size = "2" maxLength="2" min="0" max="12" placeholder ="01" name="month" id="month" value={this.state.month} onChange={this.onChange} autoComplete="off" />
-      /<input type="number" size = "2" maxLength="2" min="0" max="31" placeholder ="01" name="day" id="date" value={this.state.date} onChange={this.onChange} autoComplete="off" />
-      /<input type="number" size = "4" maxLength="4" placeholder ="2017" name="year" id="year" value={this.state.year} onChange={this.onChange} autoComplete="off" />
+      <label htmlFor="month">DOB :</label>
+      <input type="date" id="birthDate" value={this.state.birthDate} onChange={this.onChange} autoComplete="off" />
       <br/>
       <label htmlFor="food">Food Allergies (comma-separated):</label> <input type="text" size = "64" id="foodAllergies" value={this.state.foodAllergies} onChange={this.onChange} autoComplete="off" />
       <br/>
@@ -214,12 +231,13 @@ currentDate(){
       {this.context.pageId != "new" ? <div>
         <br/>
         <h2>{this.state.fullName ? `${this.state.fullName}'s Logs` : "Logs"}</h2>
-        <Table data={singleStudentTableData}
+        <Table data={this.getLogTableData()}
+          height="40vh"
           width="100%"
-          height="400px"
           headers={["Date", "Student", "Teacher", "Category", "Details"]}
           columnWidths={["10%", "20%", "20%", "10%", "40%"]}
-          rootAddress="/logs/" />
+          rootAddress="/logs/"
+          loadFunction = {this.loadMoreLogs} />
         </div> : null
       }
       {this.state.showDailyReport && this.state.dailyLogs.length!=0?

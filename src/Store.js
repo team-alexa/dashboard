@@ -1,5 +1,6 @@
 import React from 'react'
 import Constants from './Constants'
+import { Auth } from 'aws-amplify';
 
 const Context = React.createContext("")
 
@@ -17,11 +18,23 @@ class DataProvider extends React.Component {
     this.setTeachers = this.setTeachers.bind(this)
     this.setToast = this.setToast.bind(this)
     this.setStudents = this.setStudents.bind(this)
+    this.logOut = this.logOut.bind(this)
+    this.changePassword = this.changePassword.bind(this)
+    this.loadUserData = this.loadUserData.bind(this)
+    this.setLogs = this.setLogs.bind(this)
+    this.onChangeUserData = this.onChangeUserData.bind(this)
 
     this.state = {
       page: "home",
       pageId: "",
-      currentUser: "Mitchell",
+      currentUser: {
+        firstName: "",
+        lastName: "",
+        teacherID: "",
+        email: "",
+        hasChanged: "",
+        students: []
+      },
       sidebarClass: "open",
       contentLoading: false,
       toast: {
@@ -42,7 +55,12 @@ class DataProvider extends React.Component {
       setPageId: this.setPageId,
       setTeachers: this.setTeachers,
       setToast: this.setToast,
-      setStudents: this.setStudents
+      setStudents: this.setStudents,
+      logOut: this.logOut,
+      changePassword: this.changePassword,
+      loadUserData:this.loadUserData,
+      setLogs: this.setLogs,
+      onChangeUserData: this.onChangeUserData
     }
   }
 
@@ -84,6 +102,34 @@ class DataProvider extends React.Component {
         const logs = this.state.logs.slice()
         this.setLogs(logs.concat(data))
         this.setContentLoading(false)
+      })
+  }
+
+  loadUserData(currentUser){
+    this.setContentLoading(true)
+    fetch(Constants.apiUrl + 'teachers?teacherID=' + currentUser.username)
+      .then(response => response.json())
+      .then(data => {
+        if (data[0]) {
+          const user = this.state.currentUser
+          Object.assign(user, data[0])
+          Object.assign(user, currentUser)
+          user.email = currentUser.attributes.email
+          console.log(data[0])
+          console.log(currentUser)
+          console.log(user.email)
+          console.log(user.teacherID)
+          this.setState({currentUser: user})
+        }
+        this.setContentLoading(false)
+      })
+
+    fetch(Constants.apiUrl + 'students?teacherID=' + currentUser.username)
+      .then(response => response.json())
+      .then(data => {
+        const user = this.state.currentUser
+        user.students = data
+        this.setState({currentUser: user})
       })
   }
 
@@ -135,6 +181,30 @@ class DataProvider extends React.Component {
     this.setState({logs})
   }
 
+  onChangeUserData(e) {
+    this.state.currentUser[e.target.id] = e.target.value
+    this.setState({currentUser: this.state.currentUser});
+ }
+
+  logOut(){
+      Auth.signOut()
+        .then(data => console.log(data))
+        .catch(err => console.log(err));
+  }
+    
+  changePassword(oldPassword, newPassword){
+    return Auth.currentAuthenticatedUser()
+    .then(user => {
+        return Auth.changePassword(user, oldPassword, newPassword);
+    })
+    .then(data => {
+        console.log(data);
+        return data;
+    })
+    .catch(err => {
+        console.log(err);
+        return err;});
+  }
   render() {
     return <Context.Provider value={this.state}>
       {this.props.children}
