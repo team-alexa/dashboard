@@ -21,12 +21,17 @@ class DataProvider extends React.Component {
     this.logOut = this.logOut.bind(this)
     this.loadUserData = this.loadUserData.bind(this)
     this.setLogs = this.setLogs.bind(this)
+    this.onChangeUserData = this.onChangeUserData.bind(this)
 
     this.state = {
       page: "home",
       pageId: "",
       currentUser: {
         firstName: "",
+        lastName: "",
+        teacherID: "",
+        email: "",
+        hasChanged: "",
         students: []
       },
       sidebarClass: "open",
@@ -52,7 +57,8 @@ class DataProvider extends React.Component {
       setStudents: this.setStudents,
       logOut: this.logOut,
       loadUserData:this.loadUserData,
-      setLogs: this.setLogs
+      setLogs: this.setLogs,
+      onChangeUserData: this.onChangeUserData
     }
   }
 
@@ -106,6 +112,11 @@ class DataProvider extends React.Component {
           const user = this.state.currentUser
           Object.assign(user, data[0])
           Object.assign(user, currentUser)
+          user.email = currentUser.attributes.email
+          console.log(data[0])
+          console.log(currentUser)
+          console.log(user.email)
+          console.log(user.teacherID)
           this.setState({currentUser: user})
         }
         this.setContentLoading(false)
@@ -167,6 +178,11 @@ class DataProvider extends React.Component {
   setLogs(logs) {
     this.setState({logs})
   }
+
+  onChangeUserData(e) {
+    this.state.currentUser[e.target.id] = e.target.value
+    this.setState({currentUser: this.state.currentUser});
+ }
 
   logOut(){
       Auth.signOut()
