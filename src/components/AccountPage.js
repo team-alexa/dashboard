@@ -34,8 +34,8 @@ class AccountPage extends Component{
         </div>
         <h2 className="name">{this.context.currentUser.lastName ? `${this.context.currentUser.lastName}, ${this.context.currentUser.firstName}` : "Last Name, First Name"}</h2>
         <br/>
-        <label htmlFor="lname">Name:</label> <input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.context.currentUser.lastName} onChange={this.context.onChangeUserName} autoComplete="off"/>
-        <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.context.currentUser.firstName} onChange={this.context.onChangeUserName} autoComplete="off"/>
+        <label htmlFor="lname">Name:</label> <input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.context.currentUser.lastName} onChange={this.context.onChangeUserData} autoComplete="off"/>
+        <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.context.currentUser.firstName} onChange={this.context.onChangeUserData} autoComplete="off"/>
         <br/>
        {/* <label htmlFor="email">email address:</label> <input type="text" placeholder="email address" size ="32"  name="email" id="email" value={this.state.email} onChange={this.onChange} autoComplete="off"/>*/}
         <p>Email Address: {this.context.currentUser.email}</p>
