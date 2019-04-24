@@ -48,6 +48,11 @@ class StudentProfile extends Component{
             const newState = data[0]
             newState.birthDate = birthDate.toISOString().substr(0, 10)
             newState.editable = true
+
+            Object.keys(newState).forEach(key => {
+              newState[key] = newState[key] ? newState[key] : ""
+            })
+
             this.setState(newState)
           } else {
             if (!this.displayedMessage) {
