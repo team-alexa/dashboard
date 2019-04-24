@@ -2,12 +2,11 @@ import * as jsPDF from 'jspdf';
 import React, { Component } from 'react';
 import '../css/DailyReport.css';  
 import closebutton from '../img/close-button.png'
-import Constants from '../Constants'
 import Table from './Table';
 import { Context } from '../Store'
-import main_logo from '../img/main_logo.js'
-require('jspdf-autotable')
+import main_logo from '../img/main_logo'
 require('../fonts/Google Sans.js');
+require('jspdf-autotable');
 class DailyReport extends Component{
     constructor(props){
         super(props);
@@ -15,6 +14,7 @@ class DailyReport extends Component{
         this.getLogTableData = this.getLogTableData.bind(this);
         this.exportDailyLogs=this.exportDailyLogs.bind(this);
         this.getDailyLogsExport=this.getDailyLogsExport.bind(this);
+        this.formatDate=this.formatDate.bind(this);
       }
     componentDidMount(){
         document.addEventListener("keydown", this.handleKeyPress, false);
@@ -38,11 +38,14 @@ class DailyReport extends Component{
             log.logID]
         })
       }
+      formatDate(datetime){
+        var time=new Date(datetime)
+        return time.toLocaleTimeString('en-US');
+      }
       getDailyLogsExport() {
         const logs = this.props.dailyLogs
         return logs.map(log => {
-          return [log.date,
-            log.studentFullName,
+          return [this.formatDate(log.date),
             log.teacherFullName,
             log.activityType,
             log.activityDetails]
@@ -50,19 +53,24 @@ class DailyReport extends Component{
       }
 exportDailyLogs() {
  
-  var pdf = new jsPDF('l', 'mm', 'a4');
+  var pdf = new jsPDF('l', 'px', 'a4');
      // Header
-      pdf.setFontSize(20);
-      pdf.setTextColor(40);
+      pdf.setFontSize(12);
       pdf.setFont('Google Sans');
-      //pdf.addImage(main_logo,'JPEG',150,84);
-      pdf.text(this.props.lastName+","+this.props.firstName,15,20);
+      pdf.addImage(main_logo,'JPEG',(pdf.internal.pageSize.getWidth()/2),10,70,40);
+      pdf.text(this.props.lastName+","+this.props.firstName+" - "+this.props.date+" Report ",15,60);
       pdf.autoTable({
-        styles: {font: 'Google Sans'},
-        headStyles:{fillColor: [0, 159, 194]},
-        head: [["Date", "Student", "Teacher", "Category", "Details"]],
+        styles: {font: 'Google Sans',overflow: 'linebreak',rowPageBreak: 'auto'},
+        columnStyles: {
+          0: {cellWidth:10},
+          1: {cellWidth: 'auto'},
+          2: {cellWidth: 10},
+          3: {cellWidth: 'auto'}},
+        margin: 10,
+        headStyles:{fillColor: [0, 159, 194],font: 'Google Sans'},
+        head: [["Time", "Teacher", "Category", "Details"]],
         body: this.getDailyLogsExport(),
-        startY: 25,
+        startY: 70,
       });
   pdf.save('Daily Report.pdf');
 };

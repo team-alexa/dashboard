@@ -4,6 +4,7 @@ var font = 'AAEAAAARAQAABAAQR0RFRgAQAOYAAAEcAAAAFkdQT1MAGQAMAAABNAAAABBHU1VC3eze
 var callAddFont = function () {
 this.addFileToVFS('Google Sans-normal.ttf', font);
 this.addFont('Google Sans-normal.ttf', 'Google Sans', 'normal');
+this.addFont('Google Sans-normal.ttf', 'Google Sans', 'Bold');
 };
 jsPDFAPI.events.push(['addFonts', callAddFont])
  })(jsPDF.API);

@@ -225,10 +225,9 @@ currentDate(){
       {this.state.showDailyReport && this.state.dailyLogs.length!=0?
          <DailyReport
          close={this.toggleDailyReport.bind(this)}
-         studentID={this.state.studentID}
-         teacherID={this.state.teacherID}
          firstName={this.state.firstName}
          lastName={this.state.lastName}
+         date={this.currentDate()}
          dailyLogs={this.state.dailyLogs}
          />: null
        }
