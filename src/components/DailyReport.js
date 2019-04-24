@@ -58,7 +58,7 @@ exportDailyLogs() {
       pdf.setFontSize(12);
       pdf.setFont('Google Sans');
       pdf.addImage(main_logo,'JPEG',(pdf.internal.pageSize.getWidth()/2),10,70,40);
-      pdf.text(this.props.lastName+","+this.props.firstName+" - "+this.props.date+" Report ",15,60);
+      pdf.text(this.props.lastName+", "+this.props.firstName+" - "+this.props.date+" Report ",15,60);
       pdf.autoTable({
         styles: {font: 'Google Sans',overflow: 'linebreak',rowPageBreak: 'auto'},
         columnStyles: {
