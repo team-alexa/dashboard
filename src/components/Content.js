@@ -11,6 +11,7 @@ import Error from './Error'
 import Help from './Help'
 import LogPage from'./LogPage'
 import AccountPage from './AccountPage'
+import ChangePasswordInApp from './ChangePasswordInApp'
 
 class Content extends Component {
   constructor(props) {
@@ -38,6 +39,7 @@ class Content extends Component {
         case "adminpanel": return <AdminPage />
         case "myaccount": return <AccountPage />
         case "help": return <Help />
+        case "changepass": return <ChangePasswordInApp />
         default: return <Error />
       }
     }
