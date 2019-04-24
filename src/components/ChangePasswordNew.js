@@ -57,13 +57,18 @@ export default class ChangePasswordNew extends RequireNewPassword {
         return (
             <div className="login-screen">
                 <div className="main-div">  
-                    <h1>Change Password</h1>
+                    <img src="/static/media/main_logo.1d5af73f.png"/>
+                    <h1 className="login-h1">Change Password</h1>
                     <div>
-                        <input autoFocus placeholder={'New Password'} key="password" name="password" type="password" onChange={this.handleInputChange}/>
+                        <input autoFocus placeholder={'New Password'} key="password" name="password" type="password" onChange={this.handleInputChange} size="32"/>
                     </div>
-                    <div>
-                        <a onClick={() => this.changeState('signIn')}>Back to Sign In</a>
-                        <button onClick={this.change} className="login-button">Change</button>
+                    <div className="div-hold-buttons">
+                        <div className="div-login-link">
+                            <a onClick={() => this.changeState('signIn')}>Back to Sign In</a>
+                        </div>
+                        <div className="div-login-button">
+                            <button onClick={this.change} className="login-button-v2">Change</button>
+                        </div>
                     </div>
                 </div>
             </div>

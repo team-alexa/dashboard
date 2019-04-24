@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import '../css/index.css'
+import {Link} from 'react-router-dom';
 import{Context} from '../Store'
 import Constants from '../Constants'
+import '../css/AccountPage.css';
 
 
 class AccountPage extends Component{
@@ -47,8 +49,10 @@ class AccountPage extends Component{
           <div className = "account-page content-page">
             <div className="button-group">
               {this.context.pageId != "new" ?
-                <button type="button" className = "change-password-button enabled">
-                  <div className="text">Change Password</div>
+                <button type="button" className = "change-password-button enabled" >
+                  <div className="text">
+                    <Link className="accountPage-link" to={"/changepass"}>Change Password</Link>
+                    </div>
                 </button> : null }
               <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button> 
             </div>

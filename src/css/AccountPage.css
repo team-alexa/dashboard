@@ -1,0 +1,8 @@
+.accountPage-link{
+    color:white;
+    text-decoration: none;
+}
+
+.accountPage-link:hover{
+    color:rgb(0, 159, 194);
+}
