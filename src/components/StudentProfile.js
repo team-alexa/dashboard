@@ -5,6 +5,7 @@ import Constants from '../Constants'
 
 import Table from './Table';
 import SearchableInput from './SearchableInput'
+import DailyReport from './DailyReport';
 
 class StudentProfile extends Component{
   constructor(props){
@@ -14,8 +15,12 @@ class StudentProfile extends Component{
     this.saveData = this.saveData.bind(this)
     this.getStudentTeacherName = this.getStudentTeacherName.bind(this)
     this.addTeacher = this.addTeacher.bind(this)
-    this.loadMoreLogs = this.loadMoreLogs.bind(this)
-
+    this.toggleDailyReport = this.toggleDailyReport.bind(this)
+    this.currentDate = this.currentDate.bind(this);
+    this.getDailyLogs = this.getDailyLogs.bind(this);
+    this.showDailyLogsButton = this.showDailyLogsButton.bind(this);
+    this.setDailyLogs = this.setDailyLogs.bind(this);
+    this.loadMoreLogs = this.loadMoreLogs.bind(this);
     this.state = {
       birthDate: "",
       firstName: "",
@@ -28,6 +33,11 @@ class StudentProfile extends Component{
       teachers: [],
       hasChanged: false,
       editable: false,
+      date: "",
+      month: "",
+      year: "",
+      showDailyReport: false,
+      dailyLogs:[],
       logs: []
     }
 
@@ -67,7 +77,11 @@ class StudentProfile extends Component{
     this.loadMoreLogs()
     this.context.loadTeachers()
   }
-
+  toggleDailyReport() {
+    this.setState({
+      showDailyReport: !this.state.showDailyReport
+    });
+     }
   saveData() {
     const dte = new Date(this.state.birthDate)
     const dteStr = dte.getUTCFullYear() + "-" + (dte.getUTCMonth() + 1) + "-" + dte.getUTCDate()
@@ -121,6 +135,34 @@ class StudentProfile extends Component{
     var id = teachers.length > 0 ? teachers[0] : null
     this.setState({teacherID: id})
   }
+  getDailyLogs(){
+    fetch(Constants.apiUrl + "logs?studentID=" + this.state.studentID+"&date="+this.currentDate())
+        .then(response => response.json())
+        .then(data => {
+          if (data[0]) {
+            this.setDailyLogs(data)
+          } else {
+              this.context.setToast({message: "No logs found for this student today", color: "red", visible: true}, 2500)
+          }
+        })
+  }
+
+  setDailyLogs(dailyLogs) {
+    this.setState({dailyLogs})
+  }
+
+  showDailyLogsButton(){
+    this.getDailyLogs();
+    this.toggleDailyReport();
+  }
+
+  currentDate(){
+    var formattedDate = new Date(Date.now());
+    var day = formattedDate.getDate();
+    var month = formattedDate.getMonth() + 1; //Month from 0 to 11
+    var year = formattedDate.getFullYear();
+    return `${(month<=9 ? '0' + month : month)}-${(day <= 9 ? '0' + day : day)}-${year}`;
+  }
 
   loadMoreLogs() {
     this.context.setContentLoading(true)
@@ -148,7 +190,7 @@ class StudentProfile extends Component{
         log.logID]
     })
   }
-  
+
   render() {
     var teacherName = this.getStudentTeacherName()
     return (
@@ -158,7 +200,8 @@ class StudentProfile extends Component{
           <button type="button" className = "log-button enabled">
             <div className="text">New Log</div>
           </button> : null }
-        <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button> 
+        <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button>
+        <button className="Daily-Report-Button enabled" type="button" onClick={this.showDailyLogsButton}>Daily Report</button>
       </div>
       <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
       <br/>
@@ -197,6 +240,15 @@ class StudentProfile extends Component{
           loadFunction = {this.loadMoreLogs} />
         </div> : null
       }
+      {this.state.showDailyReport && this.state.dailyLogs.length!=0?
+         <DailyReport
+         close={this.toggleDailyReport.bind(this)}
+         firstName={this.state.firstName}
+         lastName={this.state.lastName}
+         date={this.currentDate()}
+         dailyLogs={this.state.dailyLogs}
+         />: null
+       }
       </div>
     );
   }
