@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "debug": "react-scripts start --inspect-brk",
+    "debug": "react-scripts --inspect-brk start --runInBand --no-cache",
     "build": "react-scripts build",
     "deploy": "aws s3 cp --recursive ./build s3://nextdoor-dashboard",
     "test": "react-scripts test",

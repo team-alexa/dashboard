@@ -1,11 +1,13 @@
-import jsPDF from 'jspdf';
+import * as jsPDF from 'jspdf';
 import React, { Component } from 'react';
 import '../css/DailyReport.css';  
 import closebutton from '../img/close-button.png'
 import Constants from '../Constants'
 import Table from './Table';
 import { Context } from '../Store'
+import main_logo from '../img/main_logo.js'
 require('jspdf-autotable')
+require('../fonts/Google Sans.js');
 class DailyReport extends Component{
     constructor(props){
         super(props);
@@ -48,20 +50,21 @@ class DailyReport extends Component{
       }
 exportDailyLogs() {
  
-  var doc = new jsPDF();
-  var totalPagesExp = "{total_pages_count_string}";
+  var pdf = new jsPDF('l', 'mm', 'a4');
      // Header
-     doc.setFontSize(20);
-     doc.setTextColor(40);
-     doc.setFontStyle('normal');
-    // doc.addImage(base64logo,'png',1000,500);
-     doc.text(this.props.lastName+","+this.props.firstName,15,20);
-  doc.autoTable({
-    head: [["Date", "Student", "Teacher", "Category", "Details"]],
-    body: this.getDailyLogsExport(),
-    startY: 25,
-});
-  doc.save('DailyReport.pdf');
+      pdf.setFontSize(20);
+      pdf.setTextColor(40);
+      pdf.setFont('Google Sans');
+      //pdf.addImage(main_logo,'JPEG',150,84);
+      pdf.text(this.props.lastName+","+this.props.firstName,15,20);
+      pdf.autoTable({
+        styles: {font: 'Google Sans'},
+        headStyles:{fillColor: [0, 159, 194]},
+        head: [["Date", "Student", "Teacher", "Category", "Details"]],
+        body: this.getDailyLogsExport(),
+        startY: 25,
+      });
+  pdf.save('Daily Report.pdf');
 };
     render() {
         return (
