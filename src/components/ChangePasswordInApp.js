@@ -33,7 +33,7 @@ class ChangePasswordInApp extends Component{
     handleSubmit(event){
         event.preventDefault();
         if(this.state.newPass != this.state.confNewPass){
-            alert("The new password entries do not match!")
+            this.context.setToast({message: "The new password entries do not match!", color: "red", visible: true}, 3000);
             this.setState({
                 oldPass: "",
                 newPass: "",
@@ -44,7 +44,7 @@ class ChangePasswordInApp extends Component{
         var x = this.context.changePassword(this.state.oldPass, this.state.newPass)
         x.then(result => {
             if(result == "SUCCESS"){
-                alert("You have successfully changed your password!")
+                this.context.setToast({message: "You have successfully changed your password!", color: "red", visible: true}, 3000);
                 this.setState({
                 oldPass: "",
                 newPass: "",
@@ -63,9 +63,9 @@ class ChangePasswordInApp extends Component{
                 var finalStr2 = "";
                 for(var i = 0; i<x.length; i++){
                     finalStr2 += x[i];
-                    finalStr2 += "\n"
+                    finalStr2 += "; "
                 }
-                alert(finalStr2);
+                this.context.setToast({message: finalStr2, color: "red", visible: true}, 3000);
                 this.setState({
                 oldPass: "",
                 newPass: "",
