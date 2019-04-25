@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import '../css/index.css'
+import'../css/LogPage.css'
 import{Context} from '../Store'
 import Constants from '../Constants'
 import SearchableInput from './SearchableInput'
+import { existsSync } from 'fs';
 
 
 class LogPage extends Component{
@@ -14,8 +16,13 @@ class LogPage extends Component{
     this.addTeacher = this.addTeacher.bind(this)
     this.getAllTeacherNames = this.getAllTeacherNames.bind(this)
     this.getAllStudentNames = this.getAllStudentNames.bind(this)
+    this.dropdownClick = this.dropdownClick.bind(this)
+    this.setActivity = this.setActivity.bind(this)
+    this.hideDropdown = this.hideDropdown.bind(this)
   
     this.state = {
+      activityTypes: ["Food", "Nap", "Diaper", "Injury", "Accomplishment", "Activity", "Needs", "Anecdotal"],
+      dropdownOpen: false,
       initDate: "",
       initTime: "",
       dateTime: "",
@@ -30,7 +37,6 @@ class LogPage extends Component{
     }
     this.displayedMessage = false
   }
-
   componentDidMount(){
        if (this.context.pageId != "new") {
       this.context.setContentLoading(true)
@@ -48,8 +54,6 @@ class LogPage extends Component{
           newState.initDate = newState.dateString
           newState.initTime = newState.timeString
           newState.dateTime = fullDate
-          console.log(newState.dateString)
-          console.log(newState.timeString)
           newState.editable = true          
           this.setState(newState)
         } else {
@@ -89,8 +93,6 @@ class LogPage extends Component{
         activityDetails: this.state.activityDetails,
         date: d + "T" + t + ":00Z",
       }
-      console.log(this.state.timeString)
-      console.log(body.date)
       fetch(Constants.apiUrl + 'logs', {
         method: "POST",
         headers:{
@@ -127,26 +129,24 @@ class LogPage extends Component{
     var id = students.length > 0 ? students[0] : null
     this.setState({studentID: id})
   }
-  addActivity(activity){
-    this.setState({activityType: activity})
+  dropdownClick(){
+    var o = !this.state.dropdownOpen
+    this.setState({dropdownOpen: o})
   }
-    render(){ //('Food','Nap','Diaper','Injury','Accomplishment','Activity','Needs','Anecdotal')
-      const activityTypes = [
-        { value: 'Food', label: 'Food' },
-        { value: 'Nap', label: 'Nap' },
-        { value: 'Diaper', label: 'Diaper Change' },
-        { value: 'Injury', label: 'Injury' },
-        { value: 'Accomplishment', label: 'Accomplishment' },
-        { value: 'Activity', label: 'Activity' },
-        { value: 'Needs', label: 'Needs' },
-        { value: 'Anecdotal', label: 'Anecdotal' }
-      ]
-        
-      
+  hideDropdown(){
+    if(this.state.dropdownOpen)
+    this.setState({dropdownOpen: false})
+  }
+  setActivity(e){
+    var activity = this.state.activityTypes[e.target.value]
+    if (this.state.editable)
+    this.setState({activityType: activity, hasChanged: true})
+  }
+    render(){ //('Food','Nap','Diaper','Injury','Accomplishment','Activity','Needs','Anecdotal')     
       var teacherName = this.state.teacherFullName
       var studentName = this.state.studentFullName
       return (
-        <div className = "log-page content-page">
+        <div className = "log-page content-page" onClick={this.hideDropdown}>
           <div className="button-group">
             {this.context.pageId != "new" ?
               <button type="button" className = "delete-log-button enabled">
@@ -172,14 +172,22 @@ class LogPage extends Component{
             onClick={() => this.setState({hasChanged: true})}
             addValue={this.addTeacher}/>
           <br/>
-          <label htmlFor="activityType">Activity:</label> <input type="text" placeholder="Activity" size ="32"  name="activityType" id="activityType" value={this.state.activityType} onChange={this.onChange} autoComplete="off"/> 
-          <br/>
+          <label htmlFor="activityType">Activity:</label> <input type="text" placeholder="Activity" size ="32"  name="activityType" id="activityType" value={this.state.activityType}  onClick={this.dropdownClick} autoComplete="off"/>
+          {this.state.dropdownOpen && (
+              <div className="activity-input">
+                <ul className="possible-values">
+                  {this.state.activityTypes.map((activity, index) => 
+                    <li key={index} value={index} onClick={this.setActivity} >{activity}</li>
+                  )}
+                </ul>
+              </div>
+            )} 
+          <br/>  
           <label htmlFor="activityDetails">Activity Details:</label> <input type="text" placeholder="Activity Details" size ="64"  name="activityDetails" id="activityDetails" value={this.state.activityDetails} onChange={this.onChange} autoComplete="off"/>
           <br/>
           <label htmlFor="time">Time:</label> <input type="time" size ="32"  name="time" id="timeString" value={this.state.timeString} onfocus="this.value=''" onChange={this.onChange} autoComplete="off"/>
           <br/>
-          <label htmlFor="date">Date: </label> <input type="date" name="date" id="dateString" value={this.state.dateString} onChange={this.onChange} autoComplete="off" />
-         
+          <label htmlFor="date">Date: </label> <input type="date" name="date" id="dateString" value={this.state.dateString} onChange={this.onChange} autoComplete="off" />         
       <br/>
         </div>
         )

@@ -45,9 +45,7 @@ class StudentProfile extends Component{
               data[0].nickName = data[0].firstName
             }
             const birthDate = new Date(data[0].birthDate)
-            console.log("birthDate", data[0].birthDate)
             const newState = data[0]
-            console.log("birthDate", birthDate)
             newState.birthDate = birthDate
             newState.editable = true
             this.setState(newState)
