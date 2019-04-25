@@ -1,7 +1,12 @@
-.activity-input .possible-values {
+
+.activity-menu{
     position: absolute;
-    margin-top: -5px;
-    margin-left: 70px;
+    margin-top: -22px;
+    padding-left: 69px;
+
+}
+.activity-menu .possible-values {
+    position: absolute;
     padding: 0;
     background-color: white;
     border: 1px solid grey;
@@ -13,19 +18,23 @@
     overflow-y: scroll;
   }
   
-  .activity-input .possible-values li {
+  .activity-menu .possible-values li {
     list-style: none;
     padding: 7px;
     border-bottom: 1px solid rgb(209, 209, 209);
     color: rgb(75, 75, 75);
   }
   
-  .activity-input .possible-values li:hover {
+  .activity-menu .possible-values li:hover {
     cursor: pointer;
     background-color: #7bc241;
     color: white;
   }
   
-  .activity-input .possible-values li:last-of-type {
+  .activity-menu .possible-values li:last-of-type {
     border-bottom: 0;
+  }
+
+  .searchable-input {
+    padding-bottom: 6px;
   }

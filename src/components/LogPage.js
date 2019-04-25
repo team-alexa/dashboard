@@ -162,7 +162,6 @@ class LogPage extends Component{
             possibleValues={this.getAllStudentNames()}
             onClick={() => this.setState({hasChanged: true})}
             addValue={this.addStudent}/>
-          <br/>
           <SearchableInput
             placeholder="Teacher"
             label="Teacher: "
@@ -171,10 +170,10 @@ class LogPage extends Component{
             possibleValues={this.getAllTeacherNames()}
             onClick={() => this.setState({hasChanged: true})}
             addValue={this.addTeacher}/>
-          <br/>
-          <label htmlFor="activityType">Activity:</label> <input type="text" placeholder="Activity" size ="32"  name="activityType" id="activityType" value={this.state.activityType}  onClick={this.dropdownClick} autoComplete="off"/>
+         
+          <label htmlFor="activityType">Activity:</label><input type="text" placeholder="Activity" size ="32"  name="activityType" id="activityType" value={this.state.activityType}  onClick={this.dropdownClick} autoComplete="off"/>
           {this.state.dropdownOpen && (
-              <div className="activity-input">
+              <div className="activity-menu">
                 <ul className="possible-values">
                   {this.state.activityTypes.map((activity, index) => 
                     <li key={index} value={index} onClick={this.setActivity} >{activity}</li>
@@ -183,11 +182,11 @@ class LogPage extends Component{
               </div>
             )} 
           <br/>  
-          <label htmlFor="activityDetails">Activity Details:</label> <input type="text" placeholder="Activity Details" size ="64"  name="activityDetails" id="activityDetails" value={this.state.activityDetails} onChange={this.onChange} autoComplete="off"/>
+          <label htmlFor="activityDetails">Activity Details:</label><input type="text" placeholder="Activity Details" size ="64"  name="activityDetails" id="activityDetails" value={this.state.activityDetails} onChange={this.onChange} autoComplete="off"/>
           <br/>
-          <label htmlFor="time">Time:</label> <input type="time" size ="32"  name="time" id="timeString" value={this.state.timeString} onfocus="this.value=''" onChange={this.onChange} autoComplete="off"/>
+          <label htmlFor="time">Time:</label><input type="time" size ="32"  name="time" id="timeString" value={this.state.timeString} onfocus="this.value=''" onChange={this.onChange} autoComplete="off"/>
           <br/>
-          <label htmlFor="date">Date: </label> <input type="date" name="date" id="dateString" value={this.state.dateString} onChange={this.onChange} autoComplete="off" />         
+          <label htmlFor="date">Date:</label><input type="date" name="date" id="dateString" value={this.state.dateString} onChange={this.onChange} autoComplete="off" />         
       <br/>
         </div>
         )
