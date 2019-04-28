@@ -176,8 +176,10 @@ class DataProvider extends React.Component {
   }
 
   onChangeUserData(e) {
-    this.state.currentUser[e.target.id] = e.target.value
-    this.setState({currentUser: this.state.currentUser});
+    var user = {...this.state.currentUser}
+    user[e.target.id] = e.target.value    
+    user.hasChanged = true
+    this.setState({currentUser: user});
  }
 
   logOut(){

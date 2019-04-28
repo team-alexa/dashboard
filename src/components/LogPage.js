@@ -13,6 +13,7 @@ class LogPage extends Component{
  
     this.onChange = this.onChange.bind(this)
     this.saveData = this.saveData.bind(this)
+    this.addStudent = this.addStudent.bind(this)
     this.addTeacher = this.addTeacher.bind(this)
     this.getAllTeacherNames = this.getAllTeacherNames.bind(this)
     this.getAllStudentNames = this.getAllStudentNames.bind(this)
@@ -73,7 +74,7 @@ class LogPage extends Component{
     if (this.state.editable)
       this.setState({[e.target.id]: e.target.value, hasChanged: true})
     }
-  saveData(){
+  saveData(){      
         var d = this.state.initDate
         if(this.state.dateString.length == 10)
           d = this.state.dateString
@@ -86,7 +87,7 @@ class LogPage extends Component{
           this.context.setToast({message: "Invalid Time Format", color: "red", visible: true}, 3000)
       const body ={
         method: this.context.pageId == "new" ? "new" : "update",
-        logID: this.context.pageId,
+        logID: this.context.pageId == "new" ? undefined : this.context.pageId,
         studentID: this.state.studentID,
         teacherID: this.state.teacherID,
         activityType: this.state.activityType,
@@ -142,9 +143,12 @@ class LogPage extends Component{
     if (this.state.editable)
     this.setState({activityType: activity, hasChanged: true})
   }
-    render(){ //('Food','Nap','Diaper','Injury','Accomplishment','Activity','Needs','Anecdotal')     
+    render(){   
       var teacherName = this.state.teacherFullName
       var studentName = this.state.studentFullName
+      var validEntry = (this.state.studentID !== "" && this.state.teacherID !== "" 
+      && this.state.activityType !== "" && this.state.dateString !== "" 
+      && this.state.timeString !== "")
       return (
         <div className = "log-page content-page" onClick={this.hideDropdown}>
           <div className="button-group">
@@ -152,7 +156,8 @@ class LogPage extends Component{
               <button type="button" className = "delete-log-button enabled">
                 <div className="text">Delete Log</div>
               </button> : null }
-            <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button> 
+            <button className={this.context.pageId != "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
+            (validEntry ? "enabled" : "disabled")} type="button" onClick={this.saveData}>Save</button> 
           </div>
           <SearchableInput
             placeholder="Student"
