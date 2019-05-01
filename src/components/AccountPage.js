@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import{Context} from '../Store'
 import '../css/AccountPage.css';
 import Constants from '../Constants'
+import {Link} from 'react-router-dom';
 
 class AccountPage extends Component{
   constructor(props){
@@ -37,14 +38,25 @@ class AccountPage extends Component{
     .catch(error => console.log(error))
   }
   render(){
+      var validEntry = (this.context.currentUser.teacherID !== "" && this.context.currentUser.role !== "" 
+      && this.context.currentUser.status !== "" && this.context.currentUser.firstName !== "" 
+      && this.context.currentUser.lastName !== "" && this.context.currentUser.nickName !== "")
     return (
-      <div className = "account-page content-page">
+      <div className = "account-page content-page">        
         <div className="button-group">
           {this.context.pageId != "new" ?
             <button type="button" className = "change-password-button enabled">
               <div className="text">Change Password</div>
             </button> : null }
-          <button className={this.context.currentUser.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button> 
+        {this.context.pageId != "new" ?
+                  <button type="button" className = "change-password-button enabled">
+        <Link className="account-page-link" to={"/changeemail"}>Change Email</Link></button>
+: null }
+
+        <button className={this.context.pageId != "new" ? (this.context.currentUser.hasChanged ? "enabled" : "disabled") : 
+            (validEntry ? "enabled" : "disabled")} type="button" onClick={this.saveData}>Save</button>
+
+        
         </div>
         <h2 className="name">{this.context.currentUser.lastName ? `${this.context.currentUser.lastName}, ${this.context.currentUser.firstName}` : "Last Name, First Name"}</h2>
         <br/>

@@ -183,7 +183,7 @@ class DataProvider extends React.Component {
     user.hasChanged = true
     this.setState({currentUser: user});
  }
-
+ 
   logOut(){
       Auth.signOut()
         .then(data => console.log(data))
