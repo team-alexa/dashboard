@@ -1,6 +1,5 @@
 import React from "react";
 import { SignIn } from "aws-amplify-react";
-import config from "../aws-exports";
 import { Login } from "./Login";
 import App from "../App";
 import { Authenticator } from "aws-amplify-react/dist/Auth";
@@ -32,7 +31,7 @@ class AppWithAuth extends React.Component {
       return (
       <div>
           <DataProvider>
-                <Authenticator hide={[SignIn]} amplifyConfig={config}>
+                <Authenticator hide={[SignIn]}>
                     <Login />
                     <ForgotPasswordNew />
                     <ChangePasswordNew />
