@@ -58,7 +58,7 @@ class DataProvider extends React.Component {
       logOut: this.logOut,
       loadUserData:this.loadUserData,
       setLogs: this.setLogs,
-      onChangeUserData: this.onChangeUserData,
+      onChangeUserData: this.onChangeUserData
     }
   }
 
