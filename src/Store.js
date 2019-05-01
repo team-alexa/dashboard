@@ -115,10 +115,6 @@ class DataProvider extends React.Component {
           Object.assign(user, data[0])
           Object.assign(user, currentUser)
           user.email = currentUser.attributes.email
-          console.log(data[0])
-          console.log(currentUser)
-          console.log(user.email)
-          console.log(user.teacherID)
           this.setState({currentUser: user})
         }
         this.setContentLoading(false)
@@ -182,8 +178,10 @@ class DataProvider extends React.Component {
   }
 
   onChangeUserData(e) {
-    this.state.currentUser[e.target.id] = e.target.value
-    this.setState({currentUser: this.state.currentUser});
+    var user = {...this.state.currentUser}
+    user[e.target.id] = e.target.value    
+    user.hasChanged = true
+    this.setState({currentUser: user});
  }
 
   logOut(){

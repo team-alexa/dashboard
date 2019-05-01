@@ -205,20 +205,20 @@ class StudentProfile extends Component{
       </div>
       <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
       <br/>
-      <label htmlFor="lname">Name:</label> <input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.state.lastName} onChange={this.onChange} autoComplete="off"/>
+      <label htmlFor="lname">Name:</label><input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.state.lastName} onChange={this.onChange} autoComplete="off"/>
       <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.state.firstName} onChange={this.onChange} autoComplete="off"/>
       <br/>
-      <label htmlFor="nickname">Nickname:</label> <input type="text" placeholder="Nickname" size="25" name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
+      <label htmlFor="nickname">Nickname:</label><input type="text" placeholder="Nickname" size="25" name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
       <br />
-      <label htmlFor="id">ID:</label> <input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/>
+      <label htmlFor="id">ID:</label><input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/>
       <br/>
       <p>Age: {parseInt(new Date().getFullYear()) - parseInt(new Date(this.state.birthDate).getFullYear())} </p>
       <label htmlFor="month">DOB :</label>
       <input type="date" id="birthDate" value={this.state.birthDate} onChange={this.onChange} autoComplete="off" />
       <br/>
-      <label htmlFor="food">Food Allergies (comma-separated):</label> <input type="text" size = "64" id="foodAllergies" value={this.state.foodAllergies} onChange={this.onChange} autoComplete="off" />
+      <label htmlFor="food">Food Allergies (comma-separated):</label><input type="text" size = "64" id="foodAllergies" value={this.state.foodAllergies} onChange={this.onChange} autoComplete="off" />
       <br/>
-      <label htmlFor="medical">Medical Conditions (comma-separated):</label> <input type="text" size = "64" id="medical" value={this.state.medical} onChange={this.onChange} autoComplete="off" />
+      <label htmlFor="medical">Medical Conditions (comma-separated):</label><input type="text" size = "64" id="medical" value={this.state.medical} onChange={this.onChange} autoComplete="off" />
       <br/>
       <SearchableInput
         placeholder="Teacher"
