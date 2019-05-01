@@ -14,7 +14,7 @@ class Sidebar extends Component {
         <SidebarButton name="Home" link="" active={this.context.page == "home"}/>
         <SidebarButton name="Students" link="students" active={this.context.page == "students"}/>
         <SidebarButton name="Logs" link="logs" active={this.context.page == "logs"}/>
-        <SidebarButton name="My Account" link="myaccount" active={this.context.page == "myaccount"}/>
+        <SidebarButton name="My Account" link="account" active={this.context.page == "account"}/>
         <SidebarButton name="Admin Panel" link="adminpanel" active={this.context.page == "adminpanel"}/>
         <SidebarButton name="Help" link="help" active={this.context.page == "help"}/>
         <button className="logout-button" onClick={this.context.logOut}>Log Out</button>

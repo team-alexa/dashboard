@@ -29,7 +29,8 @@ class AdminPage extends Component{
                     width="100%"
                     headers={["Teacher", "Admin"]}
                     columnWidths={["10%", "10%"]}
-                    rootAddress="/teachers/" />
+                    rootAddress="/account/"
+                    newLink="/account/new"/>
             </div>
         );
     }

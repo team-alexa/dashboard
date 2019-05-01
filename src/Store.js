@@ -22,6 +22,7 @@ class DataProvider extends React.Component {
     this.loadUserData = this.loadUserData.bind(this)
     this.setLogs = this.setLogs.bind(this)
     this.onChangeUserData = this.onChangeUserData.bind(this)
+    this.changeUserEmail = this.changeUserEmail.bind(this)
 
     this.state = {
       page: "home",
@@ -58,7 +59,8 @@ class DataProvider extends React.Component {
       logOut: this.logOut,
       loadUserData:this.loadUserData,
       setLogs: this.setLogs,
-      onChangeUserData: this.onChangeUserData
+      onChangeUserData: this.onChangeUserData,
+      changeUserEmail: this.changeUserEmail
     }
   }
 
@@ -181,7 +183,11 @@ class DataProvider extends React.Component {
     user.hasChanged = true
     this.setState({currentUser: user});
  }
-
+  changeUserEmail(newEmail) {
+    var user = {...this.state.currentUser}
+    user.email = newEmail;    
+    this.setState({currentUser: user});
+ }
   logOut(){
       Auth.signOut()
         .then(data => console.log(data))
