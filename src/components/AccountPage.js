@@ -4,7 +4,6 @@ import {Link} from 'react-router-dom';
 import{Context} from '../Store'
 import '../css/AccountPage.css';
 import Constants from '../Constants'
-import {Link} from 'react-router-dom';
 
 class AccountPage extends Component{
   constructor(props){
