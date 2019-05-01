@@ -36,8 +36,6 @@ class AccountPage extends Component{
     .catch(error => console.log(error))
   }
   render(){
-      if(this.context.pageId == "new"){
-      }
       var validEntry = (this.context.currentUser.teacherID !== "" && this.context.currentUser.role !== "" 
       && this.context.currentUser.status !== "" && this.context.currentUser.firstName !== "" 
       && this.context.currentUser.lastName !== "" && this.context.currentUser.nickName !== "")
