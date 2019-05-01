@@ -19,6 +19,7 @@ class DataProvider extends React.Component {
     this.setToast = this.setToast.bind(this)
     this.setStudents = this.setStudents.bind(this)
     this.logOut = this.logOut.bind(this)
+    this.changePassword = this.changePassword.bind(this)
     this.loadUserData = this.loadUserData.bind(this)
     this.setLogs = this.setLogs.bind(this)
     this.onChangeUserData = this.onChangeUserData.bind(this)
@@ -56,6 +57,7 @@ class DataProvider extends React.Component {
       setToast: this.setToast,
       setStudents: this.setStudents,
       logOut: this.logOut,
+      changePassword: this.changePassword,
       loadUserData:this.loadUserData,
       setLogs: this.setLogs,
       onChangeUserData: this.onChangeUserData
@@ -188,6 +190,19 @@ class DataProvider extends React.Component {
         .catch(err => console.log(err));
   }
     
+  changePassword(oldPassword, newPassword){
+    return Auth.currentAuthenticatedUser()
+    .then(user => {
+        return Auth.changePassword(user, oldPassword, newPassword);
+    })
+    .then(data => {
+        console.log(data);
+        return data;
+    })
+    .catch(err => {
+        console.log(err);
+        return err;});
+  }
   render() {
     return <Context.Provider value={this.state}>
       {this.props.children}

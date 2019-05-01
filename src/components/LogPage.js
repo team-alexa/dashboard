@@ -159,6 +159,7 @@ class LogPage extends Component{
             <button className={this.context.pageId != "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
             (validEntry ? "enabled" : "disabled")} type="button" onClick={this.saveData}>Save</button> 
           </div>
+          <h2 className="name">Log {this.context.pageId}</h2>
           <SearchableInput
             placeholder="Student"
             label="Student: "

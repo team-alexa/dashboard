@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import '../css/index.css'
-import{ Context } from '../Store'
+import {Link} from 'react-router-dom';
+import{Context} from '../Store'
+import '../css/AccountPage.css';
 import Constants from '../Constants'
 
 class AccountPage extends Component{
@@ -54,10 +56,10 @@ class AccountPage extends Component{
         <p>Admin: {this.context.currentUser.role === "admin" ? "Yes" : "No"}</p>
       </div>
     )
-    }
+   }
 
    
-}
+  }
 
 AccountPage.contextType = Context
 export default AccountPage
