@@ -92,7 +92,7 @@ class ChangeEmailInApp extends Component {
             <form onSubmit={this.handleUpdateClick}>
                 <input type="text" placeholder="Email" id="email" value={this.state.email} onChange={this.handleChange} size="32"/>
                 <br/>
-                <button type="submit">Update Email</button>
+                <button type="submit" className="account-page-link">Update Email</button>
             </form>
         </div>
     );
@@ -103,14 +103,13 @@ class ChangeEmailInApp extends Component {
     return (
         <div className="content-page">
             <h2>Verify Email</h2>
+            <p>***To complete the email change process, you MUST log out and log back in!***</p>
             <form onSubmit={this.handleConfirmClick}>
                 <input type="text" placeholder="Confirmation Code" id="code" value={this.state.code} onChange={this.handleChange} size="32"/>
                 <br/>
-                <button type="submit">Confirm</button>
-                <br/>
-                <button>
-                    <Link className="account-page-link" to={"/account"}>Verify Later</Link>
-                </button>
+                <button type="submit" className="account-page-link">Confirm</button>
+            
+                <Link className="account-page-link" to={"/account"}>Verify Later</Link>
             </form>
         </div>
     );

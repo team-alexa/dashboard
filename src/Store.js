@@ -65,7 +65,6 @@ class DataProvider extends React.Component {
   }
 
   loadTeachers() {
-    if (Object.keys(this.state.teachers).length == 0) {
       this.setContentLoading(true)
       fetch(Constants.apiUrl + "teachers")
           .then(response => response.json())
@@ -77,7 +76,6 @@ class DataProvider extends React.Component {
             this.setTeachers(teachers)
             this.setContentLoading(false)
           })
-    }
   }
 
   loadStudents() {

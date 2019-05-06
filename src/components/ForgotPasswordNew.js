@@ -8,9 +8,33 @@ export default class ForgotPasswordNew extends ForgotPassword {
         super(props);
 
         this._validAuthStates = ['forgotPasswordNew'];
-        this.state = { delivery: null };
+        this.state = { 
+            delivery: null,
+            newPass: ""
+        };
+    }
+    onChange(e) {
+      this.setState({[e.target.id]: e.target.value})
     }
     
+    submit() {
+        const { authData={} } = this.props;
+        const { code, password } = this.inputs;
+        const username = this.inputs.username || authData.username;
+        if(password != this.state.newPass){
+            this.context.setToast({message: "Passwords don't Match.", color: "red", visible: true}, 10000)
+            return;
+        }
+        if (!Auth || typeof Auth.forgotPasswordSubmit !== 'function') {
+            throw new Error('No Auth module found, please ensure @aws-amplify/auth is imported');
+        }
+        Auth.forgotPasswordSubmit(username, code, password)
+            .then(data => {
+                this.changeState('signIn');
+                this.setState({ delivery: null });
+            })
+            .catch(err => this.error(err));
+    }
     sendView() {
         return (
             <div>
@@ -26,6 +50,7 @@ export default class ForgotPasswordNew extends ForgotPassword {
             <div>
                 <input placeholder='Code' key="code" name="code" autoComplete="off" onChange={this.handleInputChange} type="text" size="32"/>
                 <input placeholder="New Password" type="password" key="password" name="password" onChange={this.handleInputChange} size="32"/>
+                <input placeholder="Confirm New Password" id="newPass" name="newPass" type="password" value={this.state.newPass}onChange={this.onChange} size="32"/>
             </div>
         );
     }

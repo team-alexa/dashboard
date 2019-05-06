@@ -17,7 +17,8 @@ class AccountPage extends Component{
         firstName: "",
         lastName: "",
         nickName: "",
-        hasChanged: false
+        hasChanged: false,
+        pass: ""
     }
   }
      componentDidMount(){
@@ -146,12 +147,20 @@ class AccountPage extends Component{
                 <input type="text" placeholder="Nickname" size ="32"  name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
                 <br/>
 
+                <label htmlFor="role">Role:</label>
+                <input type="text" placeholder="Role" size ="32"  name="role" id="role" value={this.state.role} onChange={this.onChange} autoComplete="off"/>
+
+                {this.context.pageId == "new" ?
+                <div>
+                <br/>
+                <h3> User Attributes </h3>
                 <label>Email Address:</label>
                 <input type="text" placeholder="Email" size ="32"  name="email" id="email" value={this.state.email} autoComplete="off"/>
                 <br/>
-
-                <label htmlFor="role">Role:</label>
-                <input type="text" placeholder="Role" size ="32"  name="role" id="role" value={this.state.role} onChange={this.onChange} autoComplete="off"/>
+                
+                <label>Temporary Password:</label>
+                <input type="text" placeholder="Password" size ="32"  name="password" id="password" value={this.state.pass} autoComplete="off"/>
+                <br/></div> : null}
             </div>
         )
     }
