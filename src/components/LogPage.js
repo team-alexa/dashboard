@@ -20,6 +20,7 @@ class LogPage extends Component{
     this.dropdownClick = this.dropdownClick.bind(this)
     this.setActivity = this.setActivity.bind(this)
     this.hideDropdown = this.hideDropdown.bind(this)
+    this.delete = this.delete.bind(this)
   
     this.state = {
       activityTypes: ["Food", "Nap", "Diaper", "Injury", "Accomplishment", "Activity", "Needs", "Anecdotal"],
@@ -143,6 +144,25 @@ class LogPage extends Component{
     if (this.state.editable)
     this.setState({activityType: activity, hasChanged: true})
   }
+  delete() {
+    const body = {
+      method: "delete",
+      logID: this.state.logID
+    }
+
+    fetch(Constants.apiUrl + 'logs', {
+      method: "POST",
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    .then(response => response.json())
+    .then(() => {
+      this.context.setToast({color: "green", message: "Successfully deleted log.", visible: true}, 3000)
+    })
+    .catch(error => console.log(error))
+  }
     render(){   
       var teacherName = this.state.teacherFullName
       var studentName = this.state.studentFullName
@@ -153,8 +173,8 @@ class LogPage extends Component{
         <div className = "log-page content-page" onClick={this.hideDropdown}>
           <div className="button-group">
             {this.context.pageId != "new" ?
-              <button type="button" className = "delete-log-button enabled">
-                <div className="text">Delete Log</div>
+              <button type="button" className="delete-log-button enabled" onClick={this.delete} style={{borderColor: "red", color: "red", backgroundColor: "transparent"}}>
+                <div className="text">Delete</div>
               </button> : null }
             <button className={this.context.pageId != "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
             (validEntry ? "enabled" : "disabled")} type="button" onClick={this.saveData}>Save</button> 
