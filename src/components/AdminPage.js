@@ -28,18 +28,27 @@ class AdminPage extends Component{
     })
   }
     render() {
-        return(
-            <div className="admin-page page content-page">
-                <h2>Teachers</h2>
-                <Table data={this.getTeacherTableData()}
-                    height="400px"
-                    width="100%"
-                    headers={["Name", "Role"]}
-                    columnWidths={["50%", "50%"]}
-                    rootAddress="/account/"
-                    newLink="/account/new"/>
-            </div>
-        );
+        if(this.context.currentUser.role == "admin"){
+            return(
+                <div className="admin-page page content-page">
+                    <h2>Teachers</h2>
+                    <Table data={this.getTeacherTableData()}
+                        height="400px"
+                        width="100%"
+                        headers={["Name", "Role"]}
+                        columnWidths={["50%", "50%"]}
+                        rootAddress="/account/"
+                        newLink="/account/new"/>
+                </div>
+            );
+        }
+        else{
+            return(
+                <div className="error-page content-page">
+                    <h2>Uh oh, you've made a wrong turn!</h2>
+                </div>
+            );
+        }
     }
 }
 AdminPage.contextType = Context;

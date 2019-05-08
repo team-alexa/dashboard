@@ -33,7 +33,8 @@ class DataProvider extends React.Component {
         teacherID: "",
         email: "",
         hasChanged: "",
-        students: []
+        students: [],
+        role: ""
       },
       sidebarClass: "open",
       contentLoading: false,
