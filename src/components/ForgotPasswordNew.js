@@ -2,6 +2,7 @@ import * as React from 'react';
 import Auth from '@aws-amplify/auth';
 import { ForgotPassword } from "aws-amplify-react";
 import {Link} from 'react-router-dom';
+import {Context} from '../Store';
 
 export default class ForgotPasswordNew extends ForgotPassword {
     constructor(props) {
@@ -12,17 +13,25 @@ export default class ForgotPasswordNew extends ForgotPassword {
             delivery: null,
             newPass: ""
         };
+        
+        this.handleInputChangeNewPass = this.handleInputChangeNewPass.bind(this);
     }
-    onChange(e) {
-      this.setState({[e.target.id]: e.target.value})
-    }
+   handleInputChangeNewPass(event) {
+        const target = event.target;
+        const value = target.value;
+        const name = target.id;
+        this.setState({
+          [name]: value
+        });
+      }
     
     submit() {
         const { authData={} } = this.props;
         const { code, password } = this.inputs;
         const username = this.inputs.username || authData.username;
         if(password != this.state.newPass){
-            this.context.setToast({message: "Passwords don't Match.", color: "red", visible: true}, 10000)
+            /*this.context.setToast({message: "Passwords don't Match.", color: "red", visible: true}, 10000)*/
+            alert("Passwords Don't Match. Please Try Again.");
             return;
         }
         if (!Auth || typeof Auth.forgotPasswordSubmit !== 'function') {
@@ -30,8 +39,10 @@ export default class ForgotPasswordNew extends ForgotPassword {
         }
         Auth.forgotPasswordSubmit(username, code, password)
             .then(data => {
+                /*this.context.setToast({message: "Passwords don't Match.", color: "red", visible: true}, 10000)*/
+                alert("Password has been successfully changed!");
                 this.changeState('signIn');
-                this.setState({ delivery: null });
+                this.setState({ delivery: null, newPass: "" });
             })
             .catch(err => this.error(err));
     }
@@ -50,7 +61,7 @@ export default class ForgotPasswordNew extends ForgotPassword {
             <div>
                 <input placeholder='Code' key="code" name="code" autoComplete="off" onChange={this.handleInputChange} type="text" size="32"/>
                 <input placeholder="New Password" type="password" key="password" name="password" onChange={this.handleInputChange} size="32"/>
-                <input placeholder="Confirm New Password" id="newPass" name="newPass" type="password" value={this.state.newPass}onChange={this.onChange} size="32"/>
+                <input placeholder="Confirm New Password" id="newPass" type="password" value={this.state.newPass} onChange={this.handleInputChangeNewPass} size="32"/>
             </div>
         );
     }
@@ -85,3 +96,4 @@ export default class ForgotPasswordNew extends ForgotPassword {
         );
     }
 }
+ForgotPasswordNew.contextType = Context;
