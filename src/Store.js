@@ -71,7 +71,9 @@ class DataProvider extends React.Component {
           .then(data => {
             const teachers = {}
             data.forEach(teacher => {
-              teachers[teacher.teacherID] = teacher
+              if(teacher.status != "inactive"){
+                teachers[teacher.teacherID] = teacher
+              }
             })
             this.setTeachers(teachers)
             this.setContentLoading(false)

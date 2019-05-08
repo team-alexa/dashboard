@@ -4,12 +4,15 @@ import {Link} from 'react-router-dom';
 import{Context} from '../Store'
 import '../css/AccountPage.css';
 import Constants from '../Constants'
+import { Auth } from 'aws-amplify';
+import {Redirect} from 'react-router-dom';
 
 class AccountPage extends Component{
   constructor(props){
     super(props)
     this.saveData = this.saveData.bind(this)
     this.onChange = this.onChange.bind(this)
+    this.deleteTeacher = this.deleteTeacher.bind(this)
       
     this.state = {
         teacherID: 0,
@@ -18,7 +21,9 @@ class AccountPage extends Component{
         lastName: "",
         nickName: "",
         hasChanged: false,
-        pass: ""
+        pass: "",
+        email: "",
+        changed: false
     }
   }
      componentDidMount(){
@@ -46,7 +51,15 @@ class AccountPage extends Component{
       this.setState({[e.target.id]: e.target.value})
         this.setState({hasChanged: true});
     }
-  saveData(){
+    
+  saveData(user, pass, email){
+     /* console.log(this.context.teachers);
+        for (let teacher of this.context.teachers){
+        if(teacher.teacherID == user){
+            alert("no");
+        }
+    }*/
+    /*Create new User Account in Database*/
     var body = "";
     if(this.context.pageId == this.context.currentUser.teacherID){
         body ={
@@ -85,9 +98,79 @@ class AccountPage extends Component{
       /*this.context.setTeachers(this.context.teachers)*/
       this.context.setToast({message: "Saved!", color: "green", visible: true})
         /*this.context.loadTeachers()*/
+        if(this.context.pageId == "new"){
+      /*Create new User Account in Cognito*/
+        Auth.signUp({
+            username: user,
+            password: pass,
+            attributes: {
+                email: email
+            },
+        })
+        .then(data => {
+            console.log(data)
+            var code = prompt("Please enter the code that was sent to your email:");
+            while (code == null || code == "") {
+                code = prompt("Please enter the code that was sent to your email:");
+            } 
+            console.log(code);
+
+            Auth.confirmSignUp(user, code, {
+                // Optional. Force user confirmation irrespective of existing alias. By default set to True.
+                forceAliasCreation: true    
+            }).then(data => {
+                if(data == "SUCCESS"){
+                    this.context.setToast({message: "You have successfully created a teacher!", color: "green", visible: true}, 3000);
+                    this.setState({
+                        teacherID: 0,
+                        role: "",
+                        firstName: "",
+                        lastName: "",
+                        nickName: "",
+                        hasChanged: false,
+                        pass: "",
+                        email: "",
+                        changed: true
+                    })            
+                }
+            })
+            .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+        } /*end if*/
     })
     .catch(error => console.log(error))
   }
+    
+  deleteTeacher(){
+      if(window.confirm("Are you sure you want to delete?")){
+          var body = {
+              method: "delete",
+              teacherID: this.state.teacherID
+            } 
+
+        fetch(Constants.apiUrl + 'teachers', {
+          method: "POST",
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        })
+        .then(response => response.json())
+        .then(() => {
+          delete body.method
+          /*this.context.teachers[body.teacherID] = body*/
+          /*this.context.setTeachers(this.context.teachers)*/
+
+          this.context.setToast({message: "Deleted!", color: "green", visible: true})
+            this.setState({
+                changed: true
+            })
+         })
+        .catch(error => console.log(error))
+      }
+  }
+    
   render(){
       var validEntry = (this.context.currentUser.teacherID !== "" && this.context.currentUser.role !== "" 
       && this.context.currentUser.status !== "" && this.context.currentUser.firstName !== "" 
@@ -102,7 +185,7 @@ class AccountPage extends Component{
                 <Link className="account-page-link" to={"/changeemail"}>Change Email</Link>
                 
                 <button className={this.context.pageId != "new" ? (this.context.currentUser.hasChanged ? "enabled" : "disabled") : 
-                    (validEntry ? "enabled" : "disabled")} type="button" onClick={this.saveData}>Save</button>
+                    (validEntry ? "enabled" : "disabled")} type="button" onClick={() => this.saveData(this.state.teacherID, this.state.pass, this.state.email)}>Save</button>
             </div>
             <h2 className="name">{this.context.currentUser.lastName ? `${this.context.currentUser.lastName}, ${this.context.currentUser.firstName}` : "Last Name, First Name"}</h2> 
             
@@ -124,11 +207,19 @@ class AccountPage extends Component{
     }
     /*View New + Others*/
     else{
+        if(this.state.changed == true){
+            this.state.changed = false;
+            return <Redirect to='/adminpanel' />
+        }
         return(
             <div className = "account-page content-page">        
-                <div className="button-group">
+                 <div className="button-group">
+                    {this.context.pageId != "new" ? <button className="enabled" onClick ={this.deleteTeacher}>
+                        Delete Teacher
+                    </button> : null}
+
                     <button className={this.context.pageId != "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
-                    (validEntry ? "enabled" : "disabled")} type="button" onClick={this.saveData}>Save</button>
+                    (validEntry ? "enabled" : "disabled")} type="button" onClick={() => this.saveData(this.state.teacherID, this.state.pass, this.state.email)}>Save</button>
                 </div>
                 {this.context.pageId == "new" ?<h2 className="name">Create New Teacher </h2> : <h2 className="name">{this.state.lastName + ", " + this.state.firstName}</h2>}
                 <br/>
@@ -155,11 +246,11 @@ class AccountPage extends Component{
                 <br/>
                 <h3> User Attributes </h3>
                 <label>Email Address:</label>
-                <input type="text" placeholder="Email" size ="32"  name="email" id="email" value={this.state.email} autoComplete="off"/>
+                <input type="text" placeholder="Email" size ="32"  name="email" id="email" value={this.state.email} onChange={this.onChange} autoComplete="off"/>
                 <br/>
                 
                 <label>Temporary Password:</label>
-                <input type="text" placeholder="Password" size ="32"  name="password" id="password" value={this.state.pass} autoComplete="off"/>
+                <input type="text" placeholder="Password" size ="32"  name="pass" id="pass" value={this.state.pass} onChange={this.onChange} autoComplete="off"/>
                 <br/></div> : null}
             </div>
         )
