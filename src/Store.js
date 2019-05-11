@@ -33,7 +33,8 @@ class DataProvider extends React.Component {
         teacherID: "",
         email: "",
         hasChanged: "",
-        students: []
+        students: [],
+        role: ""
       },
       sidebarClass: "open",
       contentLoading: false,
@@ -65,19 +66,19 @@ class DataProvider extends React.Component {
   }
 
   loadTeachers() {
-    if (Object.keys(this.state.teachers).length == 0) {
       this.setContentLoading(true)
       fetch(Constants.apiUrl + "teachers")
           .then(response => response.json())
           .then(data => {
             const teachers = {}
             data.forEach(teacher => {
-              teachers[teacher.teacherID] = teacher
+              if(teacher.status != "inactive"){
+                teachers[teacher.teacherID] = teacher
+              }
             })
             this.setTeachers(teachers)
             this.setContentLoading(false)
           })
-    }
   }
 
   loadStudents() {
