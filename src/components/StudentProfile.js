@@ -29,6 +29,7 @@ class StudentProfile extends Component{
       lastName: "",
       medical: "",
       nickName: "",
+      status: "active",
       studentID: "",
       teacherID: "",
       teachers: [],
@@ -223,8 +224,7 @@ class StudentProfile extends Component{
           </button> : null }
         <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button>
         {this.context.pageId != "new" ?
-          <button className="log-button enabled" type="button" onClick={this.delete}
-            style={{borderColor: "red", color: "red", backgroundColor: "transparent"}}>Delete</button> : null}
+          <button className="log-button enabled" type="button" onClick={this.delete}>Set {this.state.status == "active" ? "Inactive" : "Active"}</button> : null}
         <button className="Daily-Report-Button enabled" type="button" onClick={this.showDailyLogsButton}>Daily Report</button>
       </div>
       <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>

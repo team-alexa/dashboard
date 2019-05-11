@@ -21,13 +21,6 @@ class Logs extends Component {
     }
   }
 
-  componentDidMount() {
-    if (this.context.logs.length == 0) {
-      this.context.loadMoreLogs()
-    }
-    this.context.loadTeachers()
-  }
-
   getLogTableData() {
     const logs = this.state.displaySearch ? this.state.searchLogs : this.context.logs
     return logs.map(log => {
