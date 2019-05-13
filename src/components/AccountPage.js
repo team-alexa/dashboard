@@ -66,7 +66,7 @@ class AccountPage extends Component{
     }*/
     /*Create new User Account in Database*/
     var body = "";
-    if(this.context.pageId == this.context.currentUser.teacherID){
+    if(this.context.pageId == this.context.currentUser.teacherID || this.context.pageId == null){
         body ={
           method: "update",
           teacherID: this.context.currentUser.teacherID,
@@ -102,7 +102,7 @@ class AccountPage extends Component{
       this.context.teachers[body.teacherID] = body
       /*this.context.setTeachers(this.context.teachers)*/
       this.context.setToast({message: "Saved!", color: "green", visible: true})
-        /*this.context.loadTeachers()*/
+        this.context.loadTeachers();
         if(this.context.pageId == "new"){
       /*Create new User Account in Cognito*/
         Auth.signUp({
