@@ -13,8 +13,13 @@ class AccountPage extends Component{
     this.saveData = this.saveData.bind(this)
     this.onChange = this.onChange.bind(this)
     this.deleteTeacher = this.deleteTeacher.bind(this)
+    this.dropdownClick = this.dropdownClick.bind(this)
+    this.setRole = this.setRole.bind(this)
+    this.hideDropdown = this.hideDropdown.bind(this)
       
     this.state = {
+        roles: ["admin", "teacher"],
+        dropdownOpen: false,
         teacherID: 0,
         role: "",
         firstName: "",
@@ -61,7 +66,7 @@ class AccountPage extends Component{
     }*/
     /*Create new User Account in Database*/
     var body = "";
-    if(this.context.pageId == this.context.currentUser.teacherID){
+    if(this.context.pageId == this.context.currentUser.teacherID || this.context.pageId == null){
         body ={
           method: "update",
           teacherID: this.context.currentUser.teacherID,
@@ -97,7 +102,7 @@ class AccountPage extends Component{
       this.context.teachers[body.teacherID] = body
       /*this.context.setTeachers(this.context.teachers)*/
       this.context.setToast({message: "Saved!", color: "green", visible: true})
-        /*this.context.loadTeachers()*/
+        this.context.loadTeachers();
         if(this.context.pageId == "new"){
       /*Create new User Account in Cognito*/
         Auth.signUp({
@@ -141,7 +146,18 @@ class AccountPage extends Component{
     })
     .catch(error => console.log(error))
   }
-    
+    setRole(e){
+        var newRole = this.state.roles[e.target.value]
+        this.setState({role: newRole, hasChanged: true})
+    }
+    dropdownClick(){
+        var o = !this.state.dropdownOpen
+        this.setState({dropdownOpen: o})
+    }
+     hideDropdown(){
+    if(this.state.dropdownOpen)
+    this.setState({dropdownOpen: false})
+  }
   deleteTeacher(){
       if(window.confirm("Are you sure you want to delete?")){
           var body = {
@@ -212,7 +228,7 @@ class AccountPage extends Component{
             return <Redirect to='/adminpanel' />
         }
         return(
-            <div className = "account-page content-page">        
+            <div className = "account-page content-page" onClick={this.hideDropdown}>        
                  <div className="button-group">
                     {this.context.pageId != "new" ? <button className="enabled" onClick ={this.deleteTeacher}>
                         Delete Teacher
@@ -238,8 +254,17 @@ class AccountPage extends Component{
                 <input type="text" placeholder="Nickname" size ="32"  name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
                 <br/>
 
-                <label htmlFor="role">Role:</label>
-                <input type="text" placeholder="Role" size ="32"  name="role" id="role" value={this.state.role} onChange={this.onChange} autoComplete="off"/>
+              <label htmlFor="role">Role:</label><input type="text" placeholder="Role" size ="32"  name="role" id="role" value={this.state.role}  onClick={this.dropdownClick} autoComplete="off"/>
+              {this.state.dropdownOpen && (
+                  <div className="activity-menu">
+                    <ul className="possible-values">
+                      {this.state.roles.map((role, index) => 
+                        <li key={index} value={index} onClick={this.setRole} >{role}</li>
+                      )}
+                    </ul>
+                  </div>
+                )} 
+
 
                 {this.context.pageId == "new" ?
                 <div>
