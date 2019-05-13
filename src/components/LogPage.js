@@ -160,6 +160,7 @@ class LogPage extends Component{
     .then(response => response.json())
     .then(() => {
       this.context.setToast({color: "green", message: "Successfully deleted log.", visible: true}, 3000)
+      this.context.removeLog(this.state.logID)
     })
     .catch(error => console.log(error))
   }
