@@ -10,18 +10,23 @@ class Students extends Component {
 
     this.search = this.search.bind(this)
     this.onChange = this.onChange.bind(this)
+    this.onInactiveChange = this.onInactiveChange.bind(this)
 
     this.state = {
       searchStudents: [],
       displaySearch: false,
       studentName: "",
       teacherName: "",
+      includeInactive: false
     }
   }
 
   getStudentTableData() {
     if (this.state.displaySearch) {
-      return this.state.searchStudents.map(student => {
+      const students = this.state.includeInactive ? this.state.searchStudents : this.state.searchStudents.filter(student => {
+        return this.context.students[student].status == "active"
+      })
+      return students.map(student => {
         student = this.context.students[student]
         var age = parseInt(new Date().getFullYear()) - parseInt(new Date(student.birthDate).getFullYear())
         var teacher = this.context.teachers[student.teacherID] ? this.context.teachers[student.teacherID].fullName : ""
@@ -33,7 +38,10 @@ class Students extends Component {
           student.studentID]
       })
     } else {
-      return Object.keys(this.context.students).map(student => {
+      const students = this.state.includeInactive ? Object.keys(this.context.students) : Object.keys(this.context.students).filter(student => {
+        return this.context.students[student].status == "active"
+      })
+      return students.map(student => {
         student = this.context.students[student]
         var age = parseInt(new Date().getFullYear()) - parseInt(new Date(student.birthDate).getFullYear())
         var teacher = this.context.teachers[student.teacherID] ? this.context.teachers[student.teacherID].fullName : ""
@@ -75,6 +83,10 @@ class Students extends Component {
     this.setState({[e.target.id]: e.target.value});
   }
 
+  onInactiveChange(e) {
+    this.setState({includeInactive: e.target.checked})
+  }
+
   render() {
     return (
       <div className="search-page content-page">
@@ -86,6 +98,10 @@ class Students extends Component {
             <button type="submit">→</button>
           </form>
         </div>
+        <div className="include-inactive">
+          <label htmlFor="includeInactive">Include inactive students </label>
+          <input type="checkbox" id="includeInactive" checked={this.state.includeInactive} onChange={this.onInactiveChange} />
+        </div><br/>
         <Table data={this.getStudentTableData()}
           height="80%"
           width="100%"

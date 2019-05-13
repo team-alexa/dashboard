@@ -23,34 +23,34 @@ display: inline-block;
 }
 
 .button-group {
-position: absolute;
-top: 15px;
-right: 15px;
-background-color: none;
-padding: 15px 32px;
-text-align: center;
-text-decoration: none;
-font-size: 16px;
-display: block;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  display: block;
 }
 
 .button-group button {
-color: white;
-border: none;
-margin: 8px 0px;
-height: 45px;
-width: 160px;
-border-radius: 4px;
-cursor: pointer;
-display: block;
-font-size: 16px;
-font-family: "Open Sans", sans-serif;
-outline: none;
+  color: white;
+  border: none;
+  margin: 8px 0px;
+  height: 45px;
+  width: 160px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  font-size: 16px;
+  font-family: "Open Sans", sans-serif;
+  outline: none;
 }
 
 .button-group button.enabled {
-background-color: rgb(0, 159, 194);
-border: 2px solid rgb(0, 159, 194);
+  background-color: rgb(0, 159, 194);
+  border: 2px solid rgb(0, 159, 194);
 }
 
 .button-group button.enabled:hover {
@@ -67,26 +67,25 @@ cursor: not-allowed;
 }
 
 .button-group .log-button .text{
-display: inline;
+  display: inline;
 }
 
 .button-group .icon{
-display: inline;
-font-size: 30px;
+  display: inline;
+  font-size: 30px;
 }
 
 input[type="text"], input[type="number"], input[type="date"], input[type="time"], input[type="password"] {
-padding: 10px;
-margin: 6px;
-border: 1px solid rgb(201, 201, 201);
-border-radius: 4px;     
-outline: none;
-font-size: 16px;
-font-family: 'Open Sans', sans-serif;
+  padding: 10px;
+  margin: 6px;
+  border: 1px solid rgb(201, 201, 201);
+  border-radius: 4px;     
+  outline: none;
+  font-size: 16px;
+  font-family: 'Open Sans', sans-serif;
 }
 
 input[type="text"]:focus, input[type="date"]:focus, input[type="time"]:focus, input[type="password"]:focus {
-border-color:rgb(0, 159, 194);
-box-shadow: 0 0 8px 0 rgb(0, 159, 194);
+  border-color:rgb(0, 159, 194);
+  box-shadow: 0 0 8px 0 rgb(0, 159, 194);
 }
-

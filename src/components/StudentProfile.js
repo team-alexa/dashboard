@@ -21,6 +21,7 @@ class StudentProfile extends Component{
     this.showDailyLogsButton = this.showDailyLogsButton.bind(this);
     this.setDailyLogs = this.setDailyLogs.bind(this);
     this.loadMoreLogs = this.loadMoreLogs.bind(this);
+    this.delete = this.delete.bind(this);
     this.state = {
       birthDate: "",
       firstName: "",
@@ -28,6 +29,7 @@ class StudentProfile extends Component{
       lastName: "",
       medical: "",
       nickName: "",
+      status: "active",
       studentID: "",
       teacherID: "",
       teachers: [],
@@ -191,6 +193,26 @@ class StudentProfile extends Component{
     })
   }
 
+  delete() {
+    const body = {
+      method: "delete",
+      studentID: this.state.studentID
+    }
+
+    fetch(Constants.apiUrl + 'students', {
+      method: "POST",
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    .then(response => response.json())
+    .then(() => {
+      this.context.setToast({color: "green", message: "Successfully deleted student.", visible: true}, 3000)
+    })
+    .catch(error => console.log(error))
+  }
+
   render() {
     var teacherName = this.getStudentTeacherName()
     return (
@@ -201,6 +223,8 @@ class StudentProfile extends Component{
             <div className="text">New Log</div>
           </button> : null }
         <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button>
+        {this.context.pageId != "new" ?
+          <button className="log-button enabled" type="button" onClick={this.delete}>Set {this.state.status == "active" ? "Inactive" : "Active"}</button> : null}
         <button className="Daily-Report-Button enabled" type="button" onClick={this.showDailyLogsButton}>Daily Report</button>
       </div>
       <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>

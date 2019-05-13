@@ -50,3 +50,12 @@
   padding: 1px 19px 4px;
   border: 1px solid rgb(0, 159, 194);
 }
+
+.include-inactive {
+  float: right;
+}
+
+.include-inactive label {
+  font-family: 'Open Sans', sans-serif;
+  color: rgb(87, 87, 87);
+}

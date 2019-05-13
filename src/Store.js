@@ -23,6 +23,7 @@ class DataProvider extends React.Component {
     this.loadUserData = this.loadUserData.bind(this)
     this.setLogs = this.setLogs.bind(this)
     this.onChangeUserData = this.onChangeUserData.bind(this)
+    this.removeLog = this.removeLog.bind(this)
 
     this.state = {
       page: "home",
@@ -51,6 +52,7 @@ class DataProvider extends React.Component {
       loadStudents: this.loadStudents,
       loadMoreLogs: this.loadMoreLogs,
       toggleSidebar: this.toggleSidebar,
+      removeLog: this.removeLog,
       setContentLoading: this.setContentLoading,
       setPage: this.setPage,
       setPageId: this.setPageId,
@@ -138,6 +140,14 @@ class DataProvider extends React.Component {
     }
   }
 
+  removeLog(logID) {
+    const newLogs = this.state.logs.filter(log => {
+      return log.logID != logID
+    })
+
+    this.setLogs(newLogs)
+  }
+
   setContentLoading(state) {
     this.setState({contentLoading: state})
   }
@@ -183,7 +193,7 @@ class DataProvider extends React.Component {
     user[e.target.id] = e.target.value    
     user.hasChanged = true
     this.setState({currentUser: user});
- }
+  }
  
   logOut(){
       Auth.signOut()
