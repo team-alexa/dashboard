@@ -105,7 +105,7 @@ class LogPage extends Component{
       .then(response => response.json())
       .then(() => {
         delete body.method
-        this.context.logs[body.logID] = body
+        this.context.logs.append(body)
         this.context.setLogs(this.context.logs)
         this.context.setToast({message: "Saved!", color: "green", visible: true})
       })
