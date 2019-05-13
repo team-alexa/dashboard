@@ -141,9 +141,7 @@ class DataProvider extends React.Component {
   }
 
   removeLog(logID) {
-    console.log("Removing", logID)
     const newLogs = this.state.logs.filter(log => {
-      console.log(log.logID)
       return log.logID != logID
     })
 
