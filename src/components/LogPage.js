@@ -166,7 +166,7 @@ class LogPage extends Component{
     .then(() => {
       this.context.setToast({color: "green", message: "Successfully deleted log.", visible: true}, 3000)
       this.context.removeLog(this.state.logID)
-      this.navigateTo("../students")
+      this.navigateTo("../Logs")
     })
     .catch(error => console.log(error))
   }

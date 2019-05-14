@@ -32,7 +32,7 @@ class AccountPage extends Component{
     }
   }
      componentDidMount(){
-       if (this.context.pageId !== "new" && this.context.pageId != null) {
+       if (this.context.pageId !== "new" && this.props.pageId != null) {
       this.context.setContentLoading(true)
       fetch(Constants.apiUrl + "teachers?teacherID=" + this.props.pageId)
       .then(response => response.json())
