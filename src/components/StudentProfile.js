@@ -40,7 +40,8 @@ class StudentProfile extends Component{
       year: "",
       showDailyReport: false,
       dailyLogs:[],
-      logs: []
+      logs: [],
+      reportDate:""
     }
 
     this.displayedMessage = false
@@ -138,7 +139,7 @@ class StudentProfile extends Component{
     this.setState({teacherID: id})
   }
   getDailyLogs(){
-    fetch(Constants.apiUrl + "logs?studentID=" + this.state.studentID+"&date="+this.currentDate())
+    fetch(Constants.apiUrl + "logs?studentID=" + this.state.studentID+"&date="+this.currentDate(this.state.reportDate))
         .then(response => response.json())
         .then(data => {
           if (data[0]) {
@@ -158,9 +159,9 @@ class StudentProfile extends Component{
     this.toggleDailyReport();
   }
 
-  currentDate(){
-    var formattedDate = new Date(Date.now());
-    var day = formattedDate.getDate();
+  currentDate(selectedDate){
+    var formattedDate = new Date(selectedDate);
+    var day = formattedDate.getDate()+1;
     var month = formattedDate.getMonth() + 1; //Month from 0 to 11
     var year = formattedDate.getFullYear();
     return `${(month<=9 ? '0' + month : month)}-${(day <= 9 ? '0' + day : day)}-${year}`;
@@ -176,6 +177,9 @@ class StudentProfile extends Component{
         const logs = this.state.logs.slice()
         this.setState({logs: logs.concat(data)})
         this.context.setContentLoading(false)
+        {logs.length?
+          this.setState({reportDate:new Date(logs[0].date).toISOString().substr(0, 10)})  
+          :this.reportDate=""}
       })
   }
 
@@ -225,7 +229,6 @@ class StudentProfile extends Component{
         <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button>
         {this.context.pageId != "new" ?
           <button className="log-button enabled" type="button" onClick={this.delete}>Set {this.state.status == "active" ? "Inactive" : "Active"}</button> : null}
-        <button className="Daily-Report-Button enabled" type="button" onClick={this.showDailyLogsButton}>Daily Report</button>
       </div>
       <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
       <br/>
@@ -252,8 +255,12 @@ class StudentProfile extends Component{
         possibleValues={this.getAllTeacherNames()}
         onClick={() => this.setState({hasChanged: true})}
         addValue={this.addTeacher}/>
-      {this.context.pageId != "new" ? <div>
         <br/>
+        <div className="Report-button">
+          <button className={this.state.logs.length ? "enabled" : "disabled"} type="button" onClick={this.showDailyLogsButton}>Report</button>
+        </div>
+        <input type="date" id="reportDate" value={this.state.reportDate} onChange={this.onChange} autoComplete="off" />
+      {this.context.pageId != "new" ? <div>
         <h2>{this.state.fullName ? `${this.state.fullName}'s Logs` : "Logs"}</h2>
         <Table data={this.getLogTableData()}
           height="40vh"
