@@ -44,7 +44,7 @@ class ChangePasswordInApp extends Component{
         var x = this.context.changePassword(this.state.oldPass, this.state.newPass)
         x.then(result => {
             if(result == "SUCCESS"){
-                this.context.setToast({message: "You have successfully changed your password!", color: "red", visible: true}, 3000);
+                this.context.setToast({message: "You have successfully changed your password!", color: "green", visible: true}, 3000);
                 this.setState({
                 oldPass: "",
                 newPass: "",
@@ -95,7 +95,7 @@ class ChangePasswordInApp extends Component{
         }
         else{
             this.state.changed = false;
-            return <Redirect to='/myaccount' />
+            return <Redirect to='/account' />
         }
     }
 }

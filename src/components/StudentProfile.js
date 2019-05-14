@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import '../css/index.css';
 import { Context } from '../Store'
 import Constants from '../Constants'
+import {Link} from 'react-router-dom';
+
 
 import Table from './Table';
 import SearchableInput from './SearchableInput'
@@ -219,13 +221,12 @@ class StudentProfile extends Component{
       <div className="student-profile content-page" >
       <div className="button-group">
         {this.context.pageId != "new" ?
-          <button type="button" className = "log-button enabled">
-            <div className="text">New Log</div>
-          </button> : null }
+            <Link className="account-page-link" to={"/logs/new"}>New Log</Link>
+           : null }
         <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button>
         {this.context.pageId != "new" ?
           <button className="log-button enabled" type="button" onClick={this.delete}>Set {this.state.status == "active" ? "Inactive" : "Active"}</button> : null}
-        <button className="Daily-Report-Button enabled" type="button" onClick={this.showDailyLogsButton}>Daily Report</button>
+        {this.context.pageId != "new" ? <button className="Daily-Report-Button enabled" type="button" onClick={this.showDailyLogsButton}>Daily Report</button> : null}
       </div>
       <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
       <br/>
@@ -233,9 +234,10 @@ class StudentProfile extends Component{
       <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.state.firstName} onChange={this.onChange} autoComplete="off"/>
       <br/>
       <label htmlFor="nickname">Nickname:</label><input type="text" placeholder="Nickname" size="25" name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
-      <br />
-      <label htmlFor="id">ID:</label><input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/>
-      <br/>
+      
+      {this.context.pageId == "new" ? <div><label htmlFor="id">ID:</label><input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/> 
+      <br/></div>: <p> ID: {this.context.pageId} </p>}
+      
       <p>Age: {parseInt(new Date().getFullYear()) - parseInt(new Date(this.state.birthDate).getFullYear())} </p>
       <label htmlFor="month">DOB :</label>
       <input type="date" id="birthDate" value={this.state.birthDate} onChange={this.onChange} autoComplete="off" />
