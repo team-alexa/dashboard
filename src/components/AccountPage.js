@@ -34,7 +34,7 @@ class AccountPage extends Component{
      componentDidMount(){
        if (this.context.pageId !== "new" && this.context.pageId != null) {
       this.context.setContentLoading(true)
-      fetch(Constants.apiUrl + "teachers?teacherID=" + this.context.pageId)
+      fetch(Constants.apiUrl + "teachers?teacherID=" + this.props.pageId)
       .then(response => response.json())
       .then(data => {
         if (data[0]) {
@@ -66,7 +66,7 @@ class AccountPage extends Component{
     }*/
     /*Create new User Account in Database*/
     var body = "";
-    if(this.context.pageId === this.context.currentUser.teacherID || this.context.pageId == null){
+    if(this.context.pageId === this.context.currentUser.teacherID || this.props.pageId == null){
         body ={
           method: "update",
           teacherID: this.context.currentUser.teacherID,
