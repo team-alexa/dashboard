@@ -16,7 +16,7 @@
   display: block;
 }
 
-.student-profile .button-group button {
+.student-profile .button-group button, .report-button {
   color: white;
   border: none;
   margin: 8px 0px;
@@ -29,23 +29,23 @@
   font-family: "Open Sans", sans-serif;
   outline: none;
 }
-
-.student-profile .button-group button.enabled {
+.report-button {
+  display:initial;
+}
+.student-profile .button-group button.enabled,.report-button.enabled  {
   background-color: rgb(0, 159, 194);
   border: 2px solid rgb(0, 159, 194);
 }
 
-.student-profile .button-group button.enabled:hover {
+.student-profile .button-group button.enabled:hover , .report-button.enabled:hover {
   color: rgb(0, 159, 194);
   background-color: white;
 }
 
-.student-profile .button-group button.disabled {
-  background-color: rgb(170, 170, 170);
-}
 
-.student-profile .button-group button.disabled {
+.student-profile .button-group button.disabled, .report-button.disabled {
   cursor: not-allowed;
+  background-color: rgb(170, 170, 170);
 }
 
 .student-profile .button-group .log-button .text{
