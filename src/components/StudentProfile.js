@@ -238,7 +238,7 @@ class StudentProfile extends Component{
       <div className="student-profile content-page" >
       <div className="button-group">
         {this.props.match.params.id !== "new" ?
-          <button type="button" className = "log-button enabled">
+          <button type="button" className = "log-button enabled" onClick={() => this.navigateTo("/logs/new")}>
             <div className="text">New Log</div>
           </button> : null }
         <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button>
