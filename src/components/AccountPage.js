@@ -99,13 +99,30 @@ class AccountPage extends Component{
     .then(response => {
         if(response.status == 400){
             console.log(response)
-            this.context.setToast({message: "Not Saved, please check your values!", color: "red", visible: true})
+            if(this.state.teacherID < 1 || this.state.teacherID > 999999){
+                this.context.setToast({message: "Not Saved, please ensure your ID is Between 1 and 999999!", color: "red", visible: true});
+            }
+            else if(this.state.firstName == ""){
+                this.context.setToast({message: "Not Saved, please check your first name!", color: "red", visible: true}, 3000)
+            }
+            else if(this.state.lastName == ""){
+                this.context.setToast({message: "Not Saved, please check your last name!", color: "red", visible: true}, 3000)
+            }
+            else if(this.state.nickName == ""){
+                this.context.setToast({message: "Not Saved, please check your nick name!", color: "red", visible: true}, 3000)
+            }
+            else if(this.state.role == ""){
+                this.context.setToast({message: "Not Saved, please check your role!", color: "red", visible: true}, 3000)
+            }
+            else{
+                this.context.setToast({message: "Not Saved, please check your values!", color: "red", visible: true}, 3000)
+            }
         }
         else{
               delete body.method
               this.context.teachers[body.teacherID] = body
-              /*this.context.setTeachers(this.context.teachers)*/
-              this.context.setToast({message: "Saved!", color: "green", visible: true})
+              /*this.context.setTeachers(this.context.teachers)
+              this.context.setToast({message: "Saved!", color: "green", visible: true})*/
                 this.context.loadTeachers();
                 if(this.context.pageId == "new"){
               /*Create new User Account in Cognito*/
@@ -143,9 +160,15 @@ class AccountPage extends Component{
                                 changed: true
                             })            
                         }
+                        else{
+                            this.context.setToast({message: "A teacher was created in the database, but does not have a user account!", color: "red", visible: true}, 3000);
+                        }
                     })
                 })
-                .catch(err => console.log(err));
+                .catch(err => 
+                       {this.context.setToast({message: "A teacher was created in the database, but does not have a user account! " + err, color: "red", visible: true}, 3000);
+                       }
+                      );
 
         }
         } /*end if-else*/
