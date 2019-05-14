@@ -8,7 +8,7 @@ class SearchableInput extends Component {
     this.onChange = this.onChange.bind(this);
 
     this.state = {
-      values: props.values || [],
+      values: this.props.values || [],
       inputValue: "",
       receivedVals: false
     }
@@ -19,15 +19,15 @@ class SearchableInput extends Component {
   }
 
   renderPossibleValues() {
-    const filteredValues = this.props.possibleValues.filter(value => {
-      return value.fullName.toLowerCase().includes(this.state.inputValue.toLowerCase());
+    const filteredValues = this.props.possibleValues.filter(element => {
+      return element.value.toLowerCase().includes(this.state.inputValue.toLowerCase());
     })
 
     if (this.state.inputValue.length > 0) {
       return (
         <ul className="possible-values">
-          {filteredValues.map((value, index) => {
-            return <li key={index} onClick={() => this.addValue(value.fullName)}>{value.fullName}</li>
+          {filteredValues.map((element, index) => {
+            return <li key={index} onClick={() => this.addValue(element)}>{element.value}</li>
           })}
         </ul>
       )
@@ -67,15 +67,7 @@ class SearchableInput extends Component {
           {this.state.values.map((value, index) => {
             return (
               <div className="chip" key={index}>
-                <p onClick={() =>{
-                  if(this.props.placeholder==="Teacher")
-                  {  
-                    this.navigateTo("../account/"+this.props.possibleValues[this.props.possibleValues.map(function(x) {return x.fullName; }).indexOf(value)].teacherID)
-                  }
-                  else{
-                    this.navigateTo("../students/"+this.props.possibleValues[this.props.possibleValues.map(function(x) {return x.fullName; }).indexOf(value)].studentID)
-                  }
-                }}> {value}</p>
+                <p onClick={value.onClick}> {value.value}</p>
                 <p onClick={() => this.removeValue(index)}>x</p>
               </div>
             )

@@ -13,7 +13,7 @@ class StudentProfile extends Component{
 
     this.onChange = this.onChange.bind(this)
     this.saveData = this.saveData.bind(this)
-    this.getStudentTeacherName = this.getStudentTeacherName.bind(this)
+    this.getStudentTeacher = this.getStudentTeacher.bind(this)
     this.addTeacher = this.addTeacher.bind(this)
     this.toggleDailyReport = this.toggleDailyReport.bind(this)
     this.currentDate = this.currentDate.bind(this);
@@ -53,9 +53,10 @@ class StudentProfile extends Component{
     console.log(this.props.match)
     if (this.props.match.params.id !== "new") {
       this.context.setContentLoading(true)
-      fetch(Constants.apiUrl + "students?studentID=" + this.props.pageId)
+      fetch(Constants.apiUrl + "students?studentID=" + this.props.match.params.id)
         .then(response => response.json())
         .then(data => {
+          console.log(data)
           if (data[0]) {
             if (!data[0].nickName) {
               data[0].nickName = data[0].firstName
@@ -81,7 +82,6 @@ class StudentProfile extends Component{
       this.setState({editable: true})
     }
     this.loadMoreLogs()
-    this.context.loadTeachers()
   }
   toggleDailyReport() {
     this.setState({
@@ -111,21 +111,36 @@ class StudentProfile extends Component{
       body: JSON.stringify(body)
     })
     .then(response => response.json())
-    .then(() => {
-      delete body.method
-      this.context.students[body.studentID] = body
-      this.context.setStudents(this.context.students)
-      this.context.setToast({message: "Saved!", color: "green", visible: true})
+    .then((data) => {
+      if (data.errno) {
+        this.context.setToast({message: "There was an error.", color: "red", visible: true})
+      } else {
+        delete body.method
+        this.context.students[body.studentID] = body
+        this.context.setStudents(this.context.students)
+        this.context.setToast({message: "Saved!", color: "green", visible: true})
+      }
     })
     .catch(error => console.log(error))
   }
 
-  getStudentTeacherName() {
-    return this.context.teachers[this.state.teacherID] ? this.context.teachers[this.state.teacherID].fullName : ""
+  getStudentTeacher() {
+    return this.context.teachers[this.state.teacherID] ? {
+      value: this.context.teachers[this.state.teacherID].fullName,
+      id: this.context.teachers[this.state.teacherID].teacherID,
+      onClick: () => this.navigateTo("/account/" + this.context.teachers[this.state.teacherID].teacherID)
+     } : null
   }
 
   getAllTeachers() {
-    return Object.keys(this.context.teachers).map(key => this.context.teachers[key])
+    return Object.keys(this.context.teachers).map(key => {
+      const teacher = this.context.teachers[key]
+      return {
+        value: teacher.fullName,
+        id: teacher.teacherID,
+        onClick: () => this.navigateTo("/account/" + teacher.teacherID)
+      }
+    })
   }
 
   onChange(e) {
@@ -134,13 +149,9 @@ class StudentProfile extends Component{
   }
 
   addTeacher(teacher) {
-    var teachers = Object.keys(this.context.teachers).filter(key => {
-      return this.context.teachers[key].fullName === teacher
-    })
-
-    var id = teachers.length > 0 ? teachers[0] : null
-    this.setState({teacherID: id})
+    this.setState({teacherID: teacher.id})
   }
+
   getDailyLogs(){
     fetch(Constants.apiUrl + "logs?studentID=" + this.state.studentID+"&date="+this.currentDate(this.state.reportDate))
         .then(response => response.json())
@@ -173,7 +184,7 @@ class StudentProfile extends Component{
   loadMoreLogs() {
     this.context.setContentLoading(true)
     var url = Constants.apiUrl + 'logs?index=' + this.state.logs.length
-    url += '&studentID=' + this.props.pageId
+    url += '&studentID=' + this.props.match.params.id
     fetch(url)
       .then(response => response.json())
       .then(data => {
@@ -226,7 +237,7 @@ class StudentProfile extends Component{
     this.props.history.push({pathname: path})
   }
   render() {
-    var teacherName = this.getStudentTeacherName()
+    var teacher = this.getStudentTeacher()
     return (
       <div className="student-profile content-page" >
       <div className="button-group">
@@ -259,7 +270,7 @@ class StudentProfile extends Component{
         placeholder="Teacher"
         label="Teacher: "
         limit={1}
-        values={teacherName ? [teacherName] : null}
+        values={teacher ? [teacher] : null}
         possibleValues={this.getAllTeachers()}
         onClick={() => this.setState({hasChanged: true})}
         addValue={this.addTeacher}/>

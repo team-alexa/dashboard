@@ -43,16 +43,17 @@ class Content extends Component {
           <span onClick={() => this.context.setToast({visible: false})}>x</span>
         </div>
         <Switch>
-          <Route path="/students/:id" render={({ match }) => <StudentProfile pageId={match.params.id} />} />
+          <Route path="/students/:id" component={StudentProfile} />
           <Route path="/students" component={Students} />
-          <Route path="/logs/:id" render={({ match }) => <LogPage pageId={match.params.id} />} />
+          <Route path="/logs/:id" component={LogPage} />
           <Route path="/logs" component={Logs} />
-          <Route path="/account/:id" render={({ match }) => <AccountPage pageId={match.params.id} />} />
+          <Route path="/account/:id" component={AccountPage} />
           <Route path="/account" component={AccountPage} />
           <Route path="/adminpanel" component={AdminPage} />
           <Route path="/help" component={Help} />
           <Route path="/changePass" component={ChangePassword} />
           <Route path="/changeemail" component={ChangEmail} />
+          <Route path="/home" component={Home} />
           <Route exact path="/" component={Home} />
           <Route component={Error} />
         </Switch>

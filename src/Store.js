@@ -13,8 +13,6 @@ class DataProvider extends React.Component {
     this.loadMoreLogs = this.loadMoreLogs.bind(this)
     this.toggleSidebar = this.toggleSidebar.bind(this)
     this.setContentLoading = this.setContentLoading.bind(this)
-    this.setPage = this.setPage.bind(this)
-    this.setPageId = this.setPageId.bind(this)
     this.setTeachers = this.setTeachers.bind(this)
     this.setToast = this.setToast.bind(this)
     this.setStudents = this.setStudents.bind(this)
@@ -26,8 +24,6 @@ class DataProvider extends React.Component {
     this.removeLog = this.removeLog.bind(this)
 
     this.state = {
-      page: "home",
-      pageId: "",
       currentUser: {
         firstName: "",
         lastName: "",
@@ -54,8 +50,6 @@ class DataProvider extends React.Component {
       toggleSidebar: this.toggleSidebar,
       removeLog: this.removeLog,
       setContentLoading: this.setContentLoading,
-      setPage: this.setPage,
-      setPageId: this.setPageId,
       setTeachers: this.setTeachers,
       setToast: this.setToast,
       setStudents: this.setStudents,
@@ -150,16 +144,6 @@ class DataProvider extends React.Component {
 
   setContentLoading(state) {
     this.setState({contentLoading: state})
-  }
-
-  setPage(page) {
-    if (this.state.page !== page)
-      this.setState({page})
-  }
-
-  setPageId(pageId) {
-    if (this.state.pageId !== pageId)
-      this.setState({pageId})
   }
 
   setToast(params, time = 2000) {

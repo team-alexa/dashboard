@@ -33,9 +33,9 @@ class AccountPage extends Component{
     }
   }
      componentDidMount(){
-       if (this.props.match.params.id !== "new" && this.props.pageId != null) {
+       if (this.props.match.params.id !== "new" && this.props.match.params.id != null) {
       this.context.setContentLoading(true)
-      fetch(Constants.apiUrl + "teachers?teacherID=" + this.props.pageId)
+      fetch(Constants.apiUrl + "teachers?teacherID=" + this.props.match.params.id)
       .then(response => response.json())
       .then(data => {
         if (data[0]) {
@@ -50,8 +50,6 @@ class AccountPage extends Component{
     } else {
       this.setState({editable: true})
     }
-    this.context.loadTeachers();     
-    this.context.loadStudents();
   }
     onChange(e) {
       this.setState({[e.target.id]: e.target.value})
@@ -67,7 +65,7 @@ class AccountPage extends Component{
     }*/
     /*Create new User Account in Database*/
     var body = "";
-    if(this.props.match.params.id === this.context.currentUser.teacherID || this.props.pageId == null){
+    if(this.props.match.params.id === this.context.currentUser.teacherID || !this.props.match.params.id){
         body ={
           method: "update",
           teacherID: this.context.currentUser.teacherID,
@@ -98,12 +96,14 @@ class AccountPage extends Component{
       body: JSON.stringify(body)
     })
     .then(response => response.json())
-    .then(() => {
+    .then((data) => {
+      if (data.errno) {
+        this.context.setToast({message: "There was an error.", color: "red", visible: true})
+      } else {
       delete body.method
       this.context.teachers[body.teacherID] = body
       /*this.context.setTeachers(this.context.teachers)*/
       this.context.setToast({message: "Saved!", color: "green", visible: true})
-        this.context.loadTeachers();
         if(this.props.match.params.id === "new"){
       /*Create new User Account in Cognito*/
         Auth.signUp({
@@ -144,6 +144,7 @@ class AccountPage extends Component{
         })
         .catch(err => console.log(err));
         } /*end if*/
+      }
     })
     .catch(error => console.log(error))
   }
@@ -276,7 +277,7 @@ class AccountPage extends Component{
                 <br/>
                 
                 <label>Temporary Password:</label>
-                <input type="text" placeholder="Password" size ="32"  name="pass" id="pass" value={this.state.pass} onChange={this.onChange} autoComplete="off"/>
+                <input type="password" placeholder="Password" size ="32"  name="pass" id="pass" value={this.state.pass} onChange={this.onChange} autoComplete="off"/>
                 <br/></div> : null}
             </div>
         )

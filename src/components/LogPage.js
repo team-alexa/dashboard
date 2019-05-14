@@ -41,7 +41,7 @@ class LogPage extends Component{
   componentDidMount(){
        if (this.props.match.params.id !== "new") {
       this.context.setContentLoading(true)
-      fetch(Constants.apiUrl + "logs?logID=" + this.props.pageId)
+      fetch(Constants.apiUrl + "logs?logID=" + this.props.match.params.id)
       .then(response => response.json())
       .then(data => {
         if (data[0]) {
@@ -67,8 +67,6 @@ class LogPage extends Component{
     } else {
       this.setState({editable: true})
     }
-    this.context.loadTeachers();     
-    this.context.loadStudents();
   }
   onChange(e) {
     if (this.state.editable)
@@ -117,24 +115,30 @@ class LogPage extends Component{
       .catch(error => console.log(error))
   }
   getAllTeachers() {
-    return Object.keys(this.context.teachers).map(key => this.context.teachers[key])
+    return Object.keys(this.context.teachers).map(key => {
+      const teacher = this.context.teachers[key]
+      return {
+        value: teacher.fullName,
+        id: teacher.teacherID,
+        onClick: () => this.navigateTo("/account/" + teacher.teacherID)
+      }
+    })
   }
   getAllStudents(){
-    return Object.keys(this.context.students).map(key => this.context.students[key])
+    return Object.keys(this.context.students).map(key => {
+      const student = this.context.students[key]
+      return {
+        value: student.fullName,
+        id: student.studentID,
+        onClick: () => this.navigateTo("/students/" + student.studentID)
+      }
+    })
   }
   addTeacher(teacher) {
-    var teachers = Object.keys(this.context.teachers).filter(key => {
-      return this.context.teachers[key].fullName === teacher
-    })
-    var id = teachers.length > 0 ? teachers[0] : null
-    this.setState({teacherID: id})
+    this.setState({teacherID: teacher.id})
   }
   addStudent(student){
-    var students = Object.keys(this.context.students).filter(key => {
-      return this.context.students[key].fullName === student
-    })
-    var id = students.length > 0 ? students[0] : null
-    this.setState({studentID: id})
+    this.setState({studentID: student.id})
   }
   dropdownClick(){
     var o = !this.state.dropdownOpen
@@ -174,8 +178,16 @@ class LogPage extends Component{
     this.props.history.push({pathname: path})
   }
     render(){   
-      var teacherName = this.state.teacherFullName
-      var studentName = this.state.studentFullName
+      var teacher = this.context.teachers[this.state.teacherID] ? {
+        value: this.context.teachers[this.state.teacherID].fullName,
+        id: this.context.teachers[this.state.teacherID].teacherID,
+        onClick: () => this.navigateTo("/account/" + this.context.teachers[this.state.teacherID].teacherID)
+       } : null
+      var student = this.context.students[this.state.studentID] ? {
+        value: this.context.students[this.state.studentID].fullName,
+        id: this.context.students[this.state.studentID].studentID,
+        onClick: () => this.navigateTo("/students/" + this.context.students[this.state.studentID].studentID)
+       } : null
       var validEntry = (this.state.studentID !== "" && this.state.teacherID !== "" 
       && this.state.activityType !== "" && this.state.dateString !== "" 
       && this.state.timeString !== "")
@@ -194,7 +206,7 @@ class LogPage extends Component{
             placeholder="Student"
             label="Student: "
             limit={1}
-            values= {studentName ? [studentName] : null}
+            values= {student ? [student] : null}
             possibleValues={this.getAllStudents()}
             onClick={() => this.setState({hasChanged: true})}
             addValue={this.addStudent}/>
@@ -202,7 +214,7 @@ class LogPage extends Component{
             placeholder="Teacher"
             label="Teacher: "
             limit={1}
-            values= {teacherName ? [teacherName] : null}
+            values= {teacher ? [teacher] : null}
             possibleValues={this.getAllTeachers()}
             onClick={() => this.setState({hasChanged: true})}
             addValue={this.addTeacher}/>

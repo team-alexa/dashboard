@@ -11,14 +11,14 @@ class App extends Component {
             return (
             <Router>
                 <div>
-                    <Route
+                    {/* <Route
                         path="/"
                         exact
                         render={(props) => <Dashboard {...props}
                         match={{params: {page: 'home'}}} />}
                     />
-                    <Route exact path="/:page" component={Dashboard} />
-                    <Route exact path="/:page/:id" component={Dashboard} />
+                    <Route exact path="/:page" component={Dashboard} /> */}
+                    <Route path="/:page?/:id?" component={Dashboard} />
                 </div>
             </Router>
             );
