@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Auth from '@aws-amplify/auth';
 import { ForgotPassword } from "aws-amplify-react";
-import {Link} from 'react-router-dom';
 import {Context} from '../Store';
 
 export default class ForgotPasswordNew extends ForgotPassword {
@@ -29,7 +28,7 @@ export default class ForgotPasswordNew extends ForgotPassword {
         const { authData={} } = this.props;
         const { code, password } = this.inputs;
         const username = this.inputs.username || authData.username;
-        if(password != this.state.newPass){
+        if(password !== this.state.newPass){
             /*this.context.setToast({message: "Passwords don't Match.", color: "red", visible: true}, 10000)*/
             alert("Passwords Don't Match. Please Try Again.");
             return;
@@ -67,12 +66,12 @@ export default class ForgotPasswordNew extends ForgotPassword {
     }
     
     showComponent(theme) {
-        const { authState, hide, authData={} } = this.props;
+        const {authData={} } = this.props;
         
         return (
             <div className="login-screen">
                 <div className="main-div">    
-                    <img src="/static/media/main_logo.1d5af73f.png"/>        
+                    <img src="/static/media/main_logo.1d5af73f.png" alt=""/>        
                     <h1 className="login-h1">Reset Your Password</h1>
                     <div>
                         { this.state.delivery || authData.username ? this.submitView() : this.sendView() }

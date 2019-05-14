@@ -39,9 +39,9 @@ class LogPage extends Component{
     this.displayedMessage = false
   }
   componentDidMount(){
-       if (this.context.pageId != "new") {
+       if (this.context.pageId !== "new") {
       this.context.setContentLoading(true)
-      fetch(Constants.apiUrl + "logs?logID=" + this.context.pageId)
+      fetch(Constants.apiUrl + "logs?logID=" + this.props.pageId)
       .then(response => response.json())
       .then(data => {
         if (data[0]) {
@@ -76,18 +76,18 @@ class LogPage extends Component{
     }
   saveData(){      
         var d = this.state.initDate
-        if(this.state.dateString.length == 10)
+        if(this.state.dateString.length === 10)
           d = this.state.dateString
         else
           this.context.setToast({message: "Invalid Date Format", color: "red", visible: true}, 3000)
         var t = this.state.initTime
-        if(this.state.timeString.length == 5)
+        if(this.state.timeString.length === 5)
           t = this.state.timeString
         else
           this.context.setToast({message: "Invalid Time Format", color: "red", visible: true}, 3000)
       const body ={
-        method: this.context.pageId == "new" ? "new" : "update",
-        logID: this.context.pageId == "new" ? undefined : this.context.pageId,
+        method: this.context.pageId === "new" ? "new" : "update",
+        logID: this.context.pageId === "new" ? undefined : this.context.pageId,
         studentID: this.state.studentID,
         teacherID: this.state.teacherID,
         activityType: this.state.activityType,
@@ -104,7 +104,7 @@ class LogPage extends Component{
       .then(response => response.json())
       .then(() => {
         delete body.method
-        if (this.context.pageId == "new") {
+        if (this.context.pageId === "new") {
           const teacher = this.context.teachers[this.state.teacherID]
           const student = this.context.students[this.state.studentID]
           body.teacherFullName = teacher.fullName
@@ -124,14 +124,14 @@ class LogPage extends Component{
   }
   addTeacher(teacher) {
     var teachers = Object.keys(this.context.teachers).filter(key => {
-      return this.context.teachers[key].fullName == teacher
+      return this.context.teachers[key].fullName === teacher
     })
     var id = teachers.length > 0 ? teachers[0] : null
     this.setState({teacherID: id})
   }
   addStudent(student){
     var students = Object.keys(this.context.students).filter(key => {
-      return this.context.students[key].fullName == student
+      return this.context.students[key].fullName === student
     })
     var id = students.length > 0 ? students[0] : null
     this.setState({studentID: id})
@@ -182,11 +182,11 @@ class LogPage extends Component{
       return (
         <div className = "log-page content-page" onClick={this.hideDropdown}>
           <div className="button-group">
-            {this.context.pageId != "new" ?
+            {this.context.pageId !== "new" ?
               <button type="button" className="delete-log-button enabled" onClick={this.delete} style={{borderColor: "red", color: "red", backgroundColor: "transparent"}}>
                 <div className="text">Delete</div>
               </button> : null }
-            <button className={this.context.pageId != "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
+            <button className={this.context.pageId !== "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
             (validEntry ? "enabled" : "disabled")} type="button" onClick={this.saveData}>Save</button> 
           </div>
           <h2 className="name">Log {this.context.pageId}</h2>
@@ -207,7 +207,7 @@ class LogPage extends Component{
             onClick={() => this.setState({hasChanged: true})}
             addValue={this.addTeacher}/>
          
-          <label htmlFor="activityType">Activity:</label><input type="text" placeholder="Activity" size ="32"  name="activityType" id="activityType" value={this.state.activityType}  onClick={this.dropdownClick} autoComplete="off"/>
+          <label htmlFor="activityType">Activity:</label><input type="text" placeholder="Activity" size ="32"  name="activityType" id="activityType" value={this.state.activityType} onChange={this.onChange} onClick={this.dropdownClick} autoComplete="off"/>
           {this.state.dropdownOpen && (
               <div className="activity-menu">
                 <ul className="possible-values">
@@ -220,7 +220,7 @@ class LogPage extends Component{
           <br/>  
           <label htmlFor="activityDetails">Activity Details:</label><input type="text" placeholder="Activity Details" size ="64"  name="activityDetails" id="activityDetails" value={this.state.activityDetails} onChange={this.onChange} autoComplete="off"/>
           <br/>
-          <label htmlFor="time">Time:</label><input type="time" size ="32"  name="time" id="timeString" value={this.state.timeString} onfocus="this.value=''" onChange={this.onChange} autoComplete="off"/>
+          <label htmlFor="time">Time:</label><input type="time" size ="32"  name="time" id="timeString" value={this.state.timeString} onChange={this.onChange} autoComplete="off"/>
           <br/>
           <label htmlFor="date">Date:</label><input type="date" name="date" id="dateString" value={this.state.dateString} onChange={this.onChange} autoComplete="off" />         
       <br/>
@@ -228,6 +228,6 @@ class LogPage extends Component{
         )
     }
 }
-
-LogPage.contextType = Context
-export default withRouter(LogPage);
+const WrappedClass =withRouter(LogPage);
+WrappedClass.WrappedComponent.contextType = Context;
+export default WrappedClass;

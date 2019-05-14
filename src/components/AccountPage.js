@@ -32,7 +32,7 @@ class AccountPage extends Component{
     }
   }
      componentDidMount(){
-       if (this.context.pageId != "new" && this.context.pageId != null) {
+       if (this.context.pageId !== "new" && this.context.pageId != null) {
       this.context.setContentLoading(true)
       fetch(Constants.apiUrl + "teachers?teacherID=" + this.context.pageId)
       .then(response => response.json())
@@ -66,7 +66,7 @@ class AccountPage extends Component{
     }*/
     /*Create new User Account in Database*/
     var body = "";
-    if(this.context.pageId == this.context.currentUser.teacherID || this.context.pageId == null){
+    if(this.context.pageId === this.context.currentUser.teacherID || this.context.pageId == null){
         body ={
           method: "update",
           teacherID: this.context.currentUser.teacherID,
@@ -79,7 +79,7 @@ class AccountPage extends Component{
     }
     else{
       body = {
-          method: this.context.pageId == "new" ? "new" : "update",
+          method: this.context.pageId === "new" ? "new" : "update",
           teacherID: this.state.teacherID,
           role: this.state.role,
           status: "active",
@@ -103,7 +103,7 @@ class AccountPage extends Component{
       /*this.context.setTeachers(this.context.teachers)*/
       this.context.setToast({message: "Saved!", color: "green", visible: true})
         this.context.loadTeachers();
-        if(this.context.pageId == "new"){
+        if(this.context.pageId === "new"){
       /*Create new User Account in Cognito*/
         Auth.signUp({
             username: user,
@@ -115,7 +115,7 @@ class AccountPage extends Component{
         .then(data => {
             console.log(data)
             var code = prompt("Please enter the code that was sent to your email:");
-            while (code == null || code == "") {
+            while (code === null || code === "") {
                 code = prompt("Please enter the code that was sent to your email:");
             } 
             console.log(code);
@@ -124,7 +124,7 @@ class AccountPage extends Component{
                 // Optional. Force user confirmation irrespective of existing alias. By default set to True.
                 forceAliasCreation: true    
             }).then(data => {
-                if(data == "SUCCESS"){
+                if(data === "SUCCESS"){
                     this.context.setToast({message: "You have successfully created a teacher!", color: "green", visible: true}, 3000);
                     this.setState({
                         teacherID: 0,
@@ -192,7 +192,7 @@ class AccountPage extends Component{
       && this.context.currentUser.status !== "" && this.context.currentUser.firstName !== "" 
       && this.context.currentUser.lastName !== "" && this.context.currentUser.nickName !== "")
     /*View Current User*/
-      if(this.context.pageId == this.context.currentUser.teacherID || this.context.pageId == null){
+      if(this.context.pageId === this.context.currentUser.teacherID || this.context.pageId == null){
         return (
           <div className = "account-page content-page">        
             <div className="button-group">
@@ -200,7 +200,7 @@ class AccountPage extends Component{
                 
                 <Link className="account-page-link" to={"/changeemail"}>Change Email</Link>
                 
-                <button className={this.context.pageId != "new" ? (this.context.currentUser.hasChanged ? "enabled" : "disabled") : 
+                <button className={this.context.pageId !== "new" ? (this.context.currentUser.hasChanged ? "enabled" : "disabled") : 
                     (validEntry ? "enabled" : "disabled")} type="button" onClick={() => this.saveData(this.state.teacherID, this.state.pass, this.state.email)}>Save</button>
             </div>
             <h2 className="name">{this.context.currentUser.lastName ? `${this.context.currentUser.lastName}, ${this.context.currentUser.firstName}` : "Last Name, First Name"}</h2> 
@@ -223,21 +223,21 @@ class AccountPage extends Component{
     }
     /*View New + Others*/
     else{
-        if(this.state.changed == true){
-            this.state.changed = false;
+        if(this.state.changed === true){
+            this.setState({changed:false});
             return <Redirect to='/adminpanel' />
         }
         return(
             <div className = "account-page content-page" onClick={this.hideDropdown}>        
                  <div className="button-group">
-                    {this.context.pageId != "new" ? <button className="enabled" onClick ={this.deleteTeacher}>
+                    {this.context.pageId !== "new" ? <button className="enabled" onClick ={this.deleteTeacher}>
                         Delete Teacher
                     </button> : null}
 
-                    <button className={this.context.pageId != "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
+                    <button className={this.context.pageId !== "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
                     (validEntry ? "enabled" : "disabled")} type="button" onClick={() => this.saveData(this.state.teacherID, this.state.pass, this.state.email)}>Save</button>
                 </div>
-                {this.context.pageId == "new" ?<h2 className="name">Create New Teacher </h2> : <h2 className="name">{this.state.lastName + ", " + this.state.firstName}</h2>}
+                {this.context.pageId === "new" ?<h2 className="name">Create New Teacher </h2> : <h2 className="name">{this.state.lastName + ", " + this.state.firstName}</h2>}
                 <br/>
                 
                 <label htmlFor="teacherID">ID Number:</label>
@@ -266,7 +266,7 @@ class AccountPage extends Component{
                 )} 
 
 
-                {this.context.pageId == "new" ?
+                {this.context.pageId === "new" ?
                 <div>
                 <br/>
                 <h3> User Attributes </h3>

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import '../css/index.css'
 import{Context} from '../Store'
-import Auth from '@aws-amplify/auth';
 import {Redirect} from 'react-router-dom';
 import '../css/ChangePasswordInApp.css';
 
@@ -32,7 +31,7 @@ class ChangePasswordInApp extends Component{
     
     handleSubmit(event){
         event.preventDefault();
-        if(this.state.newPass != this.state.confNewPass){
+        if(this.state.newPass !== this.state.confNewPass){
             this.context.setToast({message: "The new password entries do not match!", color: "red", visible: true}, 3000);
             this.setState({
                 oldPass: "",
@@ -43,7 +42,7 @@ class ChangePasswordInApp extends Component{
         }
         var x = this.context.changePassword(this.state.oldPass, this.state.newPass)
         x.then(result => {
-            if(result == "SUCCESS"){
+            if(result === "SUCCESS"){
                 this.context.setToast({message: "You have successfully changed your password!", color: "red", visible: true}, 3000);
                 this.setState({
                 oldPass: "",
@@ -59,10 +58,10 @@ class ChangePasswordInApp extends Component{
                     finalStr += x[i];
                     finalStr += "\n"
                 }
-                var x = finalStr.split(";")
+                var y = finalStr.split(";")
                 var finalStr2 = "";
-                for(var i = 0; i<x.length; i++){
-                    finalStr2 += x[i];
+                for(var j = 0; j<y.length; j++){
+                    finalStr2 += y[j];
                     finalStr2 += "; "
                 }
                 this.context.setToast({message: finalStr2, color: "red", visible: true}, 3000);
@@ -77,7 +76,7 @@ class ChangePasswordInApp extends Component{
     }
     
     render(){
-        if(this.state.changed == false){
+        if(this.state.changed === false){
            return (
             <div className="content-page">
                <h2>Change Password</h2>
@@ -94,7 +93,8 @@ class ChangePasswordInApp extends Component{
             ) 
         }
         else{
-            this.state.changed = false;
+            this.setState({changed: false})
+          
             return <Redirect to='/myaccount' />
         }
     }

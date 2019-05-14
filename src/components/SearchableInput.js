@@ -68,7 +68,7 @@ class SearchableInput extends Component {
             return (
               <div className="chip" key={index}>
                 <p onClick={() =>{
-                  if(this.props.placeholder=="Teacher")
+                  if(this.props.placeholder==="Teacher")
                   {  
                     this.navigateTo("../account/"+this.props.possibleValues[this.props.possibleValues.map(function(x) {return x.fullName; }).indexOf(value)].teacherID)
                   }

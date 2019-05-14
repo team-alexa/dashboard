@@ -1,7 +1,6 @@
 import * as jsPDF from 'jspdf';
 import React, { Component } from 'react';
 import '../css/DailyReport.css';  
-import closebutton from '../img/close-button.png'
 import Table from './Table';
 import { Context } from '../Store'
 import main_logo from '../img/main_logo'

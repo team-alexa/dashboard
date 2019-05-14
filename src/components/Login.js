@@ -19,7 +19,7 @@ export class Login extends SignIn {
         }
         Auth.verifiedContact(user)
             .then(data => {
-            if (Object.keys(data.verified).length != 0) {
+            if (Object.keys(data.verified).length !== 0) {
                     this.changeState('signedIn', user);
                     Auth.currentAuthenticatedUser()
                     .then(result => {
@@ -63,7 +63,7 @@ export class Login extends SignIn {
         return (
         <div className="login-screen">
             <form className="main-div" onSubmit={this.signIn}>
-                <img src="/static/media/main_logo.1d5af73f.png"/>
+                <img src="/static/media/main_logo.1d5af73f.png" alt=""/>
                 <input key="username" name="username" onChange={this.handleInputChange} type="text" placeholder="Email or ID" size="32"/>
                 <br/>
                 <input key="password" name="password" onChange={this.handleInputChange} type="password" placeholder="Password" size="32"/>

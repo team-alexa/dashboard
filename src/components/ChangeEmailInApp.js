@@ -31,16 +31,14 @@ class ChangeEmailInApp extends Component {
 
   handleUpdateClick = async event => {
       event.preventDefault();
-      console.log(this.context.currentUser.email);
-      console.log(this.state.email);
     
-    if(this.state.email != this.context.currentUser.email){
+    if(this.state.email !== this.context.currentUser.email){
 
       const user = await Auth.currentAuthenticatedUser();
       var x = Auth.updateUserAttributes(user, { email: this.state.email });
 
       x.then(result =>{
-          if(result == "SUCCESS"){
+          if(result === "SUCCESS"){
               this.context.setToast({message: "Success! Please verify your email now!", color: "green", visible: true}, 3000);
               this.setState({ 
                   codeSent: true
@@ -68,7 +66,7 @@ class ChangeEmailInApp extends Component {
     
     var x = Auth.verifyCurrentUserAttributeSubmit("email", this.state.code);
     x.then(result => {
-        if(result == "SUCCESS"){
+        if(result === "SUCCESS"){
             this.context.setToast({message: "You have successfully verified your email!", color: "green", visible: true}, 3000);
             this.setState({
                 code: "",
@@ -99,7 +97,7 @@ class ChangeEmailInApp extends Component {
   }
 
   renderConfirmationForm() {
-    this.state.codeSent = "false";
+    this.setstate = ({ codeSent: false});
     return (
         <div className="content-page">
             <h2>Verify Email</h2>
@@ -116,8 +114,8 @@ class ChangeEmailInApp extends Component {
   }
 
   render() {
-      if(this.state.changed == true){
-          this.state.changed = false;
+      if(this.state.changed === true){
+        this.setstate = ({ changed: false});
           return <Redirect to="/account"/>
       }
       return (

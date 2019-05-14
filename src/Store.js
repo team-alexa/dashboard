@@ -74,7 +74,7 @@ class DataProvider extends React.Component {
           .then(data => {
             const teachers = {}
             data.forEach(teacher => {
-              if(teacher.status != "inactive"){
+              if(teacher.status !== "inactive"){
                 teachers[teacher.teacherID] = teacher
               }
             })
@@ -133,7 +133,7 @@ class DataProvider extends React.Component {
   }
 
   toggleSidebar() {
-    if(this.state.sidebarClass == "close"){
+    if(this.state.sidebarClass === "close"){
       this.setState({sidebarClass: "open"})
     } else{
       this.setState({sidebarClass: "close"})
@@ -142,7 +142,7 @@ class DataProvider extends React.Component {
 
   removeLog(logID) {
     const newLogs = this.state.logs.filter(log => {
-      return log.logID != logID
+      return log.logID !== logID
     })
 
     this.setLogs(newLogs)
@@ -153,12 +153,12 @@ class DataProvider extends React.Component {
   }
 
   setPage(page) {
-    if (this.state.page != page)
+    if (this.state.page !== page)
       this.setState({page})
   }
 
   setPageId(pageId) {
-    if (this.state.pageId != pageId)
+    if (this.state.pageId !== pageId)
       this.setState({pageId})
   }
 
@@ -166,7 +166,7 @@ class DataProvider extends React.Component {
     const newToast = {
       message: params.message || this.state.toast.message,
       color: params.color || this.state.toast.color,
-      visible: params.visible != undefined ? params.visible : this.state.toast.visible
+      visible: params.visible !== undefined ? params.visible : this.state.toast.visible
     }
     this.setState({toast: newToast})
 

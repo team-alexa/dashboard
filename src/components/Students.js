@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Table from './Table';
 import '../css/SearchPage.css';
-import Constants from '../Constants'
 import { Context } from '../Store'
 
 class Students extends Component {
@@ -24,7 +23,7 @@ class Students extends Component {
   getStudentTableData() {
     if (this.state.displaySearch) {
       const students = this.state.includeInactive ? this.state.searchStudents : this.state.searchStudents.filter(student => {
-        return this.context.students[student].status == "active"
+        return this.context.students[student].status === "active"
       })
       return students.map(student => {
         student = this.context.students[student]
@@ -39,7 +38,7 @@ class Students extends Component {
       })
     } else {
       const students = this.state.includeInactive ? Object.keys(this.context.students) : Object.keys(this.context.students).filter(student => {
-        return this.context.students[student].status == "active"
+        return this.context.students[student].status === "active"
       })
       return students.map(student => {
         student = this.context.students[student]

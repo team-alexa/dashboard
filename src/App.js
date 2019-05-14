@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { Route, BrowserRouter as Router } from 'react-router-dom'
 import Dashboard from './components/Dashboard'
-import {DataProvider} from './Store'
 import ForgotPasswordNew from './components/ForgotPasswordNew'
 import ChangePasswordNew from './components/ChangePasswordNew'
 import VerifyContactNew from './components/VerifyContactNew'
 
 class App extends Component {
     render() {
-        if (this.props.authState == "signedIn") {
+        if (this.props.authState === "signedIn") {
             return (
             <Router>
                 <div>
@@ -24,13 +23,13 @@ class App extends Component {
             </Router>
             );
         } 
-        else if(this.props.authState == "forgotPasswordNew"){
+        else if(this.props.authState === "forgotPasswordNew"){
             return <ForgotPasswordNew />;
         }
-        else if(this.props.authState == "requireNewPasswordNew"){
+        else if(this.props.authState === "requireNewPasswordNew"){
             return <ChangePasswordNew />;
         }
-        else if(this.props.authState == "verifyContactNew"){
+        else if(this.props.authState === "verifyContactNew"){
             return <VerifyContactNew />;
         }
         else {

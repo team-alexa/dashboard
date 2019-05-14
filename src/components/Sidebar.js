@@ -11,12 +11,12 @@ class Sidebar extends Component {
       <div className={this.context.sidebarClass + " sidebar"}>
         <h1> Hello, <br/><span>{this.context.currentUser.firstName}</span></h1>
         <button className="toggle-sidebar-button" onClick={this.context.toggleSidebar}>&#9776;</button>
-        <SidebarButton name="Home" link="" active={this.context.page == "home"}/>
-        <SidebarButton name="Students" link="students" active={this.context.page == "students"}/>
-        <SidebarButton name="Logs" link="logs" active={this.context.page == "logs"}/>
-        <SidebarButton name="My Account" link="account" active={this.context.page == "account"}/>
-        {this.context.currentUser.role == "admin" ? <SidebarButton name="Admin Panel" link="adminpanel" active={this.context.page == "adminpanel"} /> : null}
-        <SidebarButton name="Help" link="help" active={this.context.page == "help"}/>
+        <SidebarButton name="Home" link="" active={this.context.page === "home"}/>
+        <SidebarButton name="Students" link="students" active={this.context.page === "students"}/>
+        <SidebarButton name="Logs" link="logs" active={this.context.page === "logs"}/>
+        <SidebarButton name="My Account" link="account" active={this.context.page === "account"}/>
+        {this.context.currentUser.role === "admin" ? <SidebarButton name="Admin Panel" link="adminpanel" active={this.context.page === "adminpanel"} /> : null}
+        <SidebarButton name="Help" link="help" active={this.context.page === "help"}/>
         <button className="logout-button" onClick={this.context.logOut}>Log Out</button>
         
       </div>

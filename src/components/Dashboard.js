@@ -7,16 +7,12 @@ import { Auth } from 'aws-amplify';
 import '../css/Dashboard.css';
 
 class Dashboard extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   componentDidMount() {
     Auth.currentAuthenticatedUser()
       .then(user => this.context.loadUserData(user))
     this.context.loadTeachers()
     this.context.loadStudents()
-    if (this.context.logs.length == 0) {
+    if (this.context.logs.length === 0) {
       this.context.loadMoreLogs()
     }
   }
@@ -25,7 +21,7 @@ class Dashboard extends Component {
     this.context.setPageId(this.props.match.params.id)
     this.context.setPage(this.props.match.params.page)
     return (
-      this.context.page == "login" ? null :
+      this.context.page === "login" ? null :
       <div className="app">
         <Sidebar/>
         <LogoHeader/>

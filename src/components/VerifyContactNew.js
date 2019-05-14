@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Auth from '@aws-amplify/auth'
 import { VerifyContact } from "aws-amplify-react";
-import {Link} from 'react-router-dom';
 import { Context } from "../Store";
 
 export default class VerifyContactNew extends VerifyContact {
@@ -73,7 +72,7 @@ export default class VerifyContactNew extends VerifyContact {
         return (
             <div className="login-screen">
                 <div className="main-div">
-                    <img src="/static/media/main_logo.1d5af73f.png"/>    
+                    <img src="/static/media/main_logo.1d5af73f.png" alt=""/>    
                     <h1 className="login-h1">Verify Your Email</h1>
                 <div>
                     { this.state.verifyAttr ? this.submitView() : this.verifyView() }

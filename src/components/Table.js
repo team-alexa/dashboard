@@ -3,9 +3,7 @@ import { withRouter } from "react-router";
 import '../css/Table.css';
 
 class Table extends Component {
-  constructor(props) {
-    super(props);
-  }
+
 
   navigateTo(path) {
     this.props.history.push({pathname: path})

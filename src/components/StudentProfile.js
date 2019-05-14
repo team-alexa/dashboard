@@ -50,9 +50,9 @@ class StudentProfile extends Component{
   }
 
   componentDidMount() {
-    if (this.context.pageId != "new") {
+    if (this.context.pageId !== "new") {
       this.context.setContentLoading(true)
-      fetch(Constants.apiUrl + "students?studentID=" + this.props.id)
+      fetch(Constants.apiUrl + "students?studentID=" + this.props.pageId)
         .then(response => response.json())
         .then(data => {
           if (data[0]) {
@@ -91,7 +91,7 @@ class StudentProfile extends Component{
     const dte = new Date(this.state.birthDate)
     const dteStr = dte.getUTCFullYear() + "-" + (dte.getUTCMonth() + 1) + "-" + dte.getUTCDate()
     const body = {
-      method: this.context.pageId == "new" ? "new" : "update",
+      method: this.context.pageId === "new" ? "new" : "update",
       studentID: this.state.studentID,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
@@ -134,7 +134,7 @@ class StudentProfile extends Component{
 
   addTeacher(teacher) {
     var teachers = Object.keys(this.context.teachers).filter(key => {
-      return this.context.teachers[key].fullName == teacher
+      return this.context.teachers[key].fullName === teacher
     })
 
     var id = teachers.length > 0 ? teachers[0] : null
@@ -172,7 +172,7 @@ class StudentProfile extends Component{
   loadMoreLogs() {
     this.context.setContentLoading(true)
     var url = Constants.apiUrl + 'logs?index=' + this.state.logs.length
-    url += '&studentID=' + this.context.pageId
+    url += '&studentID=' + this.props.pageId
     fetch(url)
       .then(response => response.json())
       .then(data => {
@@ -203,7 +203,7 @@ class StudentProfile extends Component{
     const body = {
       method: "update",
       studentID: this.state.studentID,
-      status: this.state.status=='active'?'inactive':'active'
+      status: this.state.status==='active'?'inactive':'active'
     }
 
     fetch(Constants.apiUrl + 'students', {
@@ -228,13 +228,13 @@ class StudentProfile extends Component{
     return (
       <div className="student-profile content-page" >
       <div className="button-group">
-        {this.context.pageId != "new" ?
+        {this.context.pageId !== "new" ?
           <button type="button" className = "log-button enabled">
             <div className="text">New Log</div>
           </button> : null }
         <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button>
-        {this.context.pageId != "new" ?
-          <button className="log-button enabled" type="button" onClick={this.toggleStatus}>Set {this.state.status == "active" ? "Inactive" : "Active"}</button> : null}
+        {this.context.pageId !== "new" ?
+          <button className="log-button enabled" type="button" onClick={this.toggleStatus}>Set {this.state.status === "active" ? "Inactive" : "Active"}</button> : null}
       </div>
       <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
       <br/>
@@ -264,7 +264,7 @@ class StudentProfile extends Component{
         <br/>
         <input type="date" id="reportDate" value={this.state.reportDate} onChange={this.onChange} autoComplete="off" />
         <button className={"report-button "+(this.state.logs.length ? "enabled" : "disabled")} type="button" onClick={this.showDailyLogsButton}>Generate Report</button>
-      {this.context.pageId != "new" ? <div>
+      {this.context.pageId !== "new" ? <div>
         <h2>{this.state.fullName ? `${this.state.fullName}'s Logs` : "Logs"}</h2>
         <Table data={this.getLogTableData()}
           height="40vh"
@@ -275,7 +275,7 @@ class StudentProfile extends Component{
           loadFunction = {this.loadMoreLogs} />
         </div> : null
       }
-      {this.state.showDailyReport && this.state.dailyLogs.length!=0?
+      {this.state.showDailyReport && this.state.dailyLogs.length!==0?
          <DailyReport
          close={this.toggleDailyReport.bind(this)}
          firstName={this.state.firstName}
@@ -288,6 +288,6 @@ class StudentProfile extends Component{
     );
   }
 }
-
-StudentProfile.contextType = Context;
-export default withRouter(StudentProfile);
+const WrappedClass =withRouter(StudentProfile);
+WrappedClass.WrappedComponent.contextType = Context;
+export default WrappedClass;
