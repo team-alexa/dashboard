@@ -41,7 +41,7 @@ class StudentProfile extends Component{
       showDailyReport: false,
       dailyLogs:[],
       logs: [],
-      reportDate:""
+      reportDate:new Date().toISOString().substr(0, 10)
     }
 
     this.displayedMessage = false
@@ -177,9 +177,9 @@ class StudentProfile extends Component{
         const logs = this.state.logs.slice()
         this.setState({logs: logs.concat(data)})
         this.context.setContentLoading(false)
-        {logs.length?
-          this.setState({reportDate:new Date(logs[0].date).toISOString().substr(0, 10)})  
-          :this.reportDate=""}
+        if (this.state.logs.length){
+          this.setState({reportDate:new Date(this.state.logs[0].date).toISOString().substr(0, 10)})  
+        }
       })
   }
 
@@ -256,10 +256,8 @@ class StudentProfile extends Component{
         onClick={() => this.setState({hasChanged: true})}
         addValue={this.addTeacher}/>
         <br/>
-        <div className="Report-button">
-          <button className={this.state.logs.length ? "enabled" : "disabled"} type="button" onClick={this.showDailyLogsButton}>Report</button>
-        </div>
         <input type="date" id="reportDate" value={this.state.reportDate} onChange={this.onChange} autoComplete="off" />
+        <button className={"report-button "+(this.state.logs.length ? "enabled" : "disabled")} type="button" onClick={this.showDailyLogsButton}>Report</button>
       {this.context.pageId != "new" ? <div>
         <h2>{this.state.fullName ? `${this.state.fullName}'s Logs` : "Logs"}</h2>
         <Table data={this.getLogTableData()}

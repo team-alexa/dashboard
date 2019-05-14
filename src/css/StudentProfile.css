@@ -16,7 +16,7 @@
   display: block;
 }
 
-.student-profile .button-group button {
+.student-profile .button-group button, .report-button {
   color: white;
   border: none;
   margin: 8px 0px;
@@ -29,52 +29,21 @@
   font-family: "Open Sans", sans-serif;
   outline: none;
 }
-.student-profile .Report-button button {
-  color: white;
-  border: none;
-  margin: 8px 0px;
-  height: 45px;
-  width: 150px;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-  display: block;
-  font-size: 16px;
-  font-family: "Open Sans", sans-serif;
-  outline: none;
-}
 
-.student-profile .Report-button button.enabled {
-  background-color: rgb(0, 159, 194);
-  border: 2px solid rgb(0, 159, 194);
-}
-.student-profile .button-group button.enabled {
+.student-profile .button-group button.enabled,.report-button.enabled  {
   background-color: rgb(0, 159, 194);
   border: 2px solid rgb(0, 159, 194);
 }
 
-.student-profile .button-group button.enabled:hover {
-  color: rgb(0, 159, 194);
-  background-color: white;
-}
-.student-profile .Report-button button.enabled:hover {
+.student-profile .button-group button.enabled:hover , .report-button.enabled:hover {
   color: rgb(0, 159, 194);
   background-color: white;
 }
 
-.student-profile .button-group button.disabled {
-  background-color: rgb(170, 170, 170);
-}
-.student-profile .Report-button button.disabled {
-  background-color: rgb(170, 170, 170);
-}
 
-.student-profile .button-group button.disabled {
+.student-profile .button-group button.disabled, .report-button.disabled {
   cursor: not-allowed;
-}
-
-.student-profile .Report-button button.disabled {
-  cursor: not-allowed;
+  background-color: rgb(170, 170, 170);
 }
 
 .student-profile .button-group .log-button .text{
