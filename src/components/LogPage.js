@@ -112,7 +112,6 @@ class LogPage extends Component{
         this.context.setLogs(this.context.logs)
         this.context.setToast({message: "Saved!", color: "green", visible: true})
       })
-      .catch(error => console.log(error))
   }
   getAllTeachers() {
     return Object.keys(this.context.teachers).map(key => {
@@ -172,7 +171,6 @@ class LogPage extends Component{
       this.context.removeLog(this.state.logID)
       this.navigateTo("../Logs")
     })
-    .catch(error => console.log(error))
   }
   navigateTo(path) {
     this.props.history.push({pathname: path})

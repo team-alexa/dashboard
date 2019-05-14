@@ -57,12 +57,6 @@ class AccountPage extends Component{
     }
     
   saveData(user, pass, email){
-     /* console.log(this.context.teachers);
-        for (let teacher of this.context.teachers){
-        if(teacher.teacherID == user){
-            alert("no");
-        }
-    }*/
     /*Create new User Account in Database*/
     var body = "";
     if(this.props.match.params.id === this.context.currentUser.teacherID || !this.props.match.params.id){
@@ -114,12 +108,10 @@ class AccountPage extends Component{
             },
         })
         .then(data => {
-            console.log(data)
             var code = prompt("Please enter the code that was sent to your email:");
             while (code === null || code === "") {
                 code = prompt("Please enter the code that was sent to your email:");
             } 
-            console.log(code);
 
             Auth.confirmSignUp(user, code, {
                 // Optional. Force user confirmation irrespective of existing alias. By default set to True.
@@ -140,13 +132,10 @@ class AccountPage extends Component{
                     })            
                 }
             })
-            .catch(err => console.log(err));
         })
-        .catch(err => console.log(err));
         } /*end if*/
       }
     })
-    .catch(error => console.log(error))
   }
     setRole(e){
         var newRole = this.state.roles[e.target.value]
@@ -185,7 +174,6 @@ class AccountPage extends Component{
                 changed: true
             })
          })
-        .catch(error => console.log(error))
       }
   }
     

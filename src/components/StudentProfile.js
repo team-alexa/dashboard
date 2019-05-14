@@ -50,13 +50,11 @@ class StudentProfile extends Component{
   }
 
   componentDidMount() {
-    console.log(this.props.match)
     if (this.props.match.params.id !== "new") {
       this.context.setContentLoading(true)
       fetch(Constants.apiUrl + "students?studentID=" + this.props.match.params.id)
         .then(response => response.json())
         .then(data => {
-          console.log(data)
           if (data[0]) {
             if (!data[0].nickName) {
               data[0].nickName = data[0].firstName
@@ -121,7 +119,6 @@ class StudentProfile extends Component{
         this.context.setToast({message: "Saved!", color: "green", visible: true})
       }
     })
-    .catch(error => console.log(error))
   }
 
   getStudentTeacher() {
@@ -231,7 +228,6 @@ class StudentProfile extends Component{
       this.context.setToast({color: "green", message: "Success!", visible: true}, 3000)
       this.navigateTo("../students")
     })
-    .catch(error => console.log(error))
   }
   navigateTo(path) {
     this.props.history.push({pathname: path})

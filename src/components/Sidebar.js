@@ -8,7 +8,6 @@ import { withRouter } from "react-router";
 class Sidebar extends Component {
     
   render() {
-    console.log(this.props.match)
     return (
       <div className={this.context.sidebarClass + " sidebar"}>
         <h1> Hello, <br/><span>{this.context.currentUser.firstName}</span></h1>

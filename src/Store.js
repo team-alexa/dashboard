@@ -181,8 +181,7 @@ class DataProvider extends React.Component {
  
   logOut(){
       Auth.signOut()
-        .then(data => console.log(data))
-        .catch(err => console.log(err));
+        .then()
   }
     
   changePassword(oldPassword, newPassword){
@@ -191,11 +190,9 @@ class DataProvider extends React.Component {
         return Auth.changePassword(user, oldPassword, newPassword);
     })
     .then(data => {
-        console.log(data);
         return data;
     })
     .catch(err => {
-        console.log(err);
         return err;});
   }
   render() {
