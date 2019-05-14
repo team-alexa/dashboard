@@ -56,29 +56,30 @@ exportDailyLogs() {
   var pdf = new jsPDF('l', 'px', 'a4');
      // Header
       pdf.setFontSize(12);
-      pdf.setFont('Google Sans');
+      pdf.setFont('arial');
       pdf.addImage(main_logo,'JPEG',(pdf.internal.pageSize.getWidth()/2),10,70,40);
       pdf.text(this.props.lastName+", "+this.props.firstName+" - "+this.props.date+" Report ",15,60);
       pdf.autoTable({
-        styles: {font: 'Google Sans',overflow: 'linebreak',rowPageBreak: 'auto'},
+        styles: {font: 'arial',overflow: 'linebreak',rowPageBreak: 'auto'},
         columnStyles: {
           0: {cellWidth:10},
           1: {cellWidth: 'auto'},
           2: {cellWidth: 10},
           3: {cellWidth: 'auto'}},
         margin: 10,
-        headStyles:{fillColor: [0, 159, 194],font: 'Google Sans'},
+        headStyles:{fillColor: [0, 159, 194],font: 'arial'},
         head: [["Time", "Teacher", "Category", "Details"]],
         body: this.getDailyLogsExport(),
         startY: 70,
       });
-  pdf.save('Daily Report.pdf');
+  pdf.save(this.props.firstName+" "+this.props.lastName+" - " +this.props.date);
 };
     render() {
         return (
           <div className='modal'>
             <div className='modal_inner'>
-            <button type="close" className="close-button" onClick={this.props.close}><img src={closebutton}/></button>
+            <h2>Daily Report</h2>
+            <button type="close" className="close-button" onClick={this.props.close}>x</button>
             <Table data={this.getLogTableData()}
               height="80%"
               width="99%"

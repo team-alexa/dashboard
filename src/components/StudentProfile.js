@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import '../css/index.css';
+import '../css/StudentProfile.css';
 import { Context } from '../Store'
 import Constants from '../Constants'
 
 import Table from './Table';
 import SearchableInput from './SearchableInput'
 import DailyReport from './DailyReport';
-
+import { withRouter } from "react-router";
 class StudentProfile extends Component{
   constructor(props){
     super(props)
@@ -21,7 +22,8 @@ class StudentProfile extends Component{
     this.showDailyLogsButton = this.showDailyLogsButton.bind(this);
     this.setDailyLogs = this.setDailyLogs.bind(this);
     this.loadMoreLogs = this.loadMoreLogs.bind(this);
-    this.delete = this.delete.bind(this);
+    this.toggleStatus = this.toggleStatus.bind(this);
+    this.navigateTo=this.navigateTo.bind(this);
     this.state = {
       birthDate: "",
       firstName: "",
@@ -197,10 +199,11 @@ class StudentProfile extends Component{
     })
   }
 
-  delete() {
+  toggleStatus() {
     const body = {
-      method: "delete",
-      studentID: this.state.studentID
+      method: "update",
+      studentID: this.state.studentID,
+      status: this.state.status=='active'?'inactive':'active'
     }
 
     fetch(Constants.apiUrl + 'students', {
@@ -212,11 +215,14 @@ class StudentProfile extends Component{
     })
     .then(response => response.json())
     .then(() => {
-      this.context.setToast({color: "green", message: "Successfully deleted student.", visible: true}, 3000)
+      this.context.setToast({color: "green", message: "Success!", visible: true}, 3000)
+      this.navigateTo("../students")
     })
     .catch(error => console.log(error))
   }
-
+  navigateTo(path) {
+    this.props.history.push({pathname: path})
+  }
   render() {
     var teacherName = this.getStudentTeacherName()
     return (
@@ -228,7 +234,7 @@ class StudentProfile extends Component{
           </button> : null }
         <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button>
         {this.context.pageId != "new" ?
-          <button className="log-button enabled" type="button" onClick={this.delete}>Set {this.state.status == "active" ? "Inactive" : "Active"}</button> : null}
+          <button className="log-button enabled" type="button" onClick={this.toggleStatus}>Set {this.state.status == "active" ? "Inactive" : "Active"}</button> : null}
       </div>
       <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
       <br/>
@@ -257,7 +263,7 @@ class StudentProfile extends Component{
         addValue={this.addTeacher}/>
         <br/>
         <input type="date" id="reportDate" value={this.state.reportDate} onChange={this.onChange} autoComplete="off" />
-        <button className={"report-button "+(this.state.logs.length ? "enabled" : "disabled")} type="button" onClick={this.showDailyLogsButton}>Report</button>
+        <button className={"report-button "+(this.state.logs.length ? "enabled" : "disabled")} type="button" onClick={this.showDailyLogsButton}>Generate Report</button>
       {this.context.pageId != "new" ? <div>
         <h2>{this.state.fullName ? `${this.state.fullName}'s Logs` : "Logs"}</h2>
         <Table data={this.getLogTableData()}
@@ -274,7 +280,7 @@ class StudentProfile extends Component{
          close={this.toggleDailyReport.bind(this)}
          firstName={this.state.firstName}
          lastName={this.state.lastName}
-         date={this.currentDate()}
+         date={this.state.reportDate}
          dailyLogs={this.state.dailyLogs}
          />: null
        }
@@ -284,4 +290,4 @@ class StudentProfile extends Component{
 }
 
 StudentProfile.contextType = Context;
-export default StudentProfile;
+export default withRouter(StudentProfile);

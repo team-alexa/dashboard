@@ -4,8 +4,7 @@ import'../css/LogPage.css'
 import{Context} from '../Store'
 import Constants from '../Constants'
 import SearchableInput from './SearchableInput'
-import { existsSync } from 'fs';
-
+import { withRouter } from "react-router";
 
 class LogPage extends Component{
   constructor(props){
@@ -21,7 +20,7 @@ class LogPage extends Component{
     this.setActivity = this.setActivity.bind(this)
     this.hideDropdown = this.hideDropdown.bind(this)
     this.delete = this.delete.bind(this)
-  
+    this.navigateTo=this.navigateTo.bind(this);
     this.state = {
       activityTypes: ["Food", "Nap", "Diaper", "Injury", "Accomplishment", "Activity", "Needs", "Anecdotal"],
       dropdownOpen: false,
@@ -167,8 +166,12 @@ class LogPage extends Component{
     .then(() => {
       this.context.setToast({color: "green", message: "Successfully deleted log.", visible: true}, 3000)
       this.context.removeLog(this.state.logID)
+      this.navigateTo("../students")
     })
     .catch(error => console.log(error))
+  }
+  navigateTo(path) {
+    this.props.history.push({pathname: path})
   }
     render(){   
       var teacherName = this.state.teacherFullName
@@ -227,4 +230,4 @@ class LogPage extends Component{
 }
 
 LogPage.contextType = Context
-export default LogPage
+export default withRouter(LogPage);

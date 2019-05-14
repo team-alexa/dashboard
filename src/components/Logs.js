@@ -3,7 +3,7 @@ import Table from './Table';
 import '../css/SearchPage.css';
 import {Context} from '../Store'
 import Constants from '../Constants'
-
+import { withRouter } from "react-router";
 class Logs extends Component {
   constructor(props) {
     super(props)
@@ -73,7 +73,9 @@ class Logs extends Component {
   onChange(e) {
     this.setState({[e.target.id]: e.target.value, "searchChanged": true});
   }
-
+  navigateTo(path) {
+    this.props.history.push({pathname: path})
+  }
   render() {
     return (
       <div className="search-page content-page">
@@ -100,5 +102,4 @@ class Logs extends Component {
 }
 
 Logs.contextType = Context
-
-export default Logs;
+export default withRouter(Logs);

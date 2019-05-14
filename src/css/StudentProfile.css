@@ -29,7 +29,9 @@
   font-family: "Open Sans", sans-serif;
   outline: none;
 }
-
+.report-button {
+  display:initial;
+}
 .student-profile .button-group button.enabled,.report-button.enabled  {
   background-color: rgb(0, 159, 194);
   border: 2px solid rgb(0, 159, 194);
