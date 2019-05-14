@@ -114,6 +114,7 @@ class StudentProfile extends Component{
       this.context.students[body.studentID] = body
       this.context.setStudents(this.context.students)
       this.context.setToast({message: "Saved!", color: "green", visible: true})
+    this.setState({hasChanged: false});
     })
     .catch(error => console.log(error))
   }

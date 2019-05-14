@@ -96,53 +96,59 @@ class AccountPage extends Component{
       },
       body: JSON.stringify(body)
     })
-    .then(response => response.json())
-    .then(() => {
-      delete body.method
-      this.context.teachers[body.teacherID] = body
-      /*this.context.setTeachers(this.context.teachers)*/
-      this.context.setToast({message: "Saved!", color: "green", visible: true})
-        this.context.loadTeachers();
-        if(this.context.pageId == "new"){
-      /*Create new User Account in Cognito*/
-        Auth.signUp({
-            username: user,
-            password: pass,
-            attributes: {
-                email: email
-            },
-        })
-        .then(data => {
-            console.log(data)
-            var code = prompt("Please enter the code that was sent to your email:");
-            while (code == null || code == "") {
-                code = prompt("Please enter the code that was sent to your email:");
-            } 
-            console.log(code);
+    .then(response => {
+        if(response.status == 400){
+            console.log(response)
+            this.context.setToast({message: "Not Saved, please check your values!", color: "red", visible: true})
+        }
+        else{
+              delete body.method
+              this.context.teachers[body.teacherID] = body
+              /*this.context.setTeachers(this.context.teachers)*/
+              this.context.setToast({message: "Saved!", color: "green", visible: true})
+                this.context.loadTeachers();
+                if(this.context.pageId == "new"){
+              /*Create new User Account in Cognito*/
+                Auth.signUp({
+                    username: user,
+                    password: pass,
+                    attributes: {
+                        email: email
+                    },
+                })
+                .then(data => {
+                    console.log(data)
+                    var code = prompt("Please enter the code that was sent to your email:");
+                    while (code == null || code == "") {
+                        code = prompt("Please enter the code that was sent to your email:");
+                    } 
+                    console.log(code);
 
-            Auth.confirmSignUp(user, code, {
-                // Optional. Force user confirmation irrespective of existing alias. By default set to True.
-                forceAliasCreation: true    
-            }).then(data => {
-                if(data == "SUCCESS"){
-                    this.context.setToast({message: "You have successfully created a teacher!", color: "green", visible: true}, 3000);
-                    this.setState({
-                        teacherID: 0,
-                        role: "",
-                        firstName: "",
-                        lastName: "",
-                        nickName: "",
-                        hasChanged: false,
-                        pass: "",
-                        email: "",
-                        changed: true
-                    })            
-                }
-            })
-            .catch(err => console.log(err));
-        })
-        .catch(err => console.log(err));
-        } /*end if*/
+                    Auth.confirmSignUp(user, code, {
+                        // Optional. Force user confirmation irrespective of existing alias. By default set to True.
+                        forceAliasCreation: true    
+                    })
+                    .then(data => {
+                        if(data == "SUCCESS"){
+                            this.context.setToast({message: "You have successfully created a teacher!", color: "green", visible: true}, 3000);
+                            this.setState({
+                                teacherID: 0,
+                                role: "",
+                                firstName: "",
+                                lastName: "",
+                                nickName: "",
+                                hasChanged: false,
+                                pass: "",
+                                email: "",
+                                changed: true
+                            })            
+                        }
+                    })
+                })
+                .catch(err => console.log(err));
+
+        }
+        } /*end if-else*/
     })
     .catch(error => console.log(error))
   }
@@ -151,8 +157,8 @@ class AccountPage extends Component{
         this.setState({role: newRole, hasChanged: true})
     }
     dropdownClick(){
-        var o = !this.state.dropdownOpen
-        this.setState({dropdownOpen: o})
+        /*var o = !this.state.dropdownOpen*/
+        this.setState({dropdownOpen: true})
     }
      hideDropdown(){
     if(this.state.dropdownOpen)
@@ -254,7 +260,7 @@ class AccountPage extends Component{
                 <input type="text" placeholder="Nickname" size ="32"  name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
                 <br/>
 
-              <label htmlFor="role">Role:</label><input type="text" placeholder="Role" size ="32"  name="role" id="role" value={this.state.role}  onClick={this.dropdownClick} autoComplete="off"/>
+              <label htmlFor="role">Role:</label><input type="text" placeholder="Role" size ="32"  name="role" id="role" value={this.state.role}  onClick={this.dropdownClick} onFocus = {this.dropdownClick} autoComplete="off"/>
               {this.state.dropdownOpen && (
                   <div className="activity-menu">
                     <ul className="possible-values">

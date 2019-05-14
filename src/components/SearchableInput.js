@@ -20,7 +20,8 @@ class SearchableInput extends Component {
 
   renderPossibleValues() {
     const filteredValues = this.props.possibleValues.filter(value => {
-      return value.toLowerCase().includes(this.state.inputValue.toLowerCase());
+        if(value != null)
+            return value.toLowerCase().includes(this.state.inputValue.toLowerCase());
     })
 
     if (this.state.inputValue.length > 0) {
