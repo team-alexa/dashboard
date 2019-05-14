@@ -50,7 +50,8 @@ class StudentProfile extends Component{
   }
 
   componentDidMount() {
-    if (this.context.pageId !== "new") {
+    console.log(this.props.match)
+    if (this.props.match.params.id !== "new") {
       this.context.setContentLoading(true)
       fetch(Constants.apiUrl + "students?studentID=" + this.props.pageId)
         .then(response => response.json())
@@ -91,7 +92,7 @@ class StudentProfile extends Component{
     const dte = new Date(this.state.birthDate)
     const dteStr = dte.getUTCFullYear() + "-" + (dte.getUTCMonth() + 1) + "-" + dte.getUTCDate()
     const body = {
-      method: this.context.pageId === "new" ? "new" : "update",
+      method: this.props.match.params.id === "new" ? "new" : "update",
       studentID: this.state.studentID,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
@@ -180,7 +181,8 @@ class StudentProfile extends Component{
         this.setState({logs: logs.concat(data)})
         this.context.setContentLoading(false)
         if (this.state.logs.length){
-          this.setState({reportDate:new Date(this.state.logs[0].date).toISOString().substr(0, 10)})  
+          if (this.state.logs[0].date)
+            this.setState({reportDate:new Date(this.state.logs[0].date).toISOString().substr(0, 10)})  
         }
       })
   }
@@ -228,12 +230,12 @@ class StudentProfile extends Component{
     return (
       <div className="student-profile content-page" >
       <div className="button-group">
-        {this.context.pageId !== "new" ?
+        {this.props.match.params.id !== "new" ?
           <button type="button" className = "log-button enabled">
             <div className="text">New Log</div>
           </button> : null }
         <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button>
-        {this.context.pageId !== "new" ?
+        {this.props.match.params.id !== "new" ?
           <button className="log-button enabled" type="button" onClick={this.toggleStatus}>Set {this.state.status === "active" ? "Inactive" : "Active"}</button> : null}
       </div>
       <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
@@ -262,9 +264,11 @@ class StudentProfile extends Component{
         onClick={() => this.setState({hasChanged: true})}
         addValue={this.addTeacher}/>
         <br/>
+      {this.props.match.params.id !== "new" ? <div>
         <input type="date" id="reportDate" value={this.state.reportDate} onChange={this.onChange} autoComplete="off" />
         <button className={"report-button "+(this.state.logs.length ? "enabled" : "disabled")} type="button" onClick={this.showDailyLogsButton}>Generate Report</button>
-      {this.context.pageId !== "new" ? <div>
+      </div> : null}
+      {this.props.match.params.id !== "new" ? <div>
         <h2>{this.state.fullName ? `${this.state.fullName}'s Logs` : "Logs"}</h2>
         <Table data={this.getLogTableData()}
           height="40vh"

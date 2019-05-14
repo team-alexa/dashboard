@@ -39,7 +39,7 @@ class LogPage extends Component{
     this.displayedMessage = false
   }
   componentDidMount(){
-       if (this.context.pageId !== "new") {
+       if (this.props.match.params.id !== "new") {
       this.context.setContentLoading(true)
       fetch(Constants.apiUrl + "logs?logID=" + this.props.pageId)
       .then(response => response.json())
@@ -86,8 +86,8 @@ class LogPage extends Component{
         else
           this.context.setToast({message: "Invalid Time Format", color: "red", visible: true}, 3000)
       const body ={
-        method: this.context.pageId === "new" ? "new" : "update",
-        logID: this.context.pageId === "new" ? undefined : this.context.pageId,
+        method: this.props.match.params.id === "new" ? "new" : "update",
+        logID: this.props.match.params.id === "new" ? undefined : this.props.match.params.id,
         studentID: this.state.studentID,
         teacherID: this.state.teacherID,
         activityType: this.state.activityType,
@@ -104,7 +104,7 @@ class LogPage extends Component{
       .then(response => response.json())
       .then(() => {
         delete body.method
-        if (this.context.pageId === "new") {
+        if (this.props.match.params.id === "new") {
           const teacher = this.context.teachers[this.state.teacherID]
           const student = this.context.students[this.state.studentID]
           body.teacherFullName = teacher.fullName
@@ -182,14 +182,14 @@ class LogPage extends Component{
       return (
         <div className = "log-page content-page" onClick={this.hideDropdown}>
           <div className="button-group">
-            {this.context.pageId !== "new" ?
+            {this.props.match.params.id !== "new" ?
               <button type="button" className="delete-log-button enabled" onClick={this.delete} style={{borderColor: "red", color: "red", backgroundColor: "transparent"}}>
                 <div className="text">Delete</div>
               </button> : null }
-            <button className={this.context.pageId !== "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
+            <button className={this.props.match.params.id !== "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
             (validEntry ? "enabled" : "disabled")} type="button" onClick={this.saveData}>Save</button> 
           </div>
-          <h2 className="name">Log {this.context.pageId}</h2>
+          <h2 className="name">Log {this.props.match.params.id}</h2>
           <SearchableInput
             placeholder="Student"
             label="Student: "

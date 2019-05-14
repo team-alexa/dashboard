@@ -6,6 +6,7 @@ import '../css/AccountPage.css';
 import Constants from '../Constants'
 import { Auth } from 'aws-amplify';
 import {Redirect} from 'react-router-dom';
+import { withRouter } from "react-router";
 
 class AccountPage extends Component{
   constructor(props){
@@ -32,7 +33,7 @@ class AccountPage extends Component{
     }
   }
      componentDidMount(){
-       if (this.context.pageId !== "new" && this.props.pageId != null) {
+       if (this.props.match.params.id !== "new" && this.props.pageId != null) {
       this.context.setContentLoading(true)
       fetch(Constants.apiUrl + "teachers?teacherID=" + this.props.pageId)
       .then(response => response.json())
@@ -66,7 +67,7 @@ class AccountPage extends Component{
     }*/
     /*Create new User Account in Database*/
     var body = "";
-    if(this.context.pageId === this.context.currentUser.teacherID || this.props.pageId == null){
+    if(this.props.match.params.id === this.context.currentUser.teacherID || this.props.pageId == null){
         body ={
           method: "update",
           teacherID: this.context.currentUser.teacherID,
@@ -79,7 +80,7 @@ class AccountPage extends Component{
     }
     else{
       body = {
-          method: this.context.pageId === "new" ? "new" : "update",
+          method: this.props.match.params.id === "new" ? "new" : "update",
           teacherID: this.state.teacherID,
           role: this.state.role,
           status: "active",
@@ -103,7 +104,7 @@ class AccountPage extends Component{
       /*this.context.setTeachers(this.context.teachers)*/
       this.context.setToast({message: "Saved!", color: "green", visible: true})
         this.context.loadTeachers();
-        if(this.context.pageId === "new"){
+        if(this.props.match.params.id === "new"){
       /*Create new User Account in Cognito*/
         Auth.signUp({
             username: user,
@@ -192,7 +193,7 @@ class AccountPage extends Component{
       && this.context.currentUser.status !== "" && this.context.currentUser.firstName !== "" 
       && this.context.currentUser.lastName !== "" && this.context.currentUser.nickName !== "")
     /*View Current User*/
-      if(this.context.pageId === this.context.currentUser.teacherID || this.context.pageId == null){
+      if(this.props.match.params.id === this.context.currentUser.teacherID || !this.props.match.params.id){
         return (
           <div className = "account-page content-page">        
             <div className="button-group">
@@ -200,7 +201,7 @@ class AccountPage extends Component{
                 
                 <Link className="account-page-link" to={"/changeemail"}>Change Email</Link>
                 
-                <button className={this.context.pageId !== "new" ? (this.context.currentUser.hasChanged ? "enabled" : "disabled") : 
+                <button className={this.props.match.params.id !== "new" ? (this.context.currentUser.hasChanged ? "enabled" : "disabled") : 
                     (validEntry ? "enabled" : "disabled")} type="button" onClick={() => this.saveData(this.state.teacherID, this.state.pass, this.state.email)}>Save</button>
             </div>
             <h2 className="name">{this.context.currentUser.lastName ? `${this.context.currentUser.lastName}, ${this.context.currentUser.firstName}` : "Last Name, First Name"}</h2> 
@@ -230,14 +231,14 @@ class AccountPage extends Component{
         return(
             <div className = "account-page content-page" onClick={this.hideDropdown}>        
                  <div className="button-group">
-                    {this.context.pageId !== "new" ? <button className="enabled" onClick ={this.deleteTeacher}>
+                    {this.props.match.params.id !== "new" ? <button className="enabled" onClick ={this.deleteTeacher}>
                         Delete Teacher
                     </button> : null}
 
-                    <button className={this.context.pageId !== "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
+                    <button className={this.props.match.params.id !== "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
                     (validEntry ? "enabled" : "disabled")} type="button" onClick={() => this.saveData(this.state.teacherID, this.state.pass, this.state.email)}>Save</button>
                 </div>
-                {this.context.pageId === "new" ?<h2 className="name">Create New Teacher </h2> : <h2 className="name">{this.state.lastName + ", " + this.state.firstName}</h2>}
+                {this.props.match.params.id === "new" ?<h2 className="name">Create New Teacher </h2> : <h2 className="name">{this.state.lastName + ", " + this.state.firstName}</h2>}
                 <br/>
                 
                 <label htmlFor="teacherID">ID Number:</label>
@@ -266,7 +267,7 @@ class AccountPage extends Component{
                 )} 
 
 
-                {this.context.pageId === "new" ?
+                {this.props.match.params.id === "new" ?
                 <div>
                 <br/>
                 <h3> User Attributes </h3>
@@ -283,5 +284,6 @@ class AccountPage extends Component{
    }
   }
 
-AccountPage.contextType = Context
-export default AccountPage
+const WrappedClass =withRouter(AccountPage);
+WrappedClass.WrappedComponent.contextType = Context;
+export default WrappedClass;
