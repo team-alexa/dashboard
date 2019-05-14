@@ -29,6 +29,7 @@
   margin: 0;
   padding: 2px;
   color: white;
+  cursor: pointer;
 }
 
 .searchable-input .chip p:last-of-type {

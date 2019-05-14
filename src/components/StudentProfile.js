@@ -3,7 +3,6 @@ import '../css/index.css';
 import '../css/StudentProfile.css';
 import { Context } from '../Store'
 import Constants from '../Constants'
-
 import Table from './Table';
 import SearchableInput from './SearchableInput'
 import DailyReport from './DailyReport';
@@ -24,6 +23,7 @@ class StudentProfile extends Component{
     this.loadMoreLogs = this.loadMoreLogs.bind(this);
     this.toggleStatus = this.toggleStatus.bind(this);
     this.navigateTo=this.navigateTo.bind(this);
+    this.getAllTeachers=this.getAllTeachers.bind(this);
     this.state = {
       birthDate: "",
       firstName: "",
@@ -123,8 +123,8 @@ class StudentProfile extends Component{
     return this.context.teachers[this.state.teacherID] ? this.context.teachers[this.state.teacherID].fullName : ""
   }
 
-  getAllTeacherNames() {
-    return Object.keys(this.context.teachers).map(key => this.context.teachers[key].fullName)
+  getAllTeachers() {
+    return Object.keys(this.context.teachers).map(key => this.context.teachers[key])
   }
 
   onChange(e) {
@@ -258,7 +258,7 @@ class StudentProfile extends Component{
         label="Teacher: "
         limit={1}
         values={teacherName ? [teacherName] : null}
-        possibleValues={this.getAllTeacherNames()}
+        possibleValues={this.getAllTeachers()}
         onClick={() => this.setState({hasChanged: true})}
         addValue={this.addTeacher}/>
         <br/>

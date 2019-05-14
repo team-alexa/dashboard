@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../css/SearchableInput.css';
-
+import { withRouter } from "react-router";
 class SearchableInput extends Component {
   constructor(props) {
     super(props);
@@ -20,14 +20,14 @@ class SearchableInput extends Component {
 
   renderPossibleValues() {
     const filteredValues = this.props.possibleValues.filter(value => {
-      return value.toLowerCase().includes(this.state.inputValue.toLowerCase());
+      return value.fullName.toLowerCase().includes(this.state.inputValue.toLowerCase());
     })
 
     if (this.state.inputValue.length > 0) {
       return (
         <ul className="possible-values">
           {filteredValues.map((value, index) => {
-            return <li key={index} onClick={() => this.addValue(value)}>{value}</li>
+            return <li key={index} onClick={() => this.addValue(value.fullName)}>{value.fullName}</li>
           })}
         </ul>
       )
@@ -56,7 +56,9 @@ class SearchableInput extends Component {
       this.setState({values: props.values, receivedVals: true})
     }
   }
-
+  navigateTo(path) {
+    this.props.history.push({pathname: path})
+  }
   render() {
     return (
       <div className="searchable-input" onClick={this.props.onClick}>
@@ -65,7 +67,15 @@ class SearchableInput extends Component {
           {this.state.values.map((value, index) => {
             return (
               <div className="chip" key={index}>
-                <p>{value}</p>
+                <p onClick={() =>{
+                  if(this.props.placeholder=="Teacher")
+                  {  
+                    this.navigateTo("../account/"+this.props.possibleValues[this.props.possibleValues.map(function(x) {return x.fullName; }).indexOf(value)].teacherID)
+                  }
+                  else{
+                    this.navigateTo("../students/"+this.props.possibleValues[this.props.possibleValues.map(function(x) {return x.fullName; }).indexOf(value)].studentID)
+                  }
+                }}> {value}</p>
                 <p onClick={() => this.removeValue(index)}>x</p>
               </div>
             )
@@ -85,4 +95,4 @@ class SearchableInput extends Component {
   }
 }
 
-export default SearchableInput;
+export default withRouter(SearchableInput);

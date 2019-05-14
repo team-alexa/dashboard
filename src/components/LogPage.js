@@ -14,8 +14,8 @@ class LogPage extends Component{
     this.saveData = this.saveData.bind(this)
     this.addStudent = this.addStudent.bind(this)
     this.addTeacher = this.addTeacher.bind(this)
-    this.getAllTeacherNames = this.getAllTeacherNames.bind(this)
-    this.getAllStudentNames = this.getAllStudentNames.bind(this)
+    this.getAllTeachers = this.getAllTeachers.bind(this)
+    this.getAllStudents = this.getAllStudents.bind(this)
     this.dropdownClick = this.dropdownClick.bind(this)
     this.setActivity = this.setActivity.bind(this)
     this.hideDropdown = this.hideDropdown.bind(this)
@@ -116,11 +116,11 @@ class LogPage extends Component{
       })
       .catch(error => console.log(error))
   }
-  getAllTeacherNames() {
-    return Object.keys(this.context.teachers).map(key => this.context.teachers[key].fullName)
+  getAllTeachers() {
+    return Object.keys(this.context.teachers).map(key => this.context.teachers[key])
   }
-  getAllStudentNames(){
-    return Object.keys(this.context.students).map(key => this.context.students[key].fullName)
+  getAllStudents(){
+    return Object.keys(this.context.students).map(key => this.context.students[key])
   }
   addTeacher(teacher) {
     var teachers = Object.keys(this.context.teachers).filter(key => {
@@ -195,7 +195,7 @@ class LogPage extends Component{
             label="Student: "
             limit={1}
             values= {studentName ? [studentName] : null}
-            possibleValues={this.getAllStudentNames()}
+            possibleValues={this.getAllStudents()}
             onClick={() => this.setState({hasChanged: true})}
             addValue={this.addStudent}/>
           <SearchableInput
@@ -203,7 +203,7 @@ class LogPage extends Component{
             label="Teacher: "
             limit={1}
             values= {teacherName ? [teacherName] : null}
-            possibleValues={this.getAllTeacherNames()}
+            possibleValues={this.getAllTeachers()}
             onClick={() => this.setState({hasChanged: true})}
             addValue={this.addTeacher}/>
          
