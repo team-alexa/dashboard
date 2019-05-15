@@ -95,15 +95,11 @@ class AccountPage extends Component{
         this.context.setToast({message: "There was an error.", color: "red", visible: true})
       } else {
       delete body.method
-      const teacher = this.context.teachers[this.state.teacherID]
-      body.teacherID = teacher.teacherID
-      body.firstName = teacher.firstName
-      body.lastName = teacher.lastName
+      body.fullName = body.firstName + " " + body.lastName
       var tempTeachers = this.context.teachers;
-      tempTeachers.teacherID = {teacher.teacherID, }
-      this.context.teachers[body.teacherID] = body
-      
-      /*this.context.setTeachers(this.context.teachers)*/
+      tempTeachers[body.teacherID] = body
+      this.context.setTeachers(tempTeachers)
+
       this.context.setToast({message: "Saved!", color: "green", visible: true})
         if(this.props.match.params.id === "new"){
       /*Create new User Account in Cognito*/
