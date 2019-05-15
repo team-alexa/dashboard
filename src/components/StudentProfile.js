@@ -113,15 +113,10 @@ class StudentProfile extends Component{
       if (data.errno) {
         this.context.setToast({message: "There was an error.", color: "red", visible: true})
       } else {
-        // if (this.props.match.params.id === "new") {
-        //   delete body.method
-        //   var tempStudents=this.context.students;
-        //   tempStudents
-        // this.context.setStudents(tempStudent)
-        // }
         delete body.method
         var tempStudents=this.context.students;
         tempStudents[body.studentID] = body
+        body.status="active"
         this.context.setStudents(tempStudents)
         this.context.setToast({message: "Saved!", color: "green", visible: true})
       }
