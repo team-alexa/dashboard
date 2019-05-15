@@ -100,17 +100,35 @@ class LogPage extends Component{
         body: JSON.stringify(body)
       })
       .then(response => response.json())
-      .then(() => {
+      .then((response) => {
+        if(!response.errno){
         delete body.method
         if (this.props.match.params.id === "new") {
           const teacher = this.context.teachers[this.state.teacherID]
           const student = this.context.students[this.state.studentID]
           body.teacherFullName = teacher.fullName
           body.studentFullName = student.fullName
-          this.context.logs.unshift(body)
+          body.logID=response.insertId
+          var tempLogs=this.context.logs;
+          tempLogs.unshift(body);
+          this.context.setLogs(tempLogs)
+        }
+        else{
+          const teacher = this.context.teachers[this.state.teacherID]
+          const student = this.context.students[this.state.studentID]
+          body.teacherFullName = teacher.fullName
+          body.studentFullName = student.fullName
+          body.logID=this.state.logID
+          var tempLogs=this.context.logs;
+          tempLogs[tempLogs.map(function(x) {return x.logID; }).indexOf(this.state.logID)]=body;
+          this.context.setLogs(tempLogs)
         }
         this.context.setLogs(this.context.logs)
         this.context.setToast({message: "Saved!", color: "green", visible: true})
+      }
+      else{
+        this.context.setToast({message: "There was an Error!", color: "red", visible: true})
+      }
       })
   }
   getAllTeachers() {
@@ -166,10 +184,10 @@ class LogPage extends Component{
       body: JSON.stringify(body)
     })
     .then(response => response.json())
-    .then(() => {
+    .then((response) => {
       this.context.setToast({color: "green", message: "Successfully deleted log.", visible: true}, 3000)
       this.context.removeLog(this.state.logID)
-      this.navigateTo("../Logs")
+      this.navigateTo("../logs")
     })
   }
   navigateTo(path) {

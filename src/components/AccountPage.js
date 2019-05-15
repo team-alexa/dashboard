@@ -95,7 +95,14 @@ class AccountPage extends Component{
         this.context.setToast({message: "There was an error.", color: "red", visible: true})
       } else {
       delete body.method
+      const teacher = this.context.teachers[this.state.teacherID]
+      body.teacherID = teacher.teacherID
+      body.firstName = teacher.firstName
+      body.lastName = teacher.lastName
+      var tempTeachers = this.context.teachers;
+      tempTeachers.teacherID = {teacher.teacherID, }
       this.context.teachers[body.teacherID] = body
+      
       /*this.context.setTeachers(this.context.teachers)*/
       this.context.setToast({message: "Saved!", color: "green", visible: true})
         if(this.props.match.params.id === "new"){
@@ -230,10 +237,9 @@ class AccountPage extends Component{
                 {this.props.match.params.id === "new" ?<h2 className="name">Create New Teacher </h2> : <h2 className="name">{this.state.lastName + ", " + this.state.firstName}</h2>}
                 <br/>
                 
-                <label htmlFor="teacherID">ID Number:</label>
+                {this.props.match.params.id === "new" ? <div><label htmlFor="teacherID">ID Number:</label>
                 <input type="text" placeholder="ID Number" size ="32"  name="teacherID" id="teacherID" value={this.state.teacherID} onChange={this.onChange} autoComplete="off"/>
-                <br/>
-
+                <br/> </div>: <p>ID Number: {this.state.teacherID}</p>}
                 <label htmlFor="lname">Name:</label>
                 <input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.state.lastName} onChange={this.onChange} autoComplete="off"/>
 
