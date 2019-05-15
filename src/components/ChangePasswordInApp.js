@@ -95,7 +95,7 @@ class ChangePasswordInApp extends Component{
         else{
             this.setState({changed: false})
           
-            return <Redirect to='/myaccount' />
+            return <Redirect to='/account' />
         }
     }
 }

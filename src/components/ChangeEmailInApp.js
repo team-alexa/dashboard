@@ -88,7 +88,7 @@ class ChangeEmailInApp extends Component {
         <div className="content-page">
             <h2>Change Email</h2>
             <form onSubmit={this.handleUpdateClick}>
-                <input type="text" placeholder="Email" id="email" value={this.state.email} onChange={this.handleChange} size="32"/>
+                <input type="text" placeholder="New Email" id="email" value={this.state.email} onChange={this.handleChange} size="32"/>
                 <br/>
                 <button type="submit" className="account-page-link">Update Email</button>
             </form>
