@@ -91,7 +91,6 @@ class Students extends Component {
     this.setState({includeInactive: e.target.checked})
   }
   displayAllLogs() {
-    console.log(this.state.studentName)
     if(this.state.studentName==="" && this.state.teacherName===""){
       this.setState({displaySearch: false})
     }
