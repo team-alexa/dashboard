@@ -169,8 +169,9 @@ class AccountPage extends Component{
         .then(response => response.json())
         .then(() => {
           delete body.method
-          /*this.context.teachers[body.teacherID] = body*/
-          /*this.context.setTeachers(this.context.teachers)*/
+          var tempTeachersDelete= this.context.teachers;
+          delete tempTeachersDelete[body.teacherID];
+          this.context.setTeachers(tempTeachersDelete)
 
           this.context.setToast({message: "Deleted!", color: "green", visible: true})
             this.setState({
@@ -187,8 +188,18 @@ class AccountPage extends Component{
     /*View Current User*/
       if(this.props.match.params.id === this.context.currentUser.teacherID || !this.props.match.params.id){
         return (
-          <div className = "account-page content-page">        
-            <div className="button-group">
+          <div className = "account-page content-page">
+          <h2 className="name">{this.context.currentUser.lastName ? `${this.context.currentUser.lastName}, ${this.context.currentUser.firstName}` : "Last Name, First Name"}</h2>      
+            <br/>
+            <label htmlFor="lname">Name:</label>
+            <input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.context.currentUser.lastName} onChange={this.context.onChangeUserData} autoComplete="off"/>
+            <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.context.currentUser.firstName} onChange={this.context.onChangeUserData} autoComplete="off"/>
+            <br/>
+            <label htmlFor="nickname">Nickname:</label>
+            <input type="text" placeholder="Nickname" size ="32"  name="nickName" id="nickName" value={this.context.currentUser.nickName} onChange={this.context.onChangeUserData} autoComplete="off"/>
+            <p>Email Address: {this.context.currentUser.email}</p>
+            <p>Role: {this.context.currentUser.role}</p>
+            <div className="button-group my-account-page-button-group">
                 <Link className="account-page-link" to={"/changepass"}>Change Password</Link>        
                 
                 <Link className="account-page-link" to={"/changeemail"}>Change Email</Link>
@@ -196,21 +207,6 @@ class AccountPage extends Component{
                 <button className={this.props.match.params.id !== "new" ? (this.context.currentUser.hasChanged ? "enabled" : "disabled") : 
                     (validEntry ? "enabled" : "disabled")} type="button" onClick={() => this.saveData(this.state.teacherID, this.state.pass, this.state.email)}>Save</button>
             </div>
-            <h2 className="name">{this.context.currentUser.lastName ? `${this.context.currentUser.lastName}, ${this.context.currentUser.firstName}` : "Last Name, First Name"}</h2> 
-            
-            <br/>
-
-            <label htmlFor="lname">Name:</label>
-            <input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.context.currentUser.lastName} onChange={this.context.onChangeUserData} autoComplete="off"/>
-
-            <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.context.currentUser.firstName} onChange={this.context.onChangeUserData} autoComplete="off"/>
-            <br/>
-
-            <label htmlFor="nickname">Nickname:</label>
-            <input type="text" placeholder="Nickname" size ="32"  name="nickName" id="nickName" value={this.context.currentUser.nickName} onChange={this.context.onChangeUserData} autoComplete="off"/>
-
-            <p>Email Address: {this.context.currentUser.email}</p>
-            <p>Role: {this.context.currentUser.role}</p>
           </div>
         )
     }
@@ -221,18 +217,9 @@ class AccountPage extends Component{
             return <Redirect to='/adminpanel' />
         }
         return(
-            <div className = "account-page content-page" onClick={this.hideDropdown}>        
-                 <div className="button-group">
-                    {this.props.match.params.id !== "new" ? <button className="enabled" onClick ={this.deleteTeacher}>
-                        Delete Teacher
-                    </button> : null}
-
-                    <button className={this.props.match.params.id !== "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
-                    (validEntry ? "enabled" : "disabled")} type="button" onClick={() => this.saveData(this.state.teacherID, this.state.pass, this.state.email)}>Save</button>
-                </div>
+            <div className = "account-page content-page" onClick={this.hideDropdown}>
                 {this.props.match.params.id === "new" ?<h2 className="name">Create New Teacher </h2> : <h2 className="name">{this.state.lastName + ", " + this.state.firstName}</h2>}
                 <br/>
-                
                 {this.props.match.params.id === "new" ? <div><label htmlFor="teacherID">ID Number:</label>
                 <input type="text" placeholder="ID Number" size ="32"  name="teacherID" id="teacherID" value={this.state.teacherID} onChange={this.onChange} autoComplete="off"/>
                 <br/> </div>: <p>ID Number: {this.state.teacherID}</p>}
@@ -241,12 +228,11 @@ class AccountPage extends Component{
 
                 <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.state.firstName} onChange={this.onChange} autoComplete="off"/>
                 <br/>
-
                 <label htmlFor="nickname">Nickname:</label>
                 <input type="text" placeholder="Nickname" size ="32"  name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
                 <br/>
 
-              <label htmlFor="role">Role:</label><input type="text" placeholder="Role" size ="32"  name="role" id="role" value={this.state.role}  onClick={this.dropdownClick} autoComplete="off"/>
+              <label htmlFor="role">Role:</label><input type="text" placeholder="Role" size ="32"  name="role" id="role" value={this.state.role}  onChange={this.onChange} onClick={this.dropdownClick} autoComplete="off"/>
               {this.state.dropdownOpen && (
                   <div className="activity-menu">
                     <ul className="possible-values">
@@ -256,7 +242,14 @@ class AccountPage extends Component{
                     </ul>
                   </div>
                 )} 
+                   <div className="button-group teacher-page-button-group">
+                    {this.props.match.params.id !== "new" ? <button className="enabled" onClick ={this.deleteTeacher}>
+                        Delete Teacher
+                    </button> : null}
 
+                    <button className={this.props.match.params.id !== "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
+                    (validEntry ? "enabled" : "disabled")} type="button" onClick={() => this.saveData(this.state.teacherID, this.state.pass, this.state.email)}>Save</button>
+                </div>
 
                 {this.props.match.params.id === "new" ?
                 <div>

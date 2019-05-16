@@ -10,14 +10,9 @@ class AdminPage extends Component{
     }
     getTeacherTableData() {  
 
-    const teachers=Object.keys(this.context.teachers).map(teacher => {
-        if(this.context.teachers[teacher].status=== "active")
-            return teacher;
-    })
-    return teachers.map(teacher => {
-        teacher = this.context.teachers[teacher]
-        console.log(teacher)
-        return [teacher.fullName, teacher.role, teacher.teacherID]
+    return Object.keys(this.context.teachers).map(teacher => {
+        teacher = this.context.teachers[teacher];
+      return [teacher.fullName, teacher.role, teacher.teacherID]
       })
   }
     render() {

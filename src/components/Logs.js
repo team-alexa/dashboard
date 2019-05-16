@@ -7,10 +7,9 @@ import { withRouter } from "react-router";
 class Logs extends Component {
   constructor(props) {
     super(props)
-
     this.onChange = this.onChange.bind(this)
     this.search = this.search.bind(this)
-
+    this.displayAllStudents=this.displayAllStudents.bind(this);
     this.state = {
       studentName: "",
       teacherName: "",
@@ -71,7 +70,14 @@ class Logs extends Component {
   }
 
   onChange(e) {
-    this.setState({[e.target.id]: e.target.value, "searchChanged": true});
+    this.setState({[e.target.id]: e.target.value, "searchChanged": true},(()=>{
+      this.displayAllStudents();
+  }))
+  }
+displayAllStudents(){
+    if(this.state.studentName==="" && this.state.teacherName==="" && this.state.date===""){
+      this.setState({displaySearch: false})
+    }
   }
   navigateTo(path) {
     this.props.history.push({pathname: path})
@@ -79,7 +85,7 @@ class Logs extends Component {
   render() {
     return (
       <div className="search-page content-page">
-        <div className="header">
+        <div className="header logs-header">
           <h2>Logs</h2>
           <form onSubmit={this.search}>
             <input type="date" placeholder="Date" value={this.state.date} id="date" onChange={this.onChange}></input>
@@ -101,5 +107,6 @@ class Logs extends Component {
   }
 }
 
-Logs.contextType = Context
-export default withRouter(Logs);
+const WrappedClass =withRouter(Logs);
+WrappedClass.WrappedComponent.contextType = Context;
+export default WrappedClass;

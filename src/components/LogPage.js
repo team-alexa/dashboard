@@ -209,14 +209,6 @@ class LogPage extends Component{
       && this.state.timeString !== "")
       return (
         <div className = "log-page content-page" onClick={this.hideDropdown}>
-          <div className="button-group">
-            {this.props.match.params.id !== "new" ?
-              <button type="button" className="delete-log-button enabled" onClick={this.delete} style={{borderColor: "red", color: "red", backgroundColor: "transparent"}}>
-                <div className="text">Delete</div>
-              </button> : null }
-            <button className={this.props.match.params.id !== "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
-            (validEntry ? "enabled" : "disabled")} type="button" onClick={this.saveData}>Save</button> 
-          </div>
           <h2 className="name">Log {this.props.match.params.id}</h2>
           <SearchableInput
             placeholder="Student"
@@ -252,6 +244,15 @@ class LogPage extends Component{
           <br/>
           <label htmlFor="date">Date:</label><input type="date" name="date" id="dateString" value={this.state.dateString} onChange={this.onChange} autoComplete="off" />         
       <br/>
+      <div className="button-group">
+            {this.props.match.params.id !== "new" ?
+              <button type="button" className="delete-log-button enabled" onClick={this.delete} style={{borderColor: "red", color: "red", backgroundColor: "transparent"}}>
+                <div className="text">Delete</div>
+              </button> : null }
+            <button className={this.props.match.params.id !== "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
+            (validEntry ? "enabled" : "disabled")} type="button" onClick={this.state.hasChanged ? this.saveData: null}>Save</button> 
+          </div>
+          <br/>
         </div>
         )
     }

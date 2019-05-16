@@ -115,13 +115,21 @@ class StudentProfile extends Component{
       } else {
         delete body.method
         var tempStudents=this.context.students;
-        tempStudents[body.studentID] = body
         body.status="active"
+        tempStudents[body.studentID] = body
         this.context.setStudents(tempStudents)
+        var tempStudentsCurrentUser=this.context.currentUser.students
+      Object.keys(tempStudentsCurrentUser).map(student => {
+       if (student.studentID===body.studentID){
+        student.status="active"
+        this.context.setCurrentStudents(tempStudentsCurrentUser)
+       }
+      })
         this.context.setToast({message: "Saved!", color: "green", visible: true})
       }
     })
   }
+
 
   getStudentTeacher() {
     return this.context.teachers[this.state.teacherID] ? {
@@ -227,6 +235,16 @@ class StudentProfile extends Component{
     })
     .then(response => response.json())
     .then(() => {
+      var tempStudents=this.context.students;
+      tempStudents[body.studentID].status = body.status
+      this.context.setStudents(tempStudents)
+      var tempStudentsCurrentUser=this.context.currentUser.students
+      tempStudentsCurrentUser.map(student => {
+       if (student.studentID===body.studentID){
+        student.status=body.status
+       }
+      })
+      this.context.setCurrentStudents(tempStudentsCurrentUser)
       this.context.setToast({color: "green", message: "Success!", visible: true}, 3000)
       this.navigateTo("../students")
     })
@@ -238,45 +256,45 @@ class StudentProfile extends Component{
     var teacher = this.getStudentTeacher()
     return (
       <div className="student-profile content-page" >
+        <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
+        <br/>
+        <label htmlFor="lname">Name:</label><input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.state.lastName} onChange={this.onChange} autoComplete="off"/>
+        <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.state.firstName} onChange={this.onChange} autoComplete="off"/>
+        <br/>
+        <label htmlFor="nickname">Nickname:</label><input type="text" placeholder="Nickname" size="25" name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
+        <br />
+        <label htmlFor="id">ID:</label><input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/>
+        <br/>
+        <p>Age: {parseInt(new Date().getFullYear()) - parseInt(new Date(this.state.birthDate).getFullYear())} </p>
+        <label htmlFor="month">DOB :</label>
+        <input type="date" id="birthDate" value={this.state.birthDate} onChange={this.onChange} autoComplete="off" />
+        <br/>
+        <label htmlFor="food">Food Allergies (comma-separated):</label><input type="text" size = "64" id="foodAllergies" value={this.state.foodAllergies} onChange={this.onChange} autoComplete="off" />
+        <br/>
+        <label htmlFor="medical">Medical Conditions (comma-separated):</label><input type="text" size = "64" id="medical" value={this.state.medical} onChange={this.onChange} autoComplete="off" />
+        <br/>
+        <SearchableInput
+          placeholder="Teacher"
+          label="Teacher: "
+          limit={1}
+          values={teacher ? [teacher] : null}
+          possibleValues={this.getAllTeachers()}
+          onClick={() => this.setState({hasChanged: true})}
+          addValue={this.addTeacher}/>
+          <br/>
+      {this.props.match.params.id !== "new" ? <div>
+        <input type="date" id="reportDate" value={this.state.reportDate} onChange={this.onChange} autoComplete="off" />
+        <button className={"report-button "+(this.state.logs.length ? "enabled" : "disabled")} type="button" onClick={this.showDailyLogsButton}>Generate Report</button>
+      </div> : null}
       <div className="button-group">
         {this.props.match.params.id !== "new" ?
           <button type="button" className = "log-button enabled" onClick={() => this.navigateTo("/logs/new")}>
             <div className="text">New Log</div>
           </button> : null }
-        <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button>
+        <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.state.hasChanged ? this.saveData: null}>Save</button>
         {this.props.match.params.id !== "new" ?
           <button className="log-button enabled" type="button" onClick={this.toggleStatus}>Set {this.state.status === "active" ? "Inactive" : "Active"}</button> : null}
       </div>
-      <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
-      <br/>
-      <label htmlFor="lname">Name:</label><input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.state.lastName} onChange={this.onChange} autoComplete="off"/>
-      <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.state.firstName} onChange={this.onChange} autoComplete="off"/>
-      <br/>
-      <label htmlFor="nickname">Nickname:</label><input type="text" placeholder="Nickname" size="25" name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
-      <br />
-      <label htmlFor="id">ID:</label><input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/>
-      <br/>
-      <p>Age: {parseInt(new Date().getFullYear()) - parseInt(new Date(this.state.birthDate).getFullYear())} </p>
-      <label htmlFor="month">DOB :</label>
-      <input type="date" id="birthDate" value={this.state.birthDate} onChange={this.onChange} autoComplete="off" />
-      <br/>
-      <label htmlFor="food">Food Allergies (comma-separated):</label><input type="text" size = "64" id="foodAllergies" value={this.state.foodAllergies} onChange={this.onChange} autoComplete="off" />
-      <br/>
-      <label htmlFor="medical">Medical Conditions (comma-separated):</label><input type="text" size = "64" id="medical" value={this.state.medical} onChange={this.onChange} autoComplete="off" />
-      <br/>
-      <SearchableInput
-        placeholder="Teacher"
-        label="Teacher: "
-        limit={1}
-        values={teacher ? [teacher] : null}
-        possibleValues={this.getAllTeachers()}
-        onClick={() => this.setState({hasChanged: true})}
-        addValue={this.addTeacher}/>
-        <br/>
-      {this.props.match.params.id !== "new" ? <div>
-        <input type="date" id="reportDate" value={this.state.reportDate} onChange={this.onChange} autoComplete="off" />
-        <button className={"report-button "+(this.state.logs.length ? "enabled" : "disabled")} type="button" onClick={this.showDailyLogsButton}>Generate Report</button>
-      </div> : null}
       {this.props.match.params.id !== "new" ? <div>
         <h2>{this.state.fullName ? `${this.state.fullName}'s Logs` : "Logs"}</h2>
         <Table data={this.getLogTableData()}

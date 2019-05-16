@@ -38,9 +38,6 @@
   .close-button:hover {
    opacity: 1.0;  
 }
-.table-container {
-  margin-top: 5px;
-}
 .Export{
   text-align:center;
   margin-top:5px;

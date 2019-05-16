@@ -10,7 +10,8 @@ class Students extends Component {
     this.search = this.search.bind(this)
     this.onChange = this.onChange.bind(this)
     this.onInactiveChange = this.onInactiveChange.bind(this)
-
+    this.searchonChange=this.searchonChange.bind(this);
+    this.displayAllLogs=this.displayAllLogs.bind(this);
     this.state = {
       searchStudents: [],
       displaySearch: false,
@@ -81,19 +82,29 @@ class Students extends Component {
   onChange(e) {
     this.setState({[e.target.id]: e.target.value});
   }
-
+  searchonChange(e) {
+    this.setState({[e.target.id]: e.target.value},(()=>{
+      this.displayAllLogs();
+  }))
+  }
   onInactiveChange(e) {
     this.setState({includeInactive: e.target.checked})
+  }
+  displayAllLogs() {
+    console.log(this.state.studentName)
+    if(this.state.studentName==="" && this.state.teacherName===""){
+      this.setState({displaySearch: false})
+    }
   }
 
   render() {
     return (
       <div className="search-page content-page">
-        <div className="header">
+        <div className="header student-header">
           <h2>Students</h2>
           <form onSubmit={this.search}>
-            <input type="text" placeholder="Student" value={this.state.studentName} id="studentName" onChange={this.onChange}></input>
-            <input type="text" placeholder="Teacher" value={this.state.teacherName} id="teacherName" onChange={this.onChange}></input>
+            <input type="text" placeholder="Student" value={this.state.studentName} id="studentName" onChange={this.searchonChange}></input>
+            <input type="text" placeholder="Teacher" value={this.state.teacherName} id="teacherName" onChange={this.searchonChange}></input>
             <button type="submit">→</button>
           </form>
         </div>
@@ -109,7 +120,7 @@ class Students extends Component {
           rootAddress="/students/"
           newLink="/students/new"
           loadFunction = {this.context.loadMoreStudents} />
-      </div>
+          </div>
     );
   }
 }

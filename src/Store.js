@@ -22,7 +22,7 @@ class DataProvider extends React.Component {
     this.setLogs = this.setLogs.bind(this)
     this.onChangeUserData = this.onChangeUserData.bind(this)
     this.removeLog = this.removeLog.bind(this)
-
+    this.setCurrentStudents=this.setCurrentStudents.bind(this);
     this.state = {
       currentUser: {
         firstName: "",
@@ -57,7 +57,8 @@ class DataProvider extends React.Component {
       changePassword: this.changePassword,
       loadUserData:this.loadUserData,
       setLogs: this.setLogs,
-      onChangeUserData: this.onChangeUserData
+      onChangeUserData: this.onChangeUserData,
+      setCurrentStudents:this.setCurrentStudents
     }
   }
 
@@ -166,6 +167,12 @@ class DataProvider extends React.Component {
 
   setStudents(students) {
     this.setState({students})
+  }
+
+  setCurrentStudents(students) {
+    var currentUser=this.state.currentUser;
+    currentUser.students=students;
+    this.setState({currentUser})
   }
 
   setLogs(logs) {

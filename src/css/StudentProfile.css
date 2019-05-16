@@ -70,4 +70,11 @@
   border-color:rgb(0, 159, 194);
   box-shadow: 0 0 8px 0 rgb(0, 159, 194);
 }
-
+@media screen and (max-width: 852px) {
+  .student-profile .button-group {
+    position: relative;
+    top: 0px;
+    bottom:0;
+    padding-left: 15px;
+  }
+}
