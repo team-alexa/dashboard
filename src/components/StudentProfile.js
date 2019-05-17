@@ -263,8 +263,8 @@ class StudentProfile extends Component{
         <br/>
         <label htmlFor="nickname">Nickname:</label><input type="text" placeholder="Nickname" size="25" name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
         <br />
-        <label htmlFor="id">ID:</label><input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/>
-        <br/>
+        {this.props.match.params.id === "new" ? <div><label htmlFor="id">ID:</label><input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/>
+        <br/> </div>: <p>ID Number: {this.state.studentID}</p>}
         <p>Age: {parseInt(new Date().getFullYear()) - parseInt(new Date(this.state.birthDate).getFullYear())} </p>
         <label htmlFor="month">DOB :</label>
         <input type="date" id="birthDate" value={this.state.birthDate} onChange={this.onChange} autoComplete="off" />
