@@ -116,6 +116,7 @@ class StudentProfile extends Component{
         delete body.method
         var tempStudents=this.context.students;
         body.status="active"
+        body.fullName=body.firstName +" "+body.lastName
         tempStudents[body.studentID] = body
         this.context.setStudents(tempStudents)
         var tempStudentsCurrentUser=this.context.currentUser.students
