@@ -57,6 +57,34 @@ class AccountPage extends Component{
     }
     
   saveData(user, pass, email){
+    if(this.state.teacherID < 1 || this.state.teacherID > 999999){
+      this.context.setToast({message: "Not Saved, please ensure your ID is Between 1 and 999999!", color: "red", visible: true});
+      return;
+    }
+    else if(this.state.firstName == ""){
+        this.context.setToast({message: "Not Saved, please check your first name!", color: "red", visible: true}, 3000)
+        return;
+    }
+    else if(this.state.lastName == ""){
+        this.context.setToast({message: "Not Saved, please check your last name!", color: "red", visible: true}, 3000)
+        return;
+    }
+    else if(this.state.nickName == ""){
+        this.context.setToast({message: "Not Saved, please check your nick name!", color: "red", visible: true}, 3000)
+        return;
+    }
+    else if(this.state.role == ""){
+        this.context.setToast({message: "Not Saved, please check your role!", color: "red", visible: true}, 3000)
+        return;
+      }
+    else if(this.state.email == ""){
+      this.context.setToast({message: "Not Saved, please check your email!", color: "red", visible: true}, 3000)
+        return;
+    }
+    else if(this.state.pass == ""){
+      this.context.setToast({message: "Not Saved, please check your password!", color: "red", visible: true}, 3000)
+        return;
+    }
     /*Create new User Account in Database*/
     var body = "";
     if(this.props.match.params.id === this.context.currentUser.teacherID || !this.props.match.params.id){
@@ -92,7 +120,7 @@ class AccountPage extends Component{
     .then(response => response.json())
     .then((data) => {
       if (data.errno) {
-        this.context.setToast({message: "There was an error.", color: "red", visible: true})
+        this.context.setToast({message: "There was an error. Please verify the ID you've chosen isn't already taken.", color: "red", visible: true})
       } else {
       delete body.method
       body.fullName = body.firstName + " " + body.lastName
@@ -100,7 +128,6 @@ class AccountPage extends Component{
       tempTeachers[body.teacherID] = body
       this.context.setTeachers(tempTeachers)
 
-      this.context.setToast({message: "Saved!", color: "green", visible: true})
         if(this.props.match.params.id === "new"){
       /*Create new User Account in Cognito*/
         Auth.signUp({
@@ -111,15 +138,16 @@ class AccountPage extends Component{
             },
         })
         .then(data => {
-            var code = prompt("Please enter the code that was sent to your email:");
+            var code = prompt("Please enter the code that was sent to the specified email:");
             while (code === null || code === "") {
-                code = prompt("Please enter the code that was sent to your email:");
+                code = prompt("Please enter the code that was sent to the specified email:");
             } 
 
             Auth.confirmSignUp(user, code, {
                 // Optional. Force user confirmation irrespective of existing alias. By default set to True.
                 forceAliasCreation: true    
-            }).then(data => {
+            })
+            .then(data => {
                 if(data === "SUCCESS"){
                     this.context.setToast({message: "You have successfully created a teacher!", color: "green", visible: true}, 3000);
                     this.setState({
@@ -135,6 +163,10 @@ class AccountPage extends Component{
                     })            
                 }
             })
+        })
+        .finally(() => {
+          this.context.setToast({message: "Something went wrong. You have created a teacher in the database, but they do not have a Cognito account.", color: "red", visible: true}, 5000);
+          this.setState({changed:true});
         })
         } /*end if*/
       }
@@ -218,7 +250,7 @@ class AccountPage extends Component{
         }
         return(
             <div className = "account-page content-page" onClick={this.hideDropdown}>
-                {this.props.match.params.id === "new" ?<h2 className="name">Create New Teacher </h2> : <h2 className="name">{this.state.lastName + ", " + this.state.firstName}</h2>}
+                {this.props.match.params.id === "new" ?<div><h2 className="name">Create New Teacher </h2> <p><b>***Once created, the new user MUST verify their email right away.***</b></p></div> : <h2 className="name">{this.state.lastName + ", " + this.state.firstName}</h2>}
                 <br/>
                 {this.props.match.params.id === "new" ? <div><label htmlFor="teacherID">ID Number:</label>
                 <input type="text" placeholder="ID Number" size ="32"  name="teacherID" id="teacherID" value={this.state.teacherID} onChange={this.onChange} autoComplete="off"/>
@@ -232,7 +264,7 @@ class AccountPage extends Component{
                 <input type="text" placeholder="Nickname" size ="32"  name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
                 <br/>
 
-              <label htmlFor="role">Role:</label><input type="text" placeholder="Role" size ="32"  name="role" id="role" value={this.state.role}  onChange={this.onChange} onClick={this.dropdownClick} autoComplete="off"/>
+              <label htmlFor="role">Role:</label><input type="text" placeholder="Role" size ="32"  name="role" id="role" value={this.state.role}  onChange={this.onChange} onClick={this.dropdownClick} onFocus={this.dropdownClick}autoComplete="off"/>
               {this.state.dropdownOpen && (
                   <div className="activity-menu">
                     <ul className="possible-values">
@@ -261,6 +293,12 @@ class AccountPage extends Component{
                 
                 <label>Temporary Password:</label>
                 <input type="password" placeholder="Password" size ="32"  name="pass" id="pass" value={this.state.pass} onChange={this.onChange} autoComplete="off"/>
+                <p>Password Requirements:</p>
+                <ul>
+                    <li>Must be 8 characters long.</li>
+                    <li>Must contain a special character, number, uppercase letter, and lowercase letter.</li>
+                </ul>
+               
                 <br/></div> : null}
             </div>
         )

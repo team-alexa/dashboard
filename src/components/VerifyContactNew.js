@@ -13,10 +13,6 @@ export default class VerifyContactNew extends VerifyContact {
     
     verifyDataStuff(authData){
         this.changeState('signedIn', authData);
-        Auth.currentAuthenticatedUser()
-        .then(result => {
-            this.context.setCurrentUser(result.username);
-        });
     }
     
     submit() {

@@ -16,6 +16,19 @@
     width: 325px;
 }
 
+.reset-pass-div{
+    position:absolute;
+    left:50%;
+    top:35%;
+    margin-left:-162.5px;
+    margin-top:-162.5px;
+    border: black solid 1px;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: white;
+    width: 325px; 
+}
+
 .login-screen h2{
     text-align: center;
     color: white;

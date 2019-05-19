@@ -80,6 +80,11 @@ class ChangePasswordInApp extends Component{
            return (
             <div className="content-page">
                <h2>Change Password</h2>
+               <p>Password Requirements:</p>
+                <ul>
+                    <li>Must be 8 characters long.</li>
+                    <li>Must contain a special character, number, uppercase letter, and lowercase letter.</li>
+                </ul>
                 <form onSubmit={this.handleSubmit}>
                 <input type="password" placeholder="Old Password" id="oldPass" value={this.state.oldPass} onChange={this.handleInputChange}></input>
                 <br/>

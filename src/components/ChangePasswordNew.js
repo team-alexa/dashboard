@@ -51,9 +51,14 @@ export default class ChangePasswordNew extends RequireNewPassword {
 
         return (
             <div className="login-screen">
-                <div className="main-div">  
+                <div className="reset-pass-div">  
                     <img src="/static/media/main_logo.1d5af73f.png" alt=""/>
                     <h1 className="login-h1">Change Password</h1>
+                    <p>Password Requirements:</p>
+                    <ul>
+                        <li>Must be 8 characters long.</li>
+                        <li>Must contain a special character, number, uppercase letter, and lowercase letter.</li>
+                    </ul>
                     <div>
                         <input autoFocus placeholder={'New Password'} key="password" name="password" type="password" onChange={this.handleInputChange} size="32"/>
                     </div>
