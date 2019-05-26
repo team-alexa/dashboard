@@ -5,13 +5,11 @@ import { Context } from '../Store'
 import '../css/Home.css';
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   generateStudentCards() {
     const cards = []
     this.context.currentUser.students.forEach((student, index) => {
+      if(student.status ==='active'){
       const age = parseInt(new Date().getFullYear()) - parseInt(new Date(student.birthDate).getFullYear())
       cards.push(
         <StudentCard
@@ -21,6 +19,7 @@ class Home extends Component {
           id={student.studentID}
           key={index}
         />)
+      }
     })
     return cards
   }

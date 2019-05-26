@@ -27,6 +27,7 @@
   color: #6e6e6e;
   outline: none;
   margin: 25px 4px 0;
+  width: auto;
 }
 
 .search-page .header button[type="submit"] {
@@ -58,4 +59,14 @@
 .include-inactive label {
   font-family: 'Open Sans', sans-serif;
   color: rgb(87, 87, 87);
+}
+@media screen and (max-width: 1050px) {
+  .search-page .logs-header form {
+    margin-bottom: 25px;
+  }
+}
+@media screen and (max-width: 903px) {
+  .search-page .student-header form {
+    margin-bottom: 10px;
+  }
 }

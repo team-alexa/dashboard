@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Context} from '../Store'
 import '../css/Content.css';
-
+import { Route, Switch} from 'react-router-dom'
 import Home from './Home'
 import AdminPage from './AdminPage'
 import StudentProfile from './StudentProfile'
@@ -11,9 +11,8 @@ import Error from './Error'
 import Help from './Help'
 import LogPage from'./LogPage'
 import AccountPage from './AccountPage'
-import ChangePasswordInApp from './ChangePasswordInApp'
-import ChangeEmailInApp from './ChangeEmailInApp'
-
+import ChangePassword from './ChangePasswordInApp'
+import ChangEmail from './ChangeEmailInApp'
 class Content extends Component {
   constructor(props) {
     super(props);
@@ -22,29 +21,6 @@ class Content extends Component {
     this.updated = false
     this.state = {
       toastLeft: "0px"
-    }
-  }
-
-  getComponent() {
-    if (this.context.pageId) {
-      switch(this.context.page) {
-        case "students": return <StudentProfile id={this.context.pageId} />
-        case "logs": return <LogPage id={this.context.pageId}  />
-        case "account": return <AccountPage id={this.context.pageId}/>
-      }
-    } else {
-      switch(this.context.page) {
-        case "": return <Home />
-        case "home": return <Home />
-        case "students": return <Students />
-        case "logs": return <Logs />
-        case "adminpanel": return <AdminPage />
-        case "account": return <AccountPage />
-        case "help": return <Help />
-        case "changepass": return <ChangePasswordInApp />
-        case "changeemail": return <ChangeEmailInApp />
-        default: return <Error />
-      }
     }
   }
 
@@ -66,7 +42,21 @@ class Content extends Component {
           <h2>{this.context.toast.message}</h2>
           <span onClick={() => this.context.setToast({visible: false})}>x</span>
         </div>
-        {this.getComponent()}
+        <Switch>
+          <Route path="/students/:id" component={StudentProfile} />
+          <Route path="/students" component={Students} />
+          <Route path="/logs/:id" component={LogPage} />
+          <Route path="/logs" component={Logs} />
+          <Route path="/account/:id" component={AccountPage} />
+          <Route path="/account" component={AccountPage} />
+          <Route path="/adminpanel" component={AdminPage} />
+          <Route path="/help" component={Help} />
+          <Route path="/changePass" component={ChangePassword} />
+          <Route path="/changeemail" component={ChangEmail} />
+          <Route path="/home" component={Home} />
+          <Route exact path="/" component={Home} />
+          <Route component={Error} />
+        </Switch>
       </div>
     );
   }

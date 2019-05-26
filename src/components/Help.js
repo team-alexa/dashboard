@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import '../css/Help.css'
 class Help extends Component {
-    constructor(props) {
-      super(props)
-    }
 
     render() {
         return (

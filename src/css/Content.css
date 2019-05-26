@@ -56,9 +56,10 @@
 }
 
 .content .toast.enabled {
+  display: initial;
   top: 105px;
 }
 
 .content .toast.disabled {
-  top: 0px;
+  display: none;
 }

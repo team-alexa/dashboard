@@ -6,6 +6,7 @@ import '../css/AccountPage.css';
 import Constants from '../Constants'
 import { Auth } from 'aws-amplify';
 import {Redirect} from 'react-router-dom';
+import { withRouter } from "react-router";
 
 class AccountPage extends Component{
   constructor(props){
@@ -32,9 +33,9 @@ class AccountPage extends Component{
     }
   }
      componentDidMount(){
-       if (this.context.pageId != "new" && this.context.pageId != null) {
+       if (this.props.match.params.id !== "new" && this.props.match.params.id != null) {
       this.context.setContentLoading(true)
-      fetch(Constants.apiUrl + "teachers?teacherID=" + this.context.pageId)
+      fetch(Constants.apiUrl + "teachers?teacherID=" + this.props.match.params.id)
       .then(response => response.json())
       .then(data => {
         if (data[0]) {
@@ -49,8 +50,6 @@ class AccountPage extends Component{
     } else {
       this.setState({editable: true})
     }
-    this.context.loadTeachers();     
-    this.context.loadStudents();
   }
     onChange(e) {
       this.setState({[e.target.id]: e.target.value})
@@ -58,15 +57,37 @@ class AccountPage extends Component{
     }
     
   saveData(user, pass, email){
-     /* console.log(this.context.teachers);
-        for (let teacher of this.context.teachers){
-        if(teacher.teacherID == user){
-            alert("no");
-        }
-    }*/
+    if(this.state.teacherID < 1 || this.state.teacherID > 999999){
+      this.context.setToast({message: "Not Saved, please ensure your ID is Between 1 and 999999!", color: "red", visible: true});
+      return;
+    }
+    else if(this.state.firstName == ""){
+        this.context.setToast({message: "Not Saved, please check your first name!", color: "red", visible: true}, 3000)
+        return;
+    }
+    else if(this.state.lastName == ""){
+        this.context.setToast({message: "Not Saved, please check your last name!", color: "red", visible: true}, 3000)
+        return;
+    }
+    else if(this.state.nickName == ""){
+        this.context.setToast({message: "Not Saved, please check your nick name!", color: "red", visible: true}, 3000)
+        return;
+    }
+    else if(this.state.role == ""){
+        this.context.setToast({message: "Not Saved, please check your role!", color: "red", visible: true}, 3000)
+        return;
+      }
+    else if(this.state.email == ""){
+      this.context.setToast({message: "Not Saved, please check your email!", color: "red", visible: true}, 3000)
+        return;
+    }
+    else if(this.state.pass == ""){
+      this.context.setToast({message: "Not Saved, please check your password!", color: "red", visible: true}, 3000)
+        return;
+    }
     /*Create new User Account in Database*/
     var body = "";
-    if(this.context.pageId == this.context.currentUser.teacherID || this.context.pageId == null){
+    if(this.props.match.params.id === this.context.currentUser.teacherID || !this.props.match.params.id){
         body ={
           method: "update",
           teacherID: this.context.currentUser.teacherID,
@@ -79,7 +100,7 @@ class AccountPage extends Component{
     }
     else{
       body = {
-          method: this.context.pageId == "new" ? "new" : "update",
+          method: this.props.match.params.id === "new" ? "new" : "update",
           teacherID: this.state.teacherID,
           role: this.state.role,
           status: "active",
@@ -97,13 +118,17 @@ class AccountPage extends Component{
       body: JSON.stringify(body)
     })
     .then(response => response.json())
-    .then(() => {
+    .then((data) => {
+      if (data.errno) {
+        this.context.setToast({message: "There was an error. Please verify the ID you've chosen isn't already taken.", color: "red", visible: true})
+      } else {
       delete body.method
-      this.context.teachers[body.teacherID] = body
-      /*this.context.setTeachers(this.context.teachers)*/
-      this.context.setToast({message: "Saved!", color: "green", visible: true})
-        this.context.loadTeachers();
-        if(this.context.pageId == "new"){
+      body.fullName = body.firstName + " " + body.lastName
+      var tempTeachers = this.context.teachers;
+      tempTeachers[body.teacherID] = body
+      this.context.setTeachers(tempTeachers)
+
+        if(this.props.match.params.id === "new"){
       /*Create new User Account in Cognito*/
         Auth.signUp({
             username: user,
@@ -113,18 +138,17 @@ class AccountPage extends Component{
             },
         })
         .then(data => {
-            console.log(data)
-            var code = prompt("Please enter the code that was sent to your email:");
-            while (code == null || code == "") {
-                code = prompt("Please enter the code that was sent to your email:");
+            var code = prompt("Please enter the code that was sent to the specified email:");
+            while (code === null || code === "") {
+                code = prompt("Please enter the code that was sent to the specified email:");
             } 
-            console.log(code);
 
             Auth.confirmSignUp(user, code, {
                 // Optional. Force user confirmation irrespective of existing alias. By default set to True.
                 forceAliasCreation: true    
-            }).then(data => {
-                if(data == "SUCCESS"){
+            })
+            .then(data => {
+                if(data === "SUCCESS"){
                     this.context.setToast({message: "You have successfully created a teacher!", color: "green", visible: true}, 3000);
                     this.setState({
                         teacherID: 0,
@@ -139,12 +163,14 @@ class AccountPage extends Component{
                     })            
                 }
             })
-            .catch(err => console.log(err));
         })
-        .catch(err => console.log(err));
+        .finally(() => {
+          this.context.setToast({message: "Something went wrong. You have created a teacher in the database, but they do not have a Cognito account.", color: "red", visible: true}, 5000);
+          this.setState({changed:true});
+        })
         } /*end if*/
+      }
     })
-    .catch(error => console.log(error))
   }
     setRole(e){
         var newRole = this.state.roles[e.target.value]
@@ -175,15 +201,15 @@ class AccountPage extends Component{
         .then(response => response.json())
         .then(() => {
           delete body.method
-          /*this.context.teachers[body.teacherID] = body*/
-          /*this.context.setTeachers(this.context.teachers)*/
+          var tempTeachersDelete= this.context.teachers;
+          delete tempTeachersDelete[body.teacherID];
+          this.context.setTeachers(tempTeachersDelete)
 
           this.context.setToast({message: "Deleted!", color: "green", visible: true})
             this.setState({
                 changed: true
             })
          })
-        .catch(error => console.log(error))
       }
   }
     
@@ -192,69 +218,53 @@ class AccountPage extends Component{
       && this.context.currentUser.status !== "" && this.context.currentUser.firstName !== "" 
       && this.context.currentUser.lastName !== "" && this.context.currentUser.nickName !== "")
     /*View Current User*/
-      if(this.context.pageId == this.context.currentUser.teacherID || this.context.pageId == null){
+      if(this.props.match.params.id === this.context.currentUser.teacherID || !this.props.match.params.id){
         return (
-          <div className = "account-page content-page">        
-            <div className="button-group">
+          <div className = "account-page content-page">
+          <h2 className="name">{this.context.currentUser.lastName ? `${this.context.currentUser.lastName}, ${this.context.currentUser.firstName}` : "Last Name, First Name"}</h2>      
+            <br/>
+            <label htmlFor="lname">Name:</label>
+            <input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.context.currentUser.lastName} onChange={this.context.onChangeUserData} autoComplete="off"/>
+            <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.context.currentUser.firstName} onChange={this.context.onChangeUserData} autoComplete="off"/>
+            <br/>
+            <label htmlFor="nickname">Nickname:</label>
+            <input type="text" placeholder="Nickname" size ="32"  name="nickName" id="nickName" value={this.context.currentUser.nickName} onChange={this.context.onChangeUserData} autoComplete="off"/>
+            <p>Email Address: {this.context.currentUser.email}</p>
+            <p>Role: {this.context.currentUser.role}</p>
+            <div className="button-group my-account-page-button-group">
                 <Link className="account-page-link" to={"/changepass"}>Change Password</Link>        
                 
                 <Link className="account-page-link" to={"/changeemail"}>Change Email</Link>
                 
-                <button className={this.context.pageId != "new" ? (this.context.currentUser.hasChanged ? "enabled" : "disabled") : 
+                <button className={this.props.match.params.id !== "new" ? (this.context.currentUser.hasChanged ? "enabled" : "disabled") : 
                     (validEntry ? "enabled" : "disabled")} type="button" onClick={() => this.saveData(this.state.teacherID, this.state.pass, this.state.email)}>Save</button>
             </div>
-            <h2 className="name">{this.context.currentUser.lastName ? `${this.context.currentUser.lastName}, ${this.context.currentUser.firstName}` : "Last Name, First Name"}</h2> 
-            
-            <br/>
-
-            <label htmlFor="lname">Name:</label>
-            <input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.context.currentUser.lastName} onChange={this.context.onChangeUserData} autoComplete="off"/>
-
-            <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.context.currentUser.firstName} onChange={this.context.onChangeUserData} autoComplete="off"/>
-            <br/>
-
-            <label htmlFor="nickname">Nickname:</label>
-            <input type="text" placeholder="Nickname" size ="32"  name="nickName" id="nickName" value={this.context.currentUser.nickName} onChange={this.context.onChangeUserData} autoComplete="off"/>
-
-            <p>Email Address: {this.context.currentUser.email}</p>
-            <p>Role: {this.context.currentUser.role}</p>
           </div>
         )
     }
     /*View New + Others*/
     else{
-        if(this.state.changed == true){
-            this.state.changed = false;
+        if(this.state.changed === true){
+            this.setState({changed:false});
             return <Redirect to='/adminpanel' />
         }
         return(
-            <div className = "account-page content-page" onClick={this.hideDropdown}>        
-                 <div className="button-group">
-                    {this.context.pageId != "new" ? <button className="enabled" onClick ={this.deleteTeacher}>
-                        Delete Teacher
-                    </button> : null}
-
-                    <button className={this.context.pageId != "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
-                    (validEntry ? "enabled" : "disabled")} type="button" onClick={() => this.saveData(this.state.teacherID, this.state.pass, this.state.email)}>Save</button>
-                </div>
-                {this.context.pageId == "new" ?<h2 className="name">Create New Teacher </h2> : <h2 className="name">{this.state.lastName + ", " + this.state.firstName}</h2>}
+            <div className = "account-page content-page" onClick={this.hideDropdown}>
+                {this.props.match.params.id === "new" ?<div><h2 className="name">Create New Teacher </h2> <p><b>***Once created, the new user MUST verify their email right away.***</b></p></div> : <h2 className="name">{this.state.lastName + ", " + this.state.firstName}</h2>}
                 <br/>
-                
-                <label htmlFor="teacherID">ID Number:</label>
+                {this.props.match.params.id === "new" ? <div><label htmlFor="teacherID">ID Number:</label>
                 <input type="text" placeholder="ID Number" size ="32"  name="teacherID" id="teacherID" value={this.state.teacherID} onChange={this.onChange} autoComplete="off"/>
-                <br/>
-
+                <br/> </div>: <p>ID Number: {this.state.teacherID}</p>}
                 <label htmlFor="lname">Name:</label>
                 <input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.state.lastName} onChange={this.onChange} autoComplete="off"/>
 
                 <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.state.firstName} onChange={this.onChange} autoComplete="off"/>
                 <br/>
-
                 <label htmlFor="nickname">Nickname:</label>
                 <input type="text" placeholder="Nickname" size ="32"  name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
                 <br/>
 
-              <label htmlFor="role">Role:</label><input type="text" placeholder="Role" size ="32"  name="role" id="role" value={this.state.role}  onClick={this.dropdownClick} autoComplete="off"/>
+              <label htmlFor="role">Role:</label><input type="text" placeholder="Role" size ="32"  name="role" id="role" value={this.state.role}  onChange={this.onChange} onClick={this.dropdownClick} onFocus={this.dropdownClick}autoComplete="off"/>
               {this.state.dropdownOpen && (
                   <div className="activity-menu">
                     <ul className="possible-values">
@@ -264,9 +274,16 @@ class AccountPage extends Component{
                     </ul>
                   </div>
                 )} 
+                   <div className="button-group teacher-page-button-group">
+                    {this.props.match.params.id !== "new" ? <button className="enabled" onClick ={this.deleteTeacher}>
+                        Delete Teacher
+                    </button> : null}
 
+                    <button className={this.props.match.params.id !== "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
+                    (validEntry ? "enabled" : "disabled")} type="button" onClick={() => this.saveData(this.state.teacherID, this.state.pass, this.state.email)}>Save</button>
+                </div>
 
-                {this.context.pageId == "new" ?
+                {this.props.match.params.id === "new" ?
                 <div>
                 <br/>
                 <h3> User Attributes </h3>
@@ -275,7 +292,13 @@ class AccountPage extends Component{
                 <br/>
                 
                 <label>Temporary Password:</label>
-                <input type="text" placeholder="Password" size ="32"  name="pass" id="pass" value={this.state.pass} onChange={this.onChange} autoComplete="off"/>
+                <input type="password" placeholder="Password" size ="32"  name="pass" id="pass" value={this.state.pass} onChange={this.onChange} autoComplete="off"/>
+                <p>Password Requirements:</p>
+                <ul>
+                    <li>Must be 8 characters long.</li>
+                    <li>Must contain a special character, number, uppercase letter, and lowercase letter.</li>
+                </ul>
+               
                 <br/></div> : null}
             </div>
         )
@@ -283,5 +306,6 @@ class AccountPage extends Component{
    }
   }
 
-AccountPage.contextType = Context
-export default AccountPage
+const WrappedClass =withRouter(AccountPage);
+WrappedClass.WrappedComponent.contextType = Context;
+export default WrappedClass;

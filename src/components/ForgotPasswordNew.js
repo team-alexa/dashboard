@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Auth from '@aws-amplify/auth';
 import { ForgotPassword } from "aws-amplify-react";
-import {Link} from 'react-router-dom';
 import {Context} from '../Store';
 
 export default class ForgotPasswordNew extends ForgotPassword {
@@ -29,8 +28,7 @@ export default class ForgotPasswordNew extends ForgotPassword {
         const { authData={} } = this.props;
         const { code, password } = this.inputs;
         const username = this.inputs.username || authData.username;
-        if(password != this.state.newPass){
-            /*this.context.setToast({message: "Passwords don't Match.", color: "red", visible: true}, 10000)*/
+        if(password !== this.state.newPass){
             alert("Passwords Don't Match. Please Try Again.");
             return;
         }
@@ -39,7 +37,6 @@ export default class ForgotPasswordNew extends ForgotPassword {
         }
         Auth.forgotPasswordSubmit(username, code, password)
             .then(data => {
-                /*this.context.setToast({message: "Passwords don't Match.", color: "red", visible: true}, 10000)*/
                 alert("Password has been successfully changed!");
                 this.changeState('signIn');
                 this.setState({ delivery: null, newPass: "" });
@@ -59,7 +56,12 @@ export default class ForgotPasswordNew extends ForgotPassword {
     submitView() {
         return (
             <div>
-                <input placeholder='Code' key="code" name="code" autoComplete="off" onChange={this.handleInputChange} type="text" size="32"/>
+                <p>Password Requirements:</p>
+                <ul>
+                    <li>Must be 8 characters long.</li>
+                    <li>Must contain a special character, number, uppercase letter, and lowercase letter.</li>
+                </ul>
+                <input placeholder="Code" key="code" name="code" autoComplete="off" onChange={this.handleInputChange} type="text" size="32"/>
                 <input placeholder="New Password" type="password" key="password" name="password" onChange={this.handleInputChange} size="32"/>
                 <input placeholder="Confirm New Password" id="newPass" type="password" value={this.state.newPass} onChange={this.handleInputChangeNewPass} size="32"/>
             </div>
@@ -67,12 +69,12 @@ export default class ForgotPasswordNew extends ForgotPassword {
     }
     
     showComponent(theme) {
-        const { authState, hide, authData={} } = this.props;
+        const {authData={} } = this.props;
         
         return (
             <div className="login-screen">
-                <div className="main-div">    
-                    <img src="/static/media/main_logo.1d5af73f.png"/>        
+                <div className="reset-pass-div">    
+                    <img src="/static/media/main_logo.1d5af73f.png" alt=""/>        
                     <h1 className="login-h1">Reset Your Password</h1>
                     <div>
                         { this.state.delivery || authData.username ? this.submitView() : this.sendView() }

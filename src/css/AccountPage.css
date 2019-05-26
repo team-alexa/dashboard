@@ -21,3 +21,19 @@
     color: rgb(0, 159, 194);
     background-color: white;
 }
+@media screen and (max-width: 1170px) {
+      .account-page .my-account-page-button-group {
+        position: relative;
+        top: 0px;
+        bottom:0;
+        padding-left: 15px;
+      }
+  }
+  @media screen and (max-width: 670px) {
+    .account-page .teacher-page-button-group {
+      position: relative;
+      top: 0px;
+      bottom:0;
+      padding-left: 15px;
+    }
+}

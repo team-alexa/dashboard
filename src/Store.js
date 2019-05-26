@@ -13,8 +13,6 @@ class DataProvider extends React.Component {
     this.loadMoreLogs = this.loadMoreLogs.bind(this)
     this.toggleSidebar = this.toggleSidebar.bind(this)
     this.setContentLoading = this.setContentLoading.bind(this)
-    this.setPage = this.setPage.bind(this)
-    this.setPageId = this.setPageId.bind(this)
     this.setTeachers = this.setTeachers.bind(this)
     this.setToast = this.setToast.bind(this)
     this.setStudents = this.setStudents.bind(this)
@@ -24,10 +22,8 @@ class DataProvider extends React.Component {
     this.setLogs = this.setLogs.bind(this)
     this.onChangeUserData = this.onChangeUserData.bind(this)
     this.removeLog = this.removeLog.bind(this)
-
+    this.setCurrentStudents=this.setCurrentStudents.bind(this);
     this.state = {
-      page: "home",
-      pageId: "",
       currentUser: {
         firstName: "",
         lastName: "",
@@ -54,8 +50,6 @@ class DataProvider extends React.Component {
       toggleSidebar: this.toggleSidebar,
       removeLog: this.removeLog,
       setContentLoading: this.setContentLoading,
-      setPage: this.setPage,
-      setPageId: this.setPageId,
       setTeachers: this.setTeachers,
       setToast: this.setToast,
       setStudents: this.setStudents,
@@ -63,7 +57,8 @@ class DataProvider extends React.Component {
       changePassword: this.changePassword,
       loadUserData:this.loadUserData,
       setLogs: this.setLogs,
-      onChangeUserData: this.onChangeUserData
+      onChangeUserData: this.onChangeUserData,
+      setCurrentStudents:this.setCurrentStudents
     }
   }
 
@@ -74,7 +69,7 @@ class DataProvider extends React.Component {
           .then(data => {
             const teachers = {}
             data.forEach(teacher => {
-              if(teacher.status != "inactive"){
+              if(teacher.status !== "inactive"){
                 teachers[teacher.teacherID] = teacher
               }
             })
@@ -133,7 +128,7 @@ class DataProvider extends React.Component {
   }
 
   toggleSidebar() {
-    if(this.state.sidebarClass == "close"){
+    if(this.state.sidebarClass === "close"){
       this.setState({sidebarClass: "open"})
     } else{
       this.setState({sidebarClass: "close"})
@@ -142,7 +137,7 @@ class DataProvider extends React.Component {
 
   removeLog(logID) {
     const newLogs = this.state.logs.filter(log => {
-      return log.logID != logID
+      return log.logID !== logID
     })
 
     this.setLogs(newLogs)
@@ -152,21 +147,11 @@ class DataProvider extends React.Component {
     this.setState({contentLoading: state})
   }
 
-  setPage(page) {
-    if (this.state.page != page)
-      this.setState({page})
-  }
-
-  setPageId(pageId) {
-    if (this.state.pageId != pageId)
-      this.setState({pageId})
-  }
-
   setToast(params, time = 2000) {
     const newToast = {
       message: params.message || this.state.toast.message,
       color: params.color || this.state.toast.color,
-      visible: params.visible != undefined ? params.visible : this.state.toast.visible
+      visible: params.visible !== undefined ? params.visible : this.state.toast.visible
     }
     this.setState({toast: newToast})
 
@@ -184,6 +169,12 @@ class DataProvider extends React.Component {
     this.setState({students})
   }
 
+  setCurrentStudents(students) {
+    var currentUser=this.state.currentUser;
+    currentUser.students=students;
+    this.setState({currentUser})
+  }
+
   setLogs(logs) {
     this.setState({logs})
   }
@@ -197,8 +188,7 @@ class DataProvider extends React.Component {
  
   logOut(){
       Auth.signOut()
-        .then(data => console.log(data))
-        .catch(err => console.log(err));
+        .then()
   }
     
   changePassword(oldPassword, newPassword){
@@ -207,11 +197,9 @@ class DataProvider extends React.Component {
         return Auth.changePassword(user, oldPassword, newPassword);
     })
     .then(data => {
-        console.log(data);
         return data;
     })
     .catch(err => {
-        console.log(err);
         return err;});
   }
   render() {

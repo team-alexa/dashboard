@@ -7,7 +7,7 @@ class LogoHeader extends Component {
   render() {
     return (
       <div className={this.context.sidebarClass + " logo-header"}>
-        <img src={logo}></img>
+        <img src={logo} alt=""></img>
         <div className={"loader " + (this.context.contentLoading ? "enabled" : "disabled")}></div>
       </div>
     )

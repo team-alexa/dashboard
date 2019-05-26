@@ -3,32 +3,22 @@ import '../css/AdminPage.css';
 import Table from './Table';
 import { Context } from "../Store";
 
-//const teacherTempTableData = [
-//    ["Megan Waterworth", "Yes", "meganwaterworth"],
-//    ["Fred Barthel", "Yes", "fredbarthel"],
-//    ["Jake Ainsworth", "Yes", "jakeainsworth"],
-//    ["Mitchell Kossoris", "Yes", "mitchellkossoris"],
-//    ["Steven Kitscha", "Yes", "stevenkitscha"],
-//    ["Bob Bobson", "No", "bobbobson"],
-//    ["Person Personello", "No", "personpersonello"],
-//    ["Jimmy Smith", "No", "jimmysmith"],
-//    ["Hey You", "No", "heyyou"]
-//]
-
 class AdminPage extends Component{
     constructor(props){
         super(props)
         this.getTeacherTableData = this.getTeacherTableData.bind(this);
     }
     getTeacherTableData() {  
-    return Object.keys(this.context.teachers).map(teacher => {
-        teacher = this.context.teachers[teacher];
-      return [
-        teacher.fullName, teacher.role, teacher.teacherID]
-    })
-  }
+        return Object.keys(this.context.teachers).map(teacher => {
+            teacher = this.context.teachers[teacher];
+          if(teacher.status === "active"){
+            return [teacher.fullName, teacher.role, teacher.teacherID]
+            }
+          })
+    }
+  
     render() {
-        if(this.context.currentUser.role == "admin"){
+        if(this.context.currentUser.role === "admin"){
             return(
                 <div className="admin-page page content-page">
                     <h2>Teachers</h2>

@@ -38,3 +38,11 @@
   .searchable-input {
     padding-bottom: 6px;
   }
+  @media screen and (max-width: 983px) {
+    .log-page  .button-group {
+      position: relative;
+      top: 0px;
+      bottom:0;
+      padding-left: 15px;
+    }
+}

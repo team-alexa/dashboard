@@ -3,9 +3,7 @@ import { withRouter } from "react-router";
 import '../css/Table.css';
 
 class Table extends Component {
-  constructor(props) {
-    super(props);
-  }
+
 
   navigateTo(path) {
     this.props.history.push({pathname: path})
@@ -20,7 +18,7 @@ class Table extends Component {
   render() {
     return (
       <div className="table-container" style={{height: this.props.height, width: this.props.width}}>
-        <table className="table header">
+        <table className="table-header">
           <thead>
             <tr>
               {this.props.headers.map((text, index) => {
@@ -43,7 +41,7 @@ class Table extends Component {
             </tbody>
           </table>
           {this.props.newLink ?
-            <button className="new-button" onClick={() => this.navigateTo(this.props.newLink)}>+</button> :
+            <button className="new-button" onClick={() => this.navigateTo(this.props.newLink)}><div className="buttonText">+</div></button> :
             null
           }
         </div>

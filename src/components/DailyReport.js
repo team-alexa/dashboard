@@ -1,7 +1,6 @@
 import * as jsPDF from 'jspdf';
 import React, { Component } from 'react';
 import '../css/DailyReport.css';  
-import closebutton from '../img/close-button.png'
 import Table from './Table';
 import { Context } from '../Store'
 import main_logo from '../img/main_logo'
@@ -85,13 +84,12 @@ exportDailyLogs() {
               width="99%"
               headers={["Date", "Student", "Teacher", "Category", "Details"]}
               columnWidths={["10%", "20%", "20%", "10%", "40%"]}
-              rootAddress="/logs/"
-            />
+              rootAddress="/logs/"/>
             <div className='Export'>
             <button className="Export-Data" type="button" onClick={this.exportDailyLogs}>Export Logs</button> 
             </div>
             </div>
-          </div>
+            </div>
         );
       }
       

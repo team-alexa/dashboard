@@ -3,7 +3,6 @@ import '../css/index.css';
 import '../css/StudentProfile.css';
 import { Context } from '../Store'
 import Constants from '../Constants'
-
 import Table from './Table';
 import SearchableInput from './SearchableInput'
 import DailyReport from './DailyReport';
@@ -14,7 +13,7 @@ class StudentProfile extends Component{
 
     this.onChange = this.onChange.bind(this)
     this.saveData = this.saveData.bind(this)
-    this.getStudentTeacherName = this.getStudentTeacherName.bind(this)
+    this.getStudentTeacher = this.getStudentTeacher.bind(this)
     this.addTeacher = this.addTeacher.bind(this)
     this.toggleDailyReport = this.toggleDailyReport.bind(this)
     this.currentDate = this.currentDate.bind(this);
@@ -24,6 +23,7 @@ class StudentProfile extends Component{
     this.loadMoreLogs = this.loadMoreLogs.bind(this);
     this.toggleStatus = this.toggleStatus.bind(this);
     this.navigateTo=this.navigateTo.bind(this);
+    this.getAllTeachers=this.getAllTeachers.bind(this);
     this.state = {
       birthDate: "",
       firstName: "",
@@ -50,9 +50,9 @@ class StudentProfile extends Component{
   }
 
   componentDidMount() {
-    if (this.context.pageId != "new") {
+    if (this.props.match.params.id !== "new") {
       this.context.setContentLoading(true)
-      fetch(Constants.apiUrl + "students?studentID=" + this.props.id)
+      fetch(Constants.apiUrl + "students?studentID=" + this.props.match.params.id)
         .then(response => response.json())
         .then(data => {
           if (data[0]) {
@@ -80,7 +80,6 @@ class StudentProfile extends Component{
       this.setState({editable: true})
     }
     this.loadMoreLogs()
-    this.context.loadTeachers()
   }
   toggleDailyReport() {
     this.setState({
@@ -91,7 +90,7 @@ class StudentProfile extends Component{
     const dte = new Date(this.state.birthDate)
     const dteStr = dte.getUTCFullYear() + "-" + (dte.getUTCMonth() + 1) + "-" + dte.getUTCDate()
     const body = {
-      method: this.context.pageId == "new" ? "new" : "update",
+      method: this.props.match.params.id === "new" ? "new" : "update",
       studentID: this.state.studentID,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
@@ -110,21 +109,46 @@ class StudentProfile extends Component{
       body: JSON.stringify(body)
     })
     .then(response => response.json())
-    .then(() => {
-      delete body.method
-      this.context.students[body.studentID] = body
-      this.context.setStudents(this.context.students)
-      this.context.setToast({message: "Saved!", color: "green", visible: true})
+    .then((data) => {
+      if (data.errno) {
+        this.context.setToast({message: "There was an error.", color: "red", visible: true})
+      } else {
+        delete body.method
+        var tempStudents=this.context.students;
+        body.status="active"
+        body.fullName=body.firstName +" "+body.lastName
+        tempStudents[body.studentID] = body
+        this.context.setStudents(tempStudents)
+        var tempStudentsCurrentUser=this.context.currentUser.students
+      Object.keys(tempStudentsCurrentUser).map(student => {
+       if (student.studentID===body.studentID){
+        student.status="active"
+        this.context.setCurrentStudents(tempStudentsCurrentUser)
+       }
+      })
+        this.context.setToast({message: "Saved!", color: "green", visible: true})
+      }
     })
-    .catch(error => console.log(error))
   }
 
-  getStudentTeacherName() {
-    return this.context.teachers[this.state.teacherID] ? this.context.teachers[this.state.teacherID].fullName : ""
+
+  getStudentTeacher() {
+    return this.context.teachers[this.state.teacherID] ? {
+      value: this.context.teachers[this.state.teacherID].fullName,
+      id: this.context.teachers[this.state.teacherID].teacherID,
+      onClick: () => this.navigateTo("/account/" + this.context.teachers[this.state.teacherID].teacherID)
+     } : null
   }
 
-  getAllTeacherNames() {
-    return Object.keys(this.context.teachers).map(key => this.context.teachers[key].fullName)
+  getAllTeachers() {
+    return Object.keys(this.context.teachers).map(key => {
+      const teacher = this.context.teachers[key]
+      return {
+        value: teacher.fullName,
+        id: teacher.teacherID,
+        onClick: () => this.navigateTo("/account/" + teacher.teacherID)
+      }
+    })
   }
 
   onChange(e) {
@@ -133,13 +157,9 @@ class StudentProfile extends Component{
   }
 
   addTeacher(teacher) {
-    var teachers = Object.keys(this.context.teachers).filter(key => {
-      return this.context.teachers[key].fullName == teacher
-    })
-
-    var id = teachers.length > 0 ? teachers[0] : null
-    this.setState({teacherID: id})
+    this.setState({teacherID: teacher.id})
   }
+
   getDailyLogs(){
     fetch(Constants.apiUrl + "logs?studentID=" + this.state.studentID+"&date="+this.currentDate(this.state.reportDate))
         .then(response => response.json())
@@ -172,7 +192,7 @@ class StudentProfile extends Component{
   loadMoreLogs() {
     this.context.setContentLoading(true)
     var url = Constants.apiUrl + 'logs?index=' + this.state.logs.length
-    url += '&studentID=' + this.context.pageId
+    url += '&studentID=' + this.props.match.params.id
     fetch(url)
       .then(response => response.json())
       .then(data => {
@@ -180,7 +200,8 @@ class StudentProfile extends Component{
         this.setState({logs: logs.concat(data)})
         this.context.setContentLoading(false)
         if (this.state.logs.length){
-          this.setState({reportDate:new Date(this.state.logs[0].date).toISOString().substr(0, 10)})  
+          if (this.state.logs[0].date)
+            this.setState({reportDate:new Date(this.state.logs[0].date).toISOString().substr(0, 10)})  
         }
       })
   }
@@ -203,7 +224,7 @@ class StudentProfile extends Component{
     const body = {
       method: "update",
       studentID: this.state.studentID,
-      status: this.state.status=='active'?'inactive':'active'
+      status: this.state.status==='active'?'inactive':'active'
     }
 
     fetch(Constants.apiUrl + 'students', {
@@ -215,56 +236,67 @@ class StudentProfile extends Component{
     })
     .then(response => response.json())
     .then(() => {
+      var tempStudents=this.context.students;
+      tempStudents[body.studentID].status = body.status
+      this.context.setStudents(tempStudents)
+      var tempStudentsCurrentUser=this.context.currentUser.students
+      tempStudentsCurrentUser.map(student => {
+       if (student.studentID===body.studentID){
+        student.status=body.status
+       }
+      })
+      this.context.setCurrentStudents(tempStudentsCurrentUser)
       this.context.setToast({color: "green", message: "Success!", visible: true}, 3000)
       this.navigateTo("../students")
     })
-    .catch(error => console.log(error))
   }
   navigateTo(path) {
     this.props.history.push({pathname: path})
   }
   render() {
-    var teacherName = this.getStudentTeacherName()
+    var teacher = this.getStudentTeacher()
     return (
       <div className="student-profile content-page" >
-      <div className="button-group">
-        {this.context.pageId != "new" ?
-          <button type="button" className = "log-button enabled">
-            <div className="text">New Log</div>
-          </button> : null }
-        <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.saveData}>Save</button>
-        {this.context.pageId != "new" ?
-          <button className="log-button enabled" type="button" onClick={this.toggleStatus}>Set {this.state.status == "active" ? "Inactive" : "Active"}</button> : null}
-      </div>
-      <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
-      <br/>
-      <label htmlFor="lname">Name:</label><input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.state.lastName} onChange={this.onChange} autoComplete="off"/>
-      <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.state.firstName} onChange={this.onChange} autoComplete="off"/>
-      <br/>
-      <label htmlFor="nickname">Nickname:</label><input type="text" placeholder="Nickname" size="25" name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
-      <br />
-      <label htmlFor="id">ID:</label><input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/>
-      <br/>
-      <p>Age: {parseInt(new Date().getFullYear()) - parseInt(new Date(this.state.birthDate).getFullYear())} </p>
-      <label htmlFor="month">DOB :</label>
-      <input type="date" id="birthDate" value={this.state.birthDate} onChange={this.onChange} autoComplete="off" />
-      <br/>
-      <label htmlFor="food">Food Allergies (comma-separated):</label><input type="text" size = "64" id="foodAllergies" value={this.state.foodAllergies} onChange={this.onChange} autoComplete="off" />
-      <br/>
-      <label htmlFor="medical">Medical Conditions (comma-separated):</label><input type="text" size = "64" id="medical" value={this.state.medical} onChange={this.onChange} autoComplete="off" />
-      <br/>
-      <SearchableInput
-        placeholder="Teacher"
-        label="Teacher: "
-        limit={1}
-        values={teacherName ? [teacherName] : null}
-        possibleValues={this.getAllTeacherNames()}
-        onClick={() => this.setState({hasChanged: true})}
-        addValue={this.addTeacher}/>
+        <h2 className="name">{this.state.lastName ? `${this.state.lastName}, ${this.state.firstName}` : "Last Name, First Name"}</h2>
         <br/>
+        <label htmlFor="lname">Name:</label><input type="text" placeholder="Last Name" size ="32"  name="lastName" id="lastName" value={this.state.lastName} onChange={this.onChange} autoComplete="off"/>
+        <input type="text" placeholder="First Name" size ="32" name="firstName" id="firstName" value={this.state.firstName} onChange={this.onChange} autoComplete="off"/>
+        <br/>
+        <label htmlFor="nickname">Nickname:</label><input type="text" placeholder="Nickname" size="25" name="nickName" id="nickName" value={this.state.nickName} onChange={this.onChange} autoComplete="off"/>
+        <br />
+        {this.props.match.params.id === "new" ? <div><label htmlFor="id">ID:</label><input type="text" size = "10" name="studentID" id="studentID" placeholder="Student ID" value={this.state.studentID} onChange={this.onChange} autoComplete="off"/>
+        <br/> </div>: <p>ID Number: {this.state.studentID}</p>}
+        <p>Age: {parseInt(new Date().getFullYear()) - parseInt(new Date(this.state.birthDate).getFullYear())} </p>
+        <label htmlFor="month">DOB :</label>
+        <input type="date" id="birthDate" value={this.state.birthDate} onChange={this.onChange} autoComplete="off" />
+        <br/>
+        <label htmlFor="food">Food Allergies (comma-separated):</label><input type="text" size = "64" id="foodAllergies" value={this.state.foodAllergies} onChange={this.onChange} autoComplete="off" />
+        <br/>
+        <label htmlFor="medical">Medical Conditions (comma-separated):</label><input type="text" size = "64" id="medical" value={this.state.medical} onChange={this.onChange} autoComplete="off" />
+        <br/>
+        <SearchableInput
+          placeholder="Teacher"
+          label="Teacher: "
+          limit={1}
+          values={teacher ? [teacher] : null}
+          possibleValues={this.getAllTeachers()}
+          onClick={() => this.setState({hasChanged: true})}
+          addValue={this.addTeacher}/>
+          <br/>
+      {this.props.match.params.id !== "new" ? <div>
         <input type="date" id="reportDate" value={this.state.reportDate} onChange={this.onChange} autoComplete="off" />
         <button className={"report-button "+(this.state.logs.length ? "enabled" : "disabled")} type="button" onClick={this.showDailyLogsButton}>Generate Report</button>
-      {this.context.pageId != "new" ? <div>
+      </div> : null}
+      <div className="button-group">
+        {this.props.match.params.id !== "new" ?
+          <button type="button" className = "log-button enabled" onClick={() => this.navigateTo("/logs/new")}>
+            <div className="text">New Log</div>
+          </button> : null }
+        <button className={this.state.hasChanged ? "enabled" : "disabled"} type="button" onClick={this.state.hasChanged ? this.saveData: null}>Save</button>
+        {this.props.match.params.id !== "new" ?
+          <button className="log-button enabled" type="button" onClick={this.toggleStatus}>Set {this.state.status === "active" ? "Inactive" : "Active"}</button> : null}
+      </div>
+      {this.props.match.params.id !== "new" ? <div>
         <h2>{this.state.fullName ? `${this.state.fullName}'s Logs` : "Logs"}</h2>
         <Table data={this.getLogTableData()}
           height="40vh"
@@ -275,7 +307,7 @@ class StudentProfile extends Component{
           loadFunction = {this.loadMoreLogs} />
         </div> : null
       }
-      {this.state.showDailyReport && this.state.dailyLogs.length!=0?
+      {this.state.showDailyReport && this.state.dailyLogs.length!==0?
          <DailyReport
          close={this.toggleDailyReport.bind(this)}
          firstName={this.state.firstName}
@@ -288,6 +320,6 @@ class StudentProfile extends Component{
     );
   }
 }
-
-StudentProfile.contextType = Context;
-export default withRouter(StudentProfile);
+const WrappedClass =withRouter(StudentProfile);
+WrappedClass.WrappedComponent.contextType = Context;
+export default WrappedClass;

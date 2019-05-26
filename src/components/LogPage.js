@@ -14,8 +14,8 @@ class LogPage extends Component{
     this.saveData = this.saveData.bind(this)
     this.addStudent = this.addStudent.bind(this)
     this.addTeacher = this.addTeacher.bind(this)
-    this.getAllTeacherNames = this.getAllTeacherNames.bind(this)
-    this.getAllStudentNames = this.getAllStudentNames.bind(this)
+    this.getAllTeachers = this.getAllTeachers.bind(this)
+    this.getAllStudents = this.getAllStudents.bind(this)
     this.dropdownClick = this.dropdownClick.bind(this)
     this.setActivity = this.setActivity.bind(this)
     this.hideDropdown = this.hideDropdown.bind(this)
@@ -39,9 +39,9 @@ class LogPage extends Component{
     this.displayedMessage = false
   }
   componentDidMount(){
-       if (this.context.pageId != "new") {
+       if (this.props.match.params.id !== "new") {
       this.context.setContentLoading(true)
-      fetch(Constants.apiUrl + "logs?logID=" + this.context.pageId)
+      fetch(Constants.apiUrl + "logs?logID=" + this.props.match.params.id)
       .then(response => response.json())
       .then(data => {
         if (data[0]) {
@@ -67,8 +67,6 @@ class LogPage extends Component{
     } else {
       this.setState({editable: true})
     }
-    this.context.loadTeachers();     
-    this.context.loadStudents();
   }
   onChange(e) {
     if (this.state.editable)
@@ -76,18 +74,18 @@ class LogPage extends Component{
     }
   saveData(){      
         var d = this.state.initDate
-        if(this.state.dateString.length == 10)
+        if(this.state.dateString.length === 10)
           d = this.state.dateString
         else
           this.context.setToast({message: "Invalid Date Format", color: "red", visible: true}, 3000)
         var t = this.state.initTime
-        if(this.state.timeString.length == 5)
+        if(this.state.timeString.length === 5)
           t = this.state.timeString
         else
           this.context.setToast({message: "Invalid Time Format", color: "red", visible: true}, 3000)
       const body ={
-        method: this.context.pageId == "new" ? "new" : "update",
-        logID: this.context.pageId == "new" ? undefined : this.context.pageId,
+        method: this.props.match.params.id === "new" ? "new" : "update",
+        logID: this.props.match.params.id === "new" ? undefined : this.props.match.params.id,
         studentID: this.state.studentID,
         teacherID: this.state.teacherID,
         activityType: this.state.activityType,
@@ -102,39 +100,62 @@ class LogPage extends Component{
         body: JSON.stringify(body)
       })
       .then(response => response.json())
-      .then(() => {
+      .then((response) => {
+        if(!response.errno){
         delete body.method
-        if (this.context.pageId == "new") {
+        if (this.props.match.params.id === "new") {
           const teacher = this.context.teachers[this.state.teacherID]
           const student = this.context.students[this.state.studentID]
           body.teacherFullName = teacher.fullName
           body.studentFullName = student.fullName
-          this.context.logs.unshift(body)
+          body.logID=response.insertId
+          var tempLogs=this.context.logs;
+          tempLogs.unshift(body);
+          this.context.setLogs(tempLogs)
+        }
+        else{
+          const teacher = this.context.teachers[this.state.teacherID]
+          const student = this.context.students[this.state.studentID]
+          body.teacherFullName = teacher.fullName
+          body.studentFullName = student.fullName
+          body.logID=this.state.logID
+          var tempLogs=this.context.logs;
+          tempLogs[tempLogs.map(function(x) {return x.logID; }).indexOf(this.state.logID)]=body;
+          this.context.setLogs(tempLogs)
         }
         this.context.setLogs(this.context.logs)
         this.context.setToast({message: "Saved!", color: "green", visible: true})
+      }
+      else{
+        this.context.setToast({message: "There was an Error!", color: "red", visible: true})
+      }
       })
-      .catch(error => console.log(error))
   }
-  getAllTeacherNames() {
-    return Object.keys(this.context.teachers).map(key => this.context.teachers[key].fullName)
+  getAllTeachers() {
+    return Object.keys(this.context.teachers).map(key => {
+      const teacher = this.context.teachers[key]
+      return {
+        value: teacher.fullName,
+        id: teacher.teacherID,
+        onClick: () => this.navigateTo("/account/" + teacher.teacherID)
+      }
+    })
   }
-  getAllStudentNames(){
-    return Object.keys(this.context.students).map(key => this.context.students[key].fullName)
+  getAllStudents(){
+    return Object.keys(this.context.students).map(key => {
+      const student = this.context.students[key]
+      return {
+        value: student.fullName,
+        id: student.studentID,
+        onClick: () => this.navigateTo("/students/" + student.studentID)
+      }
+    })
   }
   addTeacher(teacher) {
-    var teachers = Object.keys(this.context.teachers).filter(key => {
-      return this.context.teachers[key].fullName == teacher
-    })
-    var id = teachers.length > 0 ? teachers[0] : null
-    this.setState({teacherID: id})
+    this.setState({teacherID: teacher.id})
   }
   addStudent(student){
-    var students = Object.keys(this.context.students).filter(key => {
-      return this.context.students[key].fullName == student
-    })
-    var id = students.length > 0 ? students[0] : null
-    this.setState({studentID: id})
+    this.setState({studentID: student.id})
   }
   dropdownClick(){
     var o = !this.state.dropdownOpen
@@ -163,51 +184,50 @@ class LogPage extends Component{
       body: JSON.stringify(body)
     })
     .then(response => response.json())
-    .then(() => {
+    .then((response) => {
       this.context.setToast({color: "green", message: "Successfully deleted log.", visible: true}, 3000)
       this.context.removeLog(this.state.logID)
-      this.navigateTo("../students")
+      this.navigateTo("../logs")
     })
-    .catch(error => console.log(error))
   }
   navigateTo(path) {
     this.props.history.push({pathname: path})
   }
     render(){   
-      var teacherName = this.state.teacherFullName
-      var studentName = this.state.studentFullName
+      var teacher = this.context.teachers[this.state.teacherID] ? {
+        value: this.context.teachers[this.state.teacherID].fullName,
+        id: this.context.teachers[this.state.teacherID].teacherID,
+        onClick: () => this.navigateTo("/account/" + this.context.teachers[this.state.teacherID].teacherID)
+       } : null
+      var student = this.context.students[this.state.studentID] ? {
+        value: this.context.students[this.state.studentID].fullName,
+        id: this.context.students[this.state.studentID].studentID,
+        onClick: () => this.navigateTo("/students/" + this.context.students[this.state.studentID].studentID)
+       } : null
       var validEntry = (this.state.studentID !== "" && this.state.teacherID !== "" 
       && this.state.activityType !== "" && this.state.dateString !== "" 
       && this.state.timeString !== "")
       return (
         <div className = "log-page content-page" onClick={this.hideDropdown}>
-          <div className="button-group">
-            {this.context.pageId != "new" ?
-              <button type="button" className="delete-log-button enabled" onClick={this.delete} style={{borderColor: "red", color: "red", backgroundColor: "transparent"}}>
-                <div className="text">Delete</div>
-              </button> : null }
-            <button className={this.context.pageId != "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
-            (validEntry ? "enabled" : "disabled")} type="button" onClick={this.saveData}>Save</button> 
-          </div>
-          <h2 className="name">Log {this.context.pageId}</h2>
+          <h2 className="name">Log {this.props.match.params.id}</h2>
           <SearchableInput
             placeholder="Student"
             label="Student: "
             limit={1}
-            values= {studentName ? [studentName] : null}
-            possibleValues={this.getAllStudentNames()}
+            values= {student ? [student] : null}
+            possibleValues={this.getAllStudents()}
             onClick={() => this.setState({hasChanged: true})}
             addValue={this.addStudent}/>
           <SearchableInput
             placeholder="Teacher"
             label="Teacher: "
             limit={1}
-            values= {teacherName ? [teacherName] : null}
-            possibleValues={this.getAllTeacherNames()}
+            values= {teacher ? [teacher] : null}
+            possibleValues={this.getAllTeachers()}
             onClick={() => this.setState({hasChanged: true})}
             addValue={this.addTeacher}/>
          
-          <label htmlFor="activityType">Activity:</label><input type="text" placeholder="Activity" size ="32"  name="activityType" id="activityType" value={this.state.activityType}  onClick={this.dropdownClick} autoComplete="off"/>
+          <label htmlFor="activityType">Activity:</label><input type="text" placeholder="Activity" size ="32"  name="activityType" id="activityType" value={this.state.activityType} onChange={this.onChange} onClick={this.dropdownClick} autoComplete="off"/>
           {this.state.dropdownOpen && (
               <div className="activity-menu">
                 <ul className="possible-values">
@@ -220,14 +240,23 @@ class LogPage extends Component{
           <br/>  
           <label htmlFor="activityDetails">Activity Details:</label><input type="text" placeholder="Activity Details" size ="64"  name="activityDetails" id="activityDetails" value={this.state.activityDetails} onChange={this.onChange} autoComplete="off"/>
           <br/>
-          <label htmlFor="time">Time:</label><input type="time" size ="32"  name="time" id="timeString" value={this.state.timeString} onfocus="this.value=''" onChange={this.onChange} autoComplete="off"/>
+          <label htmlFor="time">Time:</label><input type="time" size ="32"  name="time" id="timeString" value={this.state.timeString} onChange={this.onChange} autoComplete="off"/>
           <br/>
           <label htmlFor="date">Date:</label><input type="date" name="date" id="dateString" value={this.state.dateString} onChange={this.onChange} autoComplete="off" />         
       <br/>
+      <div className="button-group">
+            {this.props.match.params.id !== "new" ?
+              <button type="button" className="delete-log-button enabled" onClick={this.delete} style={{borderColor: "red", color: "red", backgroundColor: "transparent"}}>
+                <div className="text">Delete</div>
+              </button> : null }
+            <button className={this.props.match.params.id !== "new" ? (this.state.hasChanged ? "enabled" : "disabled") : 
+            (validEntry ? "enabled" : "disabled")} type="button" onClick={this.state.hasChanged ? this.saveData: null}>Save</button> 
+          </div>
+          <br/>
         </div>
         )
     }
 }
-
-LogPage.contextType = Context
-export default withRouter(LogPage);
+const WrappedClass =withRouter(LogPage);
+WrappedClass.WrappedComponent.contextType = Context;
+export default WrappedClass;
